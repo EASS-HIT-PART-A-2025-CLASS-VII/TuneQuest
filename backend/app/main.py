@@ -3,9 +3,11 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
 from app.models.gem import Gem, Base
 from app.core.db import SessionLocal, engine
+from app.routers import gem
 
 
 app = FastAPI()
+app.include_router(gem.router)
 
 # Dependency to get the database session
 def get_db():

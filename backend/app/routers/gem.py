@@ -1,8 +1,8 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.schemas.gem import Gem, GemCreate
-from app.crud.gem import create_gem, get_all_gems, get_gem
+from app.schemas.gem import Gem, GemCreate, GemUpdate, GemReplace
+from app.crud.gem import create_gem, get_all_gems, get_gem, delete_gem, update_gem, update_gem_full
 from app.core.db import SessionLocal
 
 router = APIRouter(prefix="/gems", tags=["Gems"])
@@ -26,3 +26,24 @@ async def read_gem(gem_id: int, db: AsyncSession = Depends(get_db)):
     if not gem:
         raise HTTPException(status_code=404, detail="Gem not found")
     return gem
+
+@router.delete("/{gem_id}", response_model=bool)
+async def delete_gem_endpoint(gem_id: int, db: AsyncSession = Depends(get_db)):
+    success = await delete_gem(db, gem_id)
+    if not success:
+        raise HTTPException(status_code=404, detail="Gem not found")
+    return True
+
+@router.patch("/{gem_id}", response_model=Gem)
+async def update_gem_endpoint(gem_id: int, gem_update: GemUpdate, db: AsyncSession = Depends(get_db)):
+    updated_gem = await update_gem(db, gem_id, gem_update)
+    if not updated_gem:
+        raise HTTPException(status_code=404, detail="Gem not found")
+    return updated_gem
+
+@router.put("/{gem_id}", response_model=Gem)
+async def update_gem_full_endpoint(gem_id: int, gem_replace: GemReplace, db: AsyncSession = Depends(get_db)):
+    replaced_gem = await update_gem_full(db, gem_id, gem_replace)
+    if not replaced_gem:
+        raise HTTPException(status_code=404, detail="Gem not found")
+    return replaced_gem
