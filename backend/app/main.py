@@ -9,6 +9,7 @@ from app.routers import gem
 app = FastAPI()
 app.include_router(gem.router)
 
+
 # Dependency to get the database session
 def get_db():
     db = SessionLocal()
@@ -17,11 +18,13 @@ def get_db():
     finally:
         db.close()
 
+
 @app.on_event("startup")
 async def startup():
     # Creates tables if they don't exist
     async with engine.begin() as conn:
         await conn.run_sync(Base.metadata.create_all)
+
 
 @app.get("/gems")
 async def get_gems(db: AsyncSession = Depends(get_db)):
@@ -29,6 +32,7 @@ async def get_gems(db: AsyncSession = Depends(get_db)):
     result = await db.execute(select(Gem))
     gems = result.scalars().all()  # Extract gem objects from the result
     return gems
+
 
 @app.get("/")
 async def root():

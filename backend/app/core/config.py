@@ -5,4 +5,5 @@ class Settings:
     DATABASE_USER: str = "postgres"
     DATABASE_PASSWORD: str = "password"
 
+
 settings = Settings()

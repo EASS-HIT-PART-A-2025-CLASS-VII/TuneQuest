@@ -1,6 +1,7 @@
 from pydantic import BaseModel
 from typing import Optional
 
+
 # Base class for shared attributes
 class GemBase(BaseModel):
     name: str
@@ -8,6 +9,7 @@ class GemBase(BaseModel):
     description: str
     rating: float
     category: str
+
 
 class GemUpdate(BaseModel):
     name: Optional[str] = None
@@ -19,12 +21,16 @@ class GemUpdate(BaseModel):
     class Config:
         orm_mode = True
 
+
 # For creating a new gem (does not include 'id' because it is generated)
 class GemCreate(GemBase):
     pass
-#for updating all fields in a gem
+
+
+# for updating all fields in a gem
 class GemReplace(GemBase):
     pass
+
 
 # For returning the gem (includes 'id' from DB)
 class Gem(GemBase):
