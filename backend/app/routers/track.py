@@ -1,7 +1,7 @@
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.schemas.track import Track, TrackCreate, TrackUpdate, TrackReplace
+from app.schemas.track import TrackRead, TrackCreate, TrackUpdate, TrackReplace
 from app.crud.track import (
     create_track,
     get_all_tracks,
@@ -23,12 +23,12 @@ async def get_db():
         yield session
 
 
-@router.post("/", response_model=Track)
+@router.post("/", response_model=TrackRead)
 async def create_track_endpoint(track: TrackCreate, db: AsyncSession = Depends(get_db)):
     return await create_track(db, track)
 
 
-@router.get("/", response_model=list[Track])
+@router.get("/", response_model=list[TrackRead])
 async def read_all_tracks(
     genre: str | None = None,
     artist: str | None = None,
@@ -48,11 +48,10 @@ async def read_all_tracks(
                 )
         validated_sort = fields
 
-    # Now call the pure DB function
     return await get_all_tracks(db, genre, artist, validated_sort)
 
 
-@router.get("/{track_id}", response_model=Track)
+@router.get("/{track_id}", response_model=TrackRead)
 async def read_track(track_id: int, db: AsyncSession = Depends(get_db)):
     track = await get_track(db, track_id)
     if not track:
@@ -60,15 +59,14 @@ async def read_track(track_id: int, db: AsyncSession = Depends(get_db)):
     return track
 
 
-@router.delete("/{track_id}", response_model=bool)
+@router.delete("/{track_id}", status_code=status.HTTP_204_NO_CONTENT)
 async def delete_track_endpoint(track_id: int, db: AsyncSession = Depends(get_db)):
     success = await delete_track(db, track_id)
     if not success:
         raise HTTPException(status_code=404, detail=track_not_found)
-    return True
 
 
-@router.patch("/{track_id}", response_model=Track)
+@router.patch("/{track_id}", response_model=TrackRead)
 async def update_track_endpoint(
     track_id: int, track_update: TrackUpdate, db: AsyncSession = Depends(get_db)
 ):
@@ -78,7 +76,7 @@ async def update_track_endpoint(
     return updated_track
 
 
-@router.put("/{track_id}", response_model=Track)
+@router.put("/{track_id}", response_model=TrackRead)
 async def update_track_full_endpoint(
     track_id: int, track_replace: TrackReplace, db: AsyncSession = Depends(get_db)
 ):

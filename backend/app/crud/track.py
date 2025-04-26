@@ -19,7 +19,7 @@ async def get_all_tracks(
     db: AsyncSession,
     genre: str | None = None,
     artist: str | None = None,
-    sort: list[str] | None = None,  # <--- notice: now it's a *list* of fields
+    sort: list[str] | None = None,
 ):
     query = select(Track)
 

@@ -19,7 +19,7 @@ class TrackUpdate(BaseModel):
     rating: Optional[float] = None
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 
 # For creating a new Track (does not include 'id' because it is generated)
@@ -33,8 +33,8 @@ class TrackReplace(TrackBase):
 
 
 # For returning the Track (includes 'id' from DB)
-class Track(TrackBase):
+class TrackRead(TrackBase):
     id: int
 
     class Config:
-        orm_mode = True
+        from_attributes = True

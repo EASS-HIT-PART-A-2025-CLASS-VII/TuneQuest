@@ -10,8 +10,18 @@ class UserCreate(UserBase):
     password: str
 
 
+class UserUpdate(UserBase):
+    username: str
+    email: EmailStr
+    password: str
+
+
+class UserReplace(UserBase):
+    pass
+
+
 class UserRead(UserBase):
     id: int
 
     class Config:
-        orm_mode = True
+        from_attributes = True
