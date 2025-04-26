@@ -12,6 +12,7 @@ from app.crud.user import (
 )
 from app.core.db import SessionLocal
 
+
 router = APIRouter(prefix="/users", tags=["users"])
 user_not_found = "User not found"
 VALID_SORT_FIELDS = ["id", "username", "email"]
@@ -27,7 +28,7 @@ async def create_user_endpoint(user: UserCreate, db: AsyncSession = Depends(get_
     return await create_user(db, user)
 
 
-@router.get("/{user_id}", response_model=list[UserRead])
+@router.get("/{user_id}", response_model=UserRead)
 async def read_user(user_id: int, db: AsyncSession = Depends(get_db)):
     user = await get_user(db, user_id)
     if not user:
@@ -35,11 +36,11 @@ async def read_user(user_id: int, db: AsyncSession = Depends(get_db)):
     return user
 
 
-@router.get("/", response_model=UserRead)
+@router.get("/", response_model=list[UserRead])
 async def read_all_users(
     username: str | None = None,
     email: str | None = None,
-    sort: list[str] | None = None,
+    sort: str | None = None,
     db: AsyncSession = Depends(get_db),
 ):
     validated_sort = []
@@ -75,10 +76,10 @@ async def update_user_endpoint(
 
 
 @router.put("/{user_id}", response_model=UserRead)
-async def replace_user(
+async def replace_user_endpoint(
     user_id: int, user_replace: UserReplace, db: AsyncSession = Depends(get_db)
 ):
-    replaced_user = await update_user_full(db, user_id, user_replace)
+    replaced_user = await replace_user(db, user_id, user_replace)
     if not replaced_user:
         raise HTTPException(status_code=404, detail=user_not_found)
     return replaced_user

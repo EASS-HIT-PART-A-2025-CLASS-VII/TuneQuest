@@ -3,14 +3,27 @@ from sqlalchemy.future import select
 from app.models.user import User
 from app.schemas.user import UserCreate, UserUpdate, UserReplace
 from sqlalchemy import asc, desc
+from app.core.security import hash_password
+import logging
+
+logging.basicConfig()
+logging.getLogger("sqlalchemy.engine").setLevel(logging.INFO)
+logging.getLogger("sqlalchemy.pool").setLevel(logging.INFO)
 
 
 async def create_user(db: AsyncSession, create_user: UserCreate):
-    user = User(**create_user.model_dump())
-    db.add(user)
+    hashed_pw = hash_password(create_user.password)
+    print("Original password:", create_user.password)
+    print("Hashed password:", hashed_pw)
+    new_user = User(
+        username=create_user.username,
+        email=create_user.email,
+        hashed_password=hashed_pw,
+    )
+    db.add(new_user)
     await db.commit()
-    await db.refresh(user)
-    return user
+    await db.refresh(new_user)
+    return new_user
 
 
 async def get_user(db: AsyncSession, user_id: int):
@@ -43,7 +56,7 @@ async def get_all_users(
         if sort_expressions:
             query = query.order_by(*sort_expressions)
     else:
-        query = query.order_by(User.id.asc)
+        query = query.order_by(User.id.asc())
     result = await db.execute(query)
     return result.scalars().all()
 

@@ -1,7 +1,5 @@
-from fastapi import FastAPI, Depends
-from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy.future import select
-from app.models.track import Track as TrackModel, Base
+from fastapi import FastAPI
+from app.models.base import Base
 from app.core.db import SessionLocal, engine
 from app.routers import track, user
 from contextlib import asynccontextmanager
@@ -28,18 +26,6 @@ app = FastAPI(lifespan=lifespan)
 
 app.include_router(track.router)
 app.include_router(user.router)
-
-
-@app.get("/tracks")
-async def get_tracks(db: AsyncSession = Depends(get_db)):
-    # Async query to fetch all tracks
-    result = await db.execute(select(TrackModel))
-    tracks = result.scalars().all()
-    return tracks
-
-
-# @app.get("/users")
-# async def get_users(db: AsyncSession = Depends(get_db)):
 
 
 @app.get("/")
