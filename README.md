@@ -1,7 +1,5 @@
-# 🌍 Hidden Gems Finder
-
-A full-stack web app that helps travelers discover underrated and lesser-known locations around the world. Think of it as your personal travel treasure map — powered by a custom backend and interactive frontend.
-
+🎶 TuneQuest
+TuneQuest is a full-stack web application designed to help users discover, explore, and interact with music tracks. It offers features for browsing music by genre, artist, and rating, while providing CRUD operations for track management. It's the ultimate music discovery app for anyone looking to explore new sounds.
 ---
 
 ## 🚀 Tech Stack
