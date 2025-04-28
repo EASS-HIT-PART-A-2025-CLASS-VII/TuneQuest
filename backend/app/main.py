@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from app.models.base import Base
 from app.core.db import SessionLocal, engine
-from app.routers import track, user
+from app.routers import track, user, favorite, user_favorites
 from contextlib import asynccontextmanager
 
 
@@ -26,6 +26,8 @@ app = FastAPI(lifespan=lifespan)
 
 app.include_router(track.router)
 app.include_router(user.router)
+app.include_router(favorite.router)
+app.include_router(user_favorites.router)
 
 
 @app.get("/")

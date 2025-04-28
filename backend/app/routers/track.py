@@ -19,10 +19,13 @@ VALID_SORT_FIELDS = {"id", "title", "artist", "album", "genre", "rating"}
 
 @router.post("/", response_model=TrackRead)
 async def create_track_endpoint(track: TrackCreate, db: AsyncSession = Depends(get_db)):
-    return await create_track(db, track)
+    new_track = await create_track(track, db)
+    if not new_track:
+        raise HTTPException(status_code=400, detail="Track already exists")
+    return new_track
 
 
-@router.get("/", response_model=list[TrackRead])
+@router.get("/all", response_model=list[TrackRead])
 async def read_all_tracks(
     genre: str | None = None,
     artist: str | None = None,

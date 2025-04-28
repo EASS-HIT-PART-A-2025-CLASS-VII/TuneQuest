@@ -22,7 +22,7 @@ invalid_username_or_password = "Invalid username or password"
 VALID_SORT_FIELDS = ["id", "username", "email"]
 
 
-@router.post("/", response_model=UserRead)
+@router.post("/all", response_model=UserRead)
 async def create_user_endpoint(user: UserCreate, db: AsyncSession = Depends(get_db)):
     return await create_user(db, user)
 

@@ -7,6 +7,15 @@ from sqlalchemy import asc, desc
 
 # Create a new track in the DB
 async def create_track(db: AsyncSession, track: TrackCreate):
+    existing_track = await db.execute(
+        select(Track).where(
+            Track.title == track.title,
+            Track.artist == track.artist,
+            Track.album == track.album,
+        )
+    )
+    if existing_track.scalars().first():
+        return None
     new_track = Track(**track.model_dump())
     db.add(new_track)
     await db.commit()
