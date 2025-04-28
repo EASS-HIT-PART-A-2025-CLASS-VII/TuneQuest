@@ -10,17 +10,11 @@ from app.crud.track import (
     update_track,
     update_track_full,
 )
-from app.core.db import SessionLocal
+from app.core.db import get_db
 
 router = APIRouter(prefix="/tracks", tags=["tracks"])
 track_not_found = "Track not found"
 VALID_SORT_FIELDS = {"id", "title", "artist", "album", "genre", "rating"}
-
-
-# Dependency to get a DB session
-async def get_db():
-    async with SessionLocal() as session:
-        yield session
 
 
 @router.post("/", response_model=TrackRead)

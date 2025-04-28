@@ -4,11 +4,6 @@ from app.models.user import User
 from app.schemas.user import UserCreate, UserUpdate, UserReplace
 from sqlalchemy import asc, desc
 from app.core.security import hash_password
-import logging
-
-logging.basicConfig()
-logging.getLogger("sqlalchemy.engine").setLevel(logging.INFO)
-logging.getLogger("sqlalchemy.pool").setLevel(logging.INFO)
 
 
 async def create_user(db: AsyncSession, create_user: UserCreate):
@@ -26,8 +21,13 @@ async def create_user(db: AsyncSession, create_user: UserCreate):
     return new_user
 
 
-async def get_user(db: AsyncSession, user_id: int):
+async def get_user_by_id(db: AsyncSession, user_id: int):
     result = await db.execute(select(User).where(User.id == user_id))
+    return result.scalar_one_or_none()
+
+
+async def get_user_by_username(db: AsyncSession, username: str):
+    result = await db.execute(select(User).where(User.username == username))
     return result.scalar_one_or_none()
 
 
