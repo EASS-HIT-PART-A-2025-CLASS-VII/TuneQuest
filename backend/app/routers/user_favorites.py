@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, status, Response
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.schemas.favorite import FavoriteCreate, FavoriteRead
@@ -50,10 +50,11 @@ async def read_favorite(
     return result
 
 
-@router.delete("/", status_code=status.HTTP_204_NO_CONTENT)
+@router.delete("/{favorite_id}", status_code=status.HTTP_204_NO_CONTENT)
 async def delete_favorite(
     user_id: int, favorite_id: int, db: AsyncSession = Depends(get_db)
 ):
     result = await erase_favorite(user_id, favorite_id, db)
     if not result:
         raise HTTPException(status_code=404, detail=favorite_not_found)
+    return Response(status_code=status.HTTP_204_NO_CONTENT)

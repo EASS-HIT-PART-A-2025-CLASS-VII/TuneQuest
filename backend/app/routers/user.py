@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, status, Response
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.schemas.user import UserRead, UserCreate, UserUpdate, UserReplace, UserLogin
@@ -67,6 +67,7 @@ async def delete_user_endpoint(user_id: int, db: AsyncSession = Depends(get_db))
     success = await delete_user(db, user_id)
     if not success:
         raise HTTPException(status_code=404, detail=user_not_found)
+    return Response(status_code=status.HTTP_204_NO_CONTENT)
 
 
 @router.patch("/{user_id}", response_model=UserRead)

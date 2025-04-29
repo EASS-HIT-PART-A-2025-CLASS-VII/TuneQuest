@@ -1,7 +1,12 @@
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, status, Response
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.schemas.track import TrackRead, TrackCreate, TrackUpdate, TrackReplace
+from app.schemas.track import (
+    TrackRead,
+    TrackCreate,
+    TrackUpdate,
+    TrackReplace,
+)
 from app.crud.track import (
     create_track,
     get_all_tracks,
@@ -61,6 +66,7 @@ async def delete_track_endpoint(track_id: int, db: AsyncSession = Depends(get_db
     success = await delete_track(db, track_id)
     if not success:
         raise HTTPException(status_code=404, detail=track_not_found)
+    return Response(status_code=status.HTTP_204_NO_CONTENT)
 
 
 @router.patch("/{track_id}", response_model=TrackRead)

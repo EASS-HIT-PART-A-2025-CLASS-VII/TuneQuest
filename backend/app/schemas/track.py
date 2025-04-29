@@ -38,3 +38,8 @@ class TrackRead(TrackBase):
 
     class Config:
         from_attributes = True
+
+
+class TopTrackRead(BaseModel):
+    track_id: int
+    favorites_count: int
