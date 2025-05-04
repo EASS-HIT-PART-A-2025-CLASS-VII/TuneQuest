@@ -38,16 +38,20 @@ async def get_all_user_favorites(
     return result.scalars().all()
 
 
-async def get_favorite(user_id: int, favorite_id: int, db: AsyncSession):
+async def get_favorite(user_id: int, track_id: int, db: AsyncSession):
     result = await db.execute(
-        select(Favorite).where(Favorite.user_id == user_id, Favorite.id == favorite_id)
+        select(Favorite).where(
+            Favorite.user_id == user_id, Favorite.track_id == track_id
+        )
     )
     return result.scalar_one_or_none()
 
 
-async def erase_favorite(user_id: int, favorite_id: int, db: AsyncSession):
+async def erase_favorite(user_id: int, track_id: int, db: AsyncSession):
     result = await db.execute(
-        select(Favorite).where(Favorite.user_id == user_id, Favorite.id == favorite_id)
+        select(Favorite).where(
+            Favorite.user_id == user_id, Favorite.track_id == track_id
+        )
     )
     favorite = result.scalar_one_or_none()
     if not favorite:
