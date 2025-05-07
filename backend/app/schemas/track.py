@@ -1,22 +1,22 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 from typing import Optional
 
 
 # Base class for shared attributes
 class TrackBase(BaseModel):
-    title: str
-    artist: str
-    album: str
-    genre: str
-    rating: float
+    title: str = Field(max_length=1000)
+    artist: str = Field(max_length=100)
+    album: str = Field(max_length=1000)
+    genre: str = Field(max_length=50)
+    rating: float = Field(ge=0, le=100)
 
 
 class TrackUpdate(BaseModel):
-    title: Optional[str] = None
-    artist: Optional[str] = None
-    album: Optional[str] = None
-    genre: Optional[str] = None
-    rating: Optional[float] = None
+    title: Optional[str] = Field(None, max_length=1000)
+    artist: Optional[str] = Field(None, max_length=100)
+    album: Optional[str] = Field(None, max_length=1000)
+    genre: Optional[str] = Field(None, max_length=50)
+    rating: Optional[float] = Field(ge=0, le=100)
 
     class Config:
         from_attributes = True
