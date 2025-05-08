@@ -15,7 +15,7 @@ services:
     build:
       context: ./backend  # Set the context to the backend folder
       dockerfile: Dockerfile  # Ensure this matches the Dockerfile's location inside the backend folder
-    command: uvicorn app.main:app --host 0.0.0.0 --port 8000
+    command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
     volumes:
       - ./backend:/app  # Mount only the backend directory
     ports:

@@ -11,6 +11,7 @@ from app.crud.track import (
     create_track,
     get_all_tracks,
     get_track,
+    track_search,
     delete_track,
     update_track,
     update_track_full,
@@ -24,9 +25,12 @@ VALID_SORT_FIELDS = {"id", "title", "artist", "album", "genre", "rating"}
 
 @router.post("/", response_model=TrackRead)
 async def create_track_endpoint(track: TrackCreate, db: AsyncSession = Depends(get_db)):
-    new_track = await create_track(track, db)
+    new_track = await create_track(db, track)
     if not new_track:
-        raise HTTPException(status_code=400, detail="Track already exists")
+        raise HTTPException(
+            status_code=409,
+            detail="Track already exists with the same title, artist, and album",
+        )
     return new_track
 
 
@@ -35,6 +39,8 @@ async def read_all_tracks(
     genre: str | None = None,
     artist: str | None = None,
     sort: str | None = None,
+    skip: int = 0,
+    limit: int = 10,
     db: AsyncSession = Depends(get_db),
 ):
     # Handle sort validation
@@ -50,7 +56,15 @@ async def read_all_tracks(
                 )
         validated_sort = fields
 
-    return await get_all_tracks(db, genre, artist, validated_sort)
+    return await get_all_tracks(db, genre, artist, validated_sort, skip, limit)
+
+
+@router.get("/search", response_model=list[TrackRead])
+async def search_track(track_title: str, db: AsyncSession = Depends(get_db)):
+    tracks = await track_search(db, track_title)
+    if not tracks:
+        raise HTTPException(status_code=404, detail=track_not_found)
+    return tracks
 
 
 @router.get("/{track_id}", response_model=TrackRead)

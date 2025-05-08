@@ -29,6 +29,8 @@ async def get_all_tracks(
     genre: str | None = None,
     artist: str | None = None,
     sort: list[str] | None = None,
+    skip: int = 0,
+    limit: int = 10,
 ):
     query = select(Track)
 
@@ -55,7 +57,14 @@ async def get_all_tracks(
     else:
         query = query.order_by(Track.id.asc())  # fallback to default sort
 
-    result = await db.execute(query)
+    result = await db.execute(query.offset(skip).limit(limit))
+    return result.scalars().all()
+
+
+async def track_search(db: AsyncSession, track_title: str):
+    result = await db.execute(
+        select(Track).where(Track.title.ilike(f"%{track_title}%"))
+    )
     return result.scalars().all()
 
 
