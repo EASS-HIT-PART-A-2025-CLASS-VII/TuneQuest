@@ -1,0 +1,17 @@
+.profileContainer {
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-start;
+  flex-direction: column;
+  margin-top: 2%;
+  margin-left: 2%;
+  background-color: darkkhaki;
+}
+
+.first {
+  background-color: burlywood;
+}
+
+.userImage {
+  width: 200px;
+}
