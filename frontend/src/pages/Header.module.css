@@ -4,8 +4,10 @@
   justify-content: flex-start;
   margin: 0;
   padding: 10px;
-  background-color: orange;
+  background-color: white;
   gap: 1rem;
+  z-index: 1;
+  position: relative;
 }
 
 .image {
