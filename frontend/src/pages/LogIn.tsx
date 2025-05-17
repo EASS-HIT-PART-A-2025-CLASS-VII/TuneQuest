@@ -12,10 +12,24 @@ export default function LogIn() {
     setFormData((prev) => ({ ...prev, [name]: value }));
   }
 
-  function handleSubmit(e: React.FormEvent) {
+  async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    console.log("Form data submitted:", formData);
-    // Send to backend here
+    try {
+      const response = await fetch("http://localhost:8000/users/login/", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify(formData),
+      });
+      const data = await response.json();
+      if (!response.ok) {
+        alert("Invalid username or password");
+      } else {
+        console.log("Login successful:", data);
+      }
+    } catch (error) {
+      console.error("Login error:", error);
+      alert("Something went wrong. Try again later.");
+    }
   }
 
   return (

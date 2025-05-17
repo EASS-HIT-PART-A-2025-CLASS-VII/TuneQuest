@@ -18,25 +18,38 @@ export default function SignUp() {
 
   function validate(name: string, value: string) {
     let error = "";
+    const trimmedValue = value.trim();
 
-    if (name === "username" && value.trim().length < 3) {
-      error = "⚠️ Username must be at least 3 characters.";
-    }
+    switch (name) {
+      case "username":
+        if (trimmedValue.length < 3) {
+          error = "⚠️ Username must be at least 3 characters";
+        } else if (trimmedValue.length > 20) {
+          error = "⚠️ Username must not be longer than 20 characters";
+        }
+        break;
 
-    if (name === "email" && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) {
-      error = "⚠️ Invalid email address.";
-    }
+      case "email":
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(trimmedValue)) {
+          error = "⚠️ Invalid email address.";
+        }
+        break;
 
-    if (name === "password") {
-      if (value.length < 6) {
-        error = "⚠️ Password must be at least 6 characters.";
-      } else if (!/[A-Z]/.test(value) || !/\d/.test(value)) {
-        error = "⚠️ Include at least 1 number and 1 uppercase letter.";
-      }
-    }
+      case "password":
+        if (value.length < 8) {
+          error = "⚠️ Password must be at least 8 characters.";
+        } else if (value.length > 20) {
+          error = "⚠️ Password must not be longer than 20 characters";
+        } else if (!/[A-Z]/.test(value) || !/\d/.test(value)) {
+          error = "⚠️ Include at least 1 number and 1 uppercase letter.";
+        }
+        break;
 
-    if (name === "confirmPassword" && value !== formData.password) {
-      error = "⚠️ Passwords do not match.";
+      case "confirmPassword":
+        if (value !== formData.password) {
+          error = "⚠️ Passwords do not match.";
+        }
+        break;
     }
 
     setErrors((prev) => ({ ...prev, [name]: error }));
@@ -54,14 +67,15 @@ export default function SignUp() {
       alert("Passwords do not match!");
       return;
     }
-
+    const { confirmPassword, ...newForm } = formData;
+    console.log(newForm);
     try {
-      const response = await fetch("http://localhost:8000/signup", {
+      const response = await fetch("http://localhost:8000/users/", {
         method: "POST",
         headers: {
           "content-type": "application/json",
         },
-        body: JSON.stringify(formData),
+        body: JSON.stringify(newForm),
       });
       const data = await response.json();
       if (!response.ok) {
