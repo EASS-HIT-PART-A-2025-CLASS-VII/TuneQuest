@@ -1,15 +1,24 @@
 from fastapi import APIRouter, Depends, HTTPException, status, Response
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.schemas.user import UserRead, UserCreate, UserUpdate, UserReplace, UserLogin
+from app.schemas.user import (
+    UserRead,
+    UserCreate,
+    UserUpdate,
+    UserReplace,
+    UserLogin,
+    PasswordChange,
+)
 from app.crud.user import (
     create_user,
     get_all_users,
     get_user_by_id,
     get_user_by_username,
+    get_user_by_email,
     delete_user,
     update_user,
     replace_user,
+    change_password,
 )
 from app.core.db import get_db
 from app.core.auth import create_access_token, get_current_user
@@ -24,6 +33,18 @@ VALID_SORT_FIELDS = ["id", "username", "email"]
 
 @router.post("/", response_model=UserRead)
 async def create_user_endpoint(user: UserCreate, db: AsyncSession = Depends(get_db)):
+    existing_user = await get_user_by_username(db, user.username)
+    if existing_user:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST, detail="Username already exists"
+        )
+
+    existing_email = await get_user_by_email(db, user.email)
+    if existing_email:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST, detail="Email already registered"
+        )
+
     return await create_user(db, user)
 
 
@@ -109,3 +130,15 @@ async def replace_user_endpoint(
     if not replaced_user:
         raise HTTPException(status_code=404, detail=user_not_found)
     return replaced_user
+
+
+@router.post("/change-password")
+async def change_password_endpoint(
+    payload: PasswordChange,
+    db: AsyncSession = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+):
+    success = await change_password(db, payload, current_user.username)
+    if not success:
+        raise HTTPException(status_code=403, detail="Incorrect current password.")
+    return {"message": "Password updated successfully"}

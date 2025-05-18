@@ -1,15 +1,13 @@
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
 from app.models.user import User
-from app.schemas.user import UserCreate, UserUpdate, UserReplace
+from app.schemas.user import UserCreate, UserUpdate, UserReplace, PasswordChange
 from sqlalchemy import asc, desc
-from app.core.security import hash_password
+from app.core.security import hash_password, verify_password
 
 
 async def create_user(db: AsyncSession, create_user: UserCreate):
     hashed_pw = hash_password(create_user.password)
-    print("Original password:", create_user.password)
-    print("Hashed password:", hashed_pw)
     new_user = User(
         username=create_user.username,
         email=create_user.email,
@@ -28,6 +26,11 @@ async def get_user_by_id(db: AsyncSession, user_id: int):
 
 async def get_user_by_username(db: AsyncSession, username: str):
     result = await db.execute(select(User).where(User.username == username))
+    return result.scalar_one_or_none()
+
+
+async def get_user_by_email(db: AsyncSession, email: str):
+    result = await db.execute(select(User).where(User.email == email))
     return result.scalar_one_or_none()
 
 
@@ -101,3 +104,16 @@ async def replace_user(db: AsyncSession, user_id: int, user_replace: UserReplace
     await db.commit()
     await db.refresh(user)
     return user
+
+
+async def change_password(db: AsyncSession, payload: PasswordChange, username: str):
+    result = await db.execute(select(User).where(User.username == username))
+    user = result.scalar_one_or_none()
+
+    if not user:
+        return False
+    if not verify_password(payload.old_password, user.hashed_password):
+        return False
+    user.password = hash_password(payload.new_password)
+    await db.commit()
+    return True

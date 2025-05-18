@@ -31,3 +31,8 @@ class UserRead(UserBase):
 class UserLogin(BaseModel):
     username: str
     password: str
+
+
+class PasswordChange(BaseModel):
+    old_password: str
+    new_password: str
