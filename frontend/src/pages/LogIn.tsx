@@ -1,17 +1,15 @@
 import styles from "./login.module.css";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useUser } from "../contexts/UserContext";
 
-interface HeadersProps {
-  readonly setIsLoggedIn: React.Dispatch<React.SetStateAction<boolean>>;
-}
-
-export default function LogIn({ setIsLoggedIn }: HeadersProps) {
+export default function LogIn() {
   const [formData, setFormData] = useState({
     username: "",
     password: "",
   });
   const navigate = useNavigate();
+  const { setUser } = useUser(); // Use context instead of prop
 
   function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
     const { name, value } = e.target;
@@ -29,11 +27,22 @@ export default function LogIn({ setIsLoggedIn }: HeadersProps) {
       const data = await response.json();
       if (!response.ok) {
         alert("Invalid username or password");
-      } else {
-        localStorage.setItem("access_token", data.access_token);
-        setIsLoggedIn(true);
-        navigate("/");
+        return;
       }
+
+      localStorage.setItem("access_token", data.access_token);
+      const profileResponse = await fetch("http://localhost:8000/users/me/", {
+        headers: {
+          Authorization: `Bearer ${data.access_token}`,
+        },
+      });
+      if (!profileResponse.ok) {
+        alert("Login succeeded but failed to fetch user info.");
+        return;
+      }
+      const userData = await profileResponse.json();
+      setUser(userData);
+      navigate("/");
     } catch (error) {
       console.error("Login error:", error);
       alert("Something went wrong. Try again later.");

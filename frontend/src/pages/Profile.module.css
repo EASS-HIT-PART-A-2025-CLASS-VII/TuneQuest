@@ -7,12 +7,17 @@
   margin-left: 2%;
   background-color: darkkhaki;
   position: relative;
+  padding: 5px;
 }
 
 .first {
   background-color: burlywood;
+  padding: 5px;
 }
 
 .userImage {
   width: 200px;
+}
+
+.logoutButton {
 }
