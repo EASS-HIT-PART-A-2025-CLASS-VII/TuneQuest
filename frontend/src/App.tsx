@@ -5,7 +5,6 @@ import Home from "./pages/Home";
 import Profile from "./pages/Profile";
 import SignUp from "./pages/SignUp";
 import LogIn from "./pages/LogIn";
-// import other pages when ready
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
