@@ -1,5 +1,4 @@
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
-import { useEffect, useState } from "react";
 import Header from "./pages/Header";
 import Home from "./pages/Home";
 import Profile from "./pages/Profile";
@@ -8,16 +7,9 @@ import LogIn from "./pages/LogIn";
 import ProtectedRoute from "./components/ProtectedRoute";
 
 function App() {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-
-  useEffect(() => {
-    const token = localStorage.getItem("access_token");
-    setIsLoggedIn(!!token);
-  }, []);
-
   return (
     <Router>
-      <Header isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} />
+      <Header />
       <Routes>
         <Route path="/" element={<Home />} />
         <Route

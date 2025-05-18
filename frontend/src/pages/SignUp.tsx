@@ -73,7 +73,7 @@ export default function SignUp() {
       const response = await fetch("http://localhost:8000/users/", {
         method: "POST",
         headers: {
-          "content-type": "application/json",
+          "Content-Type": "application/json",
         },
         body: JSON.stringify(newForm),
       });
