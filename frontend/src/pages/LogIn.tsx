@@ -1,11 +1,17 @@
 import styles from "./login.module.css";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
-export default function LogIn() {
+interface HeadersProps {
+  readonly setIsLoggedIn: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
+export default function LogIn({ setIsLoggedIn }: HeadersProps) {
   const [formData, setFormData] = useState({
     username: "",
     password: "",
   });
+  const navigate = useNavigate();
 
   function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
     const { name, value } = e.target;
@@ -24,7 +30,9 @@ export default function LogIn() {
       if (!response.ok) {
         alert("Invalid username or password");
       } else {
-        console.log("Login successful:", data);
+        localStorage.setItem("access_token", data.access_token);
+        setIsLoggedIn(true);
+        navigate("/");
       }
     } catch (error) {
       console.error("Login error:", error);
