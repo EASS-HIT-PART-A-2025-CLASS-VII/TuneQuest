@@ -1,5 +1,10 @@
-import React, { createContext, useContext, useState, useMemo } from "react";
-import type { ReactNode } from "react";
+import React, {
+  createContext,
+  useContext,
+  useState,
+  useEffect,
+  useMemo,
+} from "react";
 
 interface User {
   fullName: string;
@@ -8,32 +13,60 @@ interface User {
 }
 
 interface UserContextType {
-  readonly user: User | null;
-  readonly setUser: React.Dispatch<React.SetStateAction<User | null>>;
+  user: User | null;
+  setUser: React.Dispatch<React.SetStateAction<User | null>>;
+  loading: boolean;
 }
 
 const UserContext = createContext<UserContextType | undefined>(undefined);
 
-type UserProviderProps = {
-  readonly children: ReactNode;
-};
+export function UserProvider({
+  children,
+}: {
+  readonly children: React.ReactNode;
+}) {
+  const [user, setUser] = useState<User | null>(null);
+  const [loading, setLoading] = useState(true);
 
-export function UserProvider({ children }: UserProviderProps) {
-  const [user, setUser] = useState<User | null>({
-    fullName: "John Doe",
-    username: "johndoe123",
-    email: "john@example.com",
-  });
+  useEffect(() => {
+    async function loadUser() {
+      const token = localStorage.getItem("access_token");
+      if (!token) {
+        setLoading(false);
+        return;
+      }
 
-  const value = useMemo(() => ({ user, setUser }), [user, setUser]);
+      try {
+        const response = await fetch("http://localhost:8000/users/me/", {
+          headers: { Authorization: `Bearer ${token}` },
+        });
 
-  return <UserContext.Provider value={value}>{children}</UserContext.Provider>;
+        if (!response.ok) throw new Error("Failed to fetch user");
+
+        const userData = await response.json();
+        setUser(userData);
+      } catch {
+        localStorage.removeItem("access_token");
+        setUser(null);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    loadUser();
+  }, []);
+
+  const value = useMemo(() => ({ user, setUser, loading }), [user, loading]);
+
+  return (
+    <UserContext.Provider value={value}>
+      {loading ? <p>Loading...</p> : children}
+    </UserContext.Provider>
+  );
 }
 
-export function useUser(): UserContextType {
+export function useUser() {
   const context = useContext(UserContext);
-  if (context === undefined) {
-    throw new Error("useUser must be used within a UserProvider");
-  }
+  if (!context) throw new Error("useUser must be used within UserProvider");
   return context;
 }
