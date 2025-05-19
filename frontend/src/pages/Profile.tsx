@@ -2,6 +2,7 @@ import styles from "./Profile.module.css";
 import userImage from "../assets/user-image.webp";
 import { useUser } from "../contexts/UserContext";
 import LogoutButton from "../components/LogoutButton";
+import logoutButtonStyles from "../components/LogoutButton.module.css";
 
 export default function Profile() {
   const { user } = useUser();
@@ -22,8 +23,8 @@ export default function Profile() {
         <p>Full name: {user.fullName}</p>
         <p>Username: {user.username}</p>
         <p>Email: {user.email}</p>
-        <div className={styles.logoutButton}>
-          <LogoutButton />
+        <div>
+          <LogoutButton className={logoutButtonStyles.logoutButtonProfile} />
         </div>
       </div>
     </div>

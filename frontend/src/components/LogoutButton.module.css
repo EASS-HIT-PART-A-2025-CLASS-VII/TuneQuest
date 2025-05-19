@@ -1,5 +1,30 @@
 .logoutButton {
+  background-color: aqua;
+}
+
+.logoutButtonProfile {
   background-color: orange;
   border-radius: 50px;
   border: none;
+}
+
+.logoutButtonHeader {
+  cursor: pointer;
+  background-color: orange;
+  margin-top: 0.5rem;
+  width: 8rem;
+  height: 4rem;
+  text-align: center;
+  border-radius: 50px;
+  transition-duration: 0.2s;
+}
+
+.logoutButtonHeader:hover {
+  box-shadow: 0 12px 16px 0 rgba(0, 0, 0, 0.24),
+    0 17px 50px 0 rgba(0, 0, 0, 0.19);
+  transform: translate(3px, -3px);
+}
+
+.logoutButtonHeader:active {
+  transform: translateY(3px);
 }

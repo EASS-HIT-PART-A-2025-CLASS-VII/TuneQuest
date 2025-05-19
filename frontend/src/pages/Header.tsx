@@ -3,6 +3,7 @@ import styles from "./Header.module.css";
 import logo from "../assets/logo-modified.png";
 import LogoutButton from "../components/LogoutButton";
 import { useUser } from "../contexts/UserContext";
+import logoutButtonStyles from "../components/LogoutButton.module.css";
 
 export default function Header() {
   const { user } = useUser();
@@ -19,7 +20,7 @@ export default function Header() {
               <span>Profile</span>
             </button>
           </NavLink>
-          <LogoutButton />
+          <LogoutButton className={logoutButtonStyles.logoutButtonHeader} />
         </>
       ) : (
         <>

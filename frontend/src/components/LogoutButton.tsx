@@ -2,7 +2,11 @@ import { useUser } from "../contexts/UserContext";
 import { useNavigate } from "react-router-dom";
 import styles from "./LogoutButton.module.css";
 
-export default function LogoutButton() {
+interface LogoutButtonProps {
+  readonly className?: string;
+}
+
+export default function LogoutButton({ className }: LogoutButtonProps) {
   const { setUser } = useUser();
   const navigate = useNavigate();
 
@@ -13,7 +17,10 @@ export default function LogoutButton() {
   }
 
   return (
-    <button onClick={logout} className={styles.logoutButton}>
+    <button
+      onClick={logout}
+      className={`${styles.logoutButton} ${className ?? ""}`}
+    >
       Log Out
     </button>
   );
