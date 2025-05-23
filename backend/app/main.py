@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from app.models.base import Base
 from app.core.db import SessionLocal, engine
-from app.routers import track, user, favorite, user_favorites, top_tracks
+from app.routers import track, user, favorite, user_favorites, top_tracks, spotify
 from contextlib import asynccontextmanager
 from fastapi.middleware.cors import CORSMiddleware
 
@@ -30,6 +30,7 @@ app.include_router(user.router)
 app.include_router(favorite.router)
 app.include_router(user_favorites.router)
 app.include_router(top_tracks.router)
+app.include_router(spotify.router)
 
 
 @app.get("/")
