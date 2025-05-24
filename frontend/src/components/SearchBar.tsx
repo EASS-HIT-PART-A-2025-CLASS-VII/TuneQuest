@@ -27,6 +27,7 @@ export default function SearchBar() {
   function checkKey(e: React.KeyboardEvent<HTMLInputElement>) {
     if (e.key === "Enter") {
       navigate(`/search?query=${encodeURIComponent(search)}`);
+      setSearch("");
     }
   }
 
@@ -43,7 +44,9 @@ export default function SearchBar() {
       {results.length > 0 && (
         <div className={styles.dropdown}>
           {results.slice(0, 5).map((track: any) => (
-            <TrackCard key={track.id} track={track} />
+            <NavLink key={track.id} to={`/track/${track.id}`}>
+              <TrackCard track={track} />
+            </NavLink>
           ))}
           <NavLink to="/search">
             <button className={styles.seeAll}>
