@@ -4,7 +4,7 @@ import logo from "../assets/logo-modified.png";
 import LogoutButton from "../components/LogoutButton";
 import { useUser } from "../contexts/UserContext";
 import logoutButtonStyles from "../components/LogoutButton.module.css";
-import Search from "../components/Search.tsx";
+import SearchBar from "../components/SearchBar.tsx";
 
 export default function Header() {
   const { user } = useUser();
@@ -14,7 +14,7 @@ export default function Header() {
       <NavLink to="/">
         <img src={logo} alt="TuneQuest" className={styles.image} />
       </NavLink>
-      <Search />
+      <SearchBar />
       {user ? (
         <>
           <NavLink to="/profile">

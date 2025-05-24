@@ -12,7 +12,7 @@ def search_tracks(query: str = Query(..., min_length=1)):
     response = requests.get(
         "https://api.spotify.com/v1/search",
         headers={"Authorization": f"Bearer {token}"},
-        params={"q": query, "type": "track", "limit": 10},
+        params={"q": query, "type": "track", "limit": 30},
     )
 
     if response.status_code != 200:

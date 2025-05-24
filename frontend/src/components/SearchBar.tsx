@@ -1,15 +1,20 @@
-import styles from "./Search.module.css";
+import styles from "./SearchBar.module.css";
 import { useState, useEffect } from "react";
+import { NavLink } from "react-router";
+import { useNavigate } from "react-router-dom";
+import fetchTracks from "../api/fetchTracks";
 
-export default function Search() {
+export default function SearchBar() {
   const [search, setSearch] = useState("");
   const [results, setResults] = useState([]);
+
+  const navigate = useNavigate();
 
   // Debounce search term
   useEffect(() => {
     const timeout = setTimeout(() => {
       if (search.trim() !== "") {
-        fetchTracks(search);
+        fetchTracks(search).then((tracks) => setResults(tracks));
       } else {
         setResults([]);
       }
@@ -18,28 +23,9 @@ export default function Search() {
     return () => clearTimeout(timeout);
   }, [search]);
 
-  async function fetchTracks(query: string) {
-    try {
-      const response = await fetch(
-        `http://localhost:8000/spotify/search?query=${encodeURIComponent(
-          query
-        )}`,
-        {
-          method: "GET",
-          headers: { "Content-Type": "application/json" },
-        }
-      );
-
-      if (!response.ok) {
-        alert("No tracks found");
-        return;
-      }
-
-      const tracks = await response.json();
-      setResults(tracks); // store and use results
-    } catch (error) {
-      console.error("Search error:", error);
-      alert("Something went wrong. Try again later.");
+  function checkKey(e: React.KeyboardEvent<HTMLInputElement>) {
+    if (e.key === "Enter") {
+      navigate(`/search?query=${encodeURIComponent(search)}`);
     }
   }
 
@@ -47,14 +33,15 @@ export default function Search() {
     <div className={styles.container}>
       <input
         type="search"
-        className={styles.search}
+        className={styles.searchBar}
         placeholder="Search"
         value={search}
         onChange={(e) => setSearch(e.target.value)}
+        onKeyDown={checkKey}
       />
       {results.length > 0 && (
         <div className={styles.dropdown}>
-          {results.map((track: any) => (
+          {results.slice(0, 5).map((track: any) => (
             <div key={track.id} className={styles.card}>
               {track.album?.images?.[0]?.url && (
                 <img
@@ -69,6 +56,11 @@ export default function Search() {
               </p>
             </div>
           ))}
+          <NavLink to="/search">
+            <button className={styles.seeAll}>
+              <span>See all</span>
+            </button>
+          </NavLink>
         </div>
       )}
     </div>
