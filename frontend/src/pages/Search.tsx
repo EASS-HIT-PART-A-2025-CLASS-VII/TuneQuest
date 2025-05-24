@@ -2,6 +2,7 @@ import styles from "./Search.module.css";
 import { useEffect, useState } from "react";
 import { useLocation } from "react-router";
 import fetchTracks from "../api/fetchTracks";
+import TrackCard from "../components/TrackCard";
 
 export default function Search() {
   const [results, setResults] = useState([]);
@@ -19,22 +20,21 @@ export default function Search() {
     fetchData();
   }, [location.search]);
   return (
-    <div>
-      {results.slice(0, 5).map((track: any) => (
-        <div key={track.id} className={styles.card}>
-          {track.album?.images?.[0]?.url && (
-            <img
-              src={track.album.images[0].url}
-              alt={track.name}
-              className={styles.image}
-            />
-          )}
-          <h3 className={styles.title}>{track.name}</h3>
-          <p className={styles.artist}>
-            {track.album?.artists?.[0]?.name ?? "Unknown Artist"}
-          </p>
-        </div>
-      ))}
+    <div className={styles.container}>
+      <div className={styles.column}>
+        {results
+          .filter((_, index) => index % 2 === 0)
+          .map((track: any) => (
+            <TrackCard key={track.id} track={track} />
+          ))}
+      </div>
+      <div className={styles.column}>
+        {results
+          .filter((_, index) => index % 2 === 1)
+          .map((track: any) => (
+            <TrackCard key={track.id} track={track} />
+          ))}
+      </div>
     </div>
   );
 }

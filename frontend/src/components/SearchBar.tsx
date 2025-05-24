@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import { NavLink } from "react-router";
 import { useNavigate } from "react-router-dom";
 import fetchTracks from "../api/fetchTracks";
+import TrackCard from "./TrackCard";
 
 export default function SearchBar() {
   const [search, setSearch] = useState("");
@@ -42,19 +43,7 @@ export default function SearchBar() {
       {results.length > 0 && (
         <div className={styles.dropdown}>
           {results.slice(0, 5).map((track: any) => (
-            <div key={track.id} className={styles.card}>
-              {track.album?.images?.[0]?.url && (
-                <img
-                  src={track.album.images[0].url}
-                  alt={track.name}
-                  className={styles.image}
-                />
-              )}
-              <h3 className={styles.title}>{track.name}</h3>
-              <p className={styles.artist}>
-                {track.album?.artists?.[0]?.name ?? "Unknown Artist"}
-              </p>
-            </div>
+            <TrackCard key={track.id} track={track} />
           ))}
           <NavLink to="/search">
             <button className={styles.seeAll}>

@@ -1,0 +1,29 @@
+.card {
+  padding: 8px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  border-bottom: 1px solid #eee;
+}
+
+.card:last-child {
+  border-bottom: none;
+}
+
+.image {
+  width: 48px;
+  height: 48px;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+.title {
+  font-size: 1rem;
+  font-weight: 600;
+  margin: 0;
+}
+
+.artist {
+  font-size: 0.875rem;
+  color: #666;
+}
