@@ -4,7 +4,7 @@
 
 .logoutButtonProfile {
   background-color: orange;
-  border-radius: 50px;
+  border-radius: 3rem;
   border: none;
 }
 
@@ -15,16 +15,16 @@
   width: 8rem;
   height: 4rem;
   text-align: center;
-  border-radius: 50px;
+  border-radius: 3rem;
   transition-duration: 0.2s;
 }
 
 .logoutButtonHeader:hover {
-  box-shadow: 0 12px 16px 0 rgba(0, 0, 0, 0.24),
-    0 17px 50px 0 rgba(0, 0, 0, 0.19);
-  transform: translate(3px, -3px);
+  box-shadow: 0 0.75rem 1rem 0 rgba(0, 0, 0, 0.24),
+    0 1rem 3rem 0 rgba(0, 0, 0, 0.19);
+  transform: translate(0.2rem, -0.2rem);
 }
 
 .logoutButtonHeader:active {
-  transform: translateY(3px);
+  transform: translateY(0.2rem);
 }

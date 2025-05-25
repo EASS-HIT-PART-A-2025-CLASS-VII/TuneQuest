@@ -3,18 +3,20 @@
   align-items: flex-start;
   justify-content: flex-start;
   flex-direction: column;
-  margin-top: 2%;
-  margin-left: 2%;
+  margin-top: 1.25rem;
+  margin-left: 1.25rem;
   background-color: darkkhaki;
   position: relative;
-  padding: 5px;
+  padding: 0.3rem;
 }
 
 .first {
   background-color: burlywood;
-  padding: 5px;
+  padding: 0.3rem;
 }
 
 .userImage {
-  width: 200px;
+  width: 12.5rem;
+  max-width: 100%;
+  height: auto;
 }

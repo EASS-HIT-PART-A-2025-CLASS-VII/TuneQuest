@@ -1,5 +1,6 @@
 .SignUpForm {
   height: 100vh;
+  min-height: 31rem;
   width: 100vw;
   display: flex;
   justify-content: center;
@@ -11,10 +12,10 @@
 }
 
 .SignUpContainer {
-  max-width: 400px;
+  max-width: 25rem;
   width: 100%;
   padding: 1rem;
-  border-radius: 25px;
+  border-radius: 1.5rem;
   background-color: white;
   display: flex;
   flex-direction: column;
@@ -25,7 +26,7 @@
 .error {
   color: #d8000c;
   background-color: #ffbaba;
-  border-radius: 5px;
+  border-radius: 0.3rem;
   padding: 0.4rem;
   font-size: 0.85rem;
   animation: fadeIn 0.3s ease-in-out;
@@ -51,15 +52,14 @@
   background-color: #ffa500;
   border: none;
   padding: 0.5rem;
-  border-radius: 50px;
+  border-radius: 3rem;
   margin-top: 0.5rem;
 }
 
 .InputBar {
-  /* border: none; */
   border-color: pink;
   background-color: wheat;
-  border-radius: 50px;
+  border-radius: 3rem;
   padding: 0.5rem;
 }
 
@@ -76,7 +76,7 @@
   height: 100%;
   background-image: url("/pngtree-music-icon-png-image_4490549-567140736.jpg"); /* use a transparent SVG or PNG */
   background-repeat: repeat;
-  background-size: 80px;
+  background-size: 5rem;
   opacity: 0.05;
   z-index: 0;
 }

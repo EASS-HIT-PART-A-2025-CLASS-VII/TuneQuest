@@ -4,11 +4,11 @@
   text-align: center;
   margin: 0 auto;
   z-index: 20;
-  gap: 32px;
+  gap: 2rem;
 }
 
 .column {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 2rem;
 }
