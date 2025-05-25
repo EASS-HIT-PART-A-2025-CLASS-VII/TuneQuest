@@ -8,18 +8,23 @@ import TrackCard from "./TrackCard";
 export default function SearchBar() {
   const [search, setSearch] = useState("");
   const [results, setResults] = useState([]);
-
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   // Debounce search term
   useEffect(() => {
+    if (search.trim() === "") {
+      setResults([]);
+      setLoading(false);
+      return;
+    }
+
+    setLoading(true);
     const timeout = setTimeout(() => {
-      if (search.trim() !== "") {
-        fetchTracks(search).then((tracks) => setResults(tracks));
-      } else {
-        setResults([]);
-      }
-    }, 400); // 400ms debounce
+      fetchTracks(search)
+        .then((tracks) => setResults(tracks))
+        .finally(() => setLoading(false));
+    }, 400);
 
     return () => clearTimeout(timeout);
   }, [search]);
@@ -41,20 +46,31 @@ export default function SearchBar() {
         onChange={(e) => setSearch(e.target.value)}
         onKeyDown={checkKey}
       />
-      {results.length > 0 && (
+      {loading && <div className={styles.loading}>Loading...</div>}
+      {!loading && results.length > 0 && (
         <div className={styles.dropdown}>
           {results.slice(0, 5).map((track: any) => (
-            <NavLink key={track.id} to={`/track/${track.id}`}>
+            <NavLink
+              key={track.id}
+              to={`/track/${track.id}`}
+              onClick={() => setSearch("")}
+            >
               <TrackCard track={track} />
             </NavLink>
           ))}
-          <NavLink to="/search">
+          <NavLink
+            to={`/search?query=${encodeURIComponent(search)}`}
+            onClick={() => {
+              setLoading(false);
+              setSearch("");
+            }}
+          >
             <button className={styles.seeAll}>
               <span>See all</span>
             </button>
           </NavLink>
         </div>
-      )}
+      )}{" "}
     </div>
   );
 }

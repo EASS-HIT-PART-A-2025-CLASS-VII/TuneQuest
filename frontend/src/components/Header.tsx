@@ -1,10 +1,10 @@
 import { NavLink } from "react-router-dom";
 import styles from "./Header.module.css";
 import logo from "../assets/logo-modified.png";
-import LogoutButton from "../components/LogoutButton";
+import LogoutButton from "./LogoutButton";
 import { useUser } from "../contexts/UserContext";
-import logoutButtonStyles from "../components/LogoutButton.module.css";
-import SearchBar from "../components/SearchBar.tsx";
+import logoutButtonStyles from "./LogoutButton.module.css";
+import SearchBar from "./SearchBar.tsx";
 
 export default function Header() {
   const { user } = useUser();
