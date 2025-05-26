@@ -48,10 +48,19 @@ export default function Search() {
       {loading && <div className={styles.loading}>Loading...</div>}
       {!loading && (
         <>
-          <div>
-            <button onClick={() => setType("tracks")}>Tracks</button>
-            <button onClick={() => setType("albums")}>Albums</button>
-            <button onClick={() => setType("artists")}>Artists</button>
+          <div className={styles.buttonsContainer}>
+            <button className={styles.button} onClick={() => setType("tracks")}>
+              Tracks
+            </button>
+            <button className={styles.button} onClick={() => setType("albums")}>
+              Albums
+            </button>
+            <button
+              className={styles.button}
+              onClick={() => setType("artists")}
+            >
+              Artists
+            </button>
           </div>
 
           <div className={styles.container}>

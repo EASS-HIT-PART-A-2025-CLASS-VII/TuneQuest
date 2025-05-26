@@ -1,6 +1,6 @@
 import styles from "./SearchBar.module.css";
 import { useState, useEffect } from "react";
-import { NavLink, useNavigate } from "react-router-dom";
+import { NavLink, useNavigate, useLocation } from "react-router-dom";
 import fetchSearchResults from "../api/fetchSearchResults";
 import { TrackCard, AlbumCard, ArtistCard } from "./Cards.tsx";
 
@@ -18,6 +18,11 @@ export default function SearchBar() {
   const [loading, setLoading] = useState(false);
   const [type, setType] = useState<"tracks" | "albums" | "artists">("tracks");
   const navigate = useNavigate();
+  const location = useLocation();
+
+  useEffect(() => {
+    setSearch("");
+  }, [location.pathname]);
 
   useEffect(() => {
     if (search.trim() === "") {
@@ -58,10 +63,19 @@ export default function SearchBar() {
 
       {!loading && results[type].length > 0 && (
         <div className={styles.dropdown}>
-          <div>
-            <button onClick={() => setType("tracks")}>Tracks</button>
-            <button onClick={() => setType("albums")}>Albums</button>
-            <button onClick={() => setType("artists")}>Artists</button>
+          <div className={styles.buttonsContainer}>
+            <button className={styles.button} onClick={() => setType("tracks")}>
+              Tracks
+            </button>
+            <button className={styles.button} onClick={() => setType("albums")}>
+              Albums
+            </button>
+            <button
+              className={styles.button}
+              onClick={() => setType("artists")}
+            >
+              Artists
+            </button>
           </div>
 
           {type === "tracks" &&

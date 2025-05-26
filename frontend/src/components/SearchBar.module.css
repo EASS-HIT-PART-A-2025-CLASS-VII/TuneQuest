@@ -44,6 +44,26 @@
   background-color: darkorange;
 }
 
+.buttonsContainer {
+  display: flex;
+  text-align: center;
+  justify-content: space-around;
+}
+
+.button {
+  width: 100%;
+  border-width: 0.2rem;
+  border-radius: 0rem;
+  border-color: white;
+  background-color: orange;
+  cursor: pointer;
+  transition: background-color 0.2s ease, transform 0.2s ease;
+}
+
+.button:hover {
+  background-color: darkorange;
+}
+
 @media (max-width: 900px) {
   .searchBar {
     margin-top: 0.9rem;
