@@ -6,6 +6,8 @@ import SignUp from "./pages/SignUp";
 import LogIn from "./pages/LogIn";
 import Search from "./pages/Search";
 import TrackDetails from "./pages/TrackDetails";
+import ArtistDetails from "./pages/ArtistDetails";
+import AlbumDetails from "./pages/AlbumDetails";
 import ProtectedRoute from "./components/ProtectedRoute";
 
 function App() {
@@ -26,6 +28,8 @@ function App() {
         <Route path="/login" element={<LogIn />} />
         <Route path="/search" element={<Search />} />
         <Route path="/track/:id" element={<TrackDetails />} />
+        <Route path="/artist/:id" element={<ArtistDetails />} />
+        <Route path="/album/:id" element={<AlbumDetails />} />
       </Routes>
     </Router>
   );

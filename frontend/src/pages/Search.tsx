@@ -1,12 +1,21 @@
 import styles from "./Search.module.css";
 import { useEffect, useState } from "react";
 import { useLocation, NavLink } from "react-router";
-import fetchTracks from "../api/fetchTracks";
-import TrackCard from "../components/TrackCard";
+import fetchTracks from "../api/fetchSearchResults";
+import { TrackCard, AlbumCard, ArtistCard } from "../components/Cards";
 
 export default function Search() {
-  const [results, setResults] = useState([]);
+  const [results, setResults] = useState<{
+    tracks: any[];
+    albums: any[];
+    artists: any[];
+  }>({
+    tracks: [],
+    albums: [],
+    artists: [],
+  });
   const [loading, setLoading] = useState(false);
+  const [type, setType] = useState<"tracks" | "albums" | "artists">("tracks");
   const location = useLocation();
 
   useEffect(() => {
@@ -14,7 +23,7 @@ export default function Search() {
       const url = new URLSearchParams(location.search);
       const query = url.get("query");
       if (!query) {
-        setResults([]);
+        setResults({ tracks: [], albums: [], artists: [] });
         setLoading(false);
         return;
       }
@@ -25,7 +34,7 @@ export default function Search() {
         setResults(data);
       } catch (error) {
         console.error(error);
-        setResults([]);
+        setResults({ tracks: [], albums: [], artists: [] });
       } finally {
         setLoading(false);
       }
@@ -35,27 +44,83 @@ export default function Search() {
   }, [location.search]);
 
   return (
-    <div className={styles.container}>
+    <div>
       {loading && <div className={styles.loading}>Loading...</div>}
       {!loading && (
         <>
-          <div className={styles.column}>
-            {results
-              .filter((_, index) => index % 2 === 0)
-              .map((track: any) => (
-                <NavLink key={track.id} to={`/track/${track.id}`}>
-                  <TrackCard track={track} />
-                </NavLink>
-              ))}
+          <div>
+            <button onClick={() => setType("tracks")}>Tracks</button>
+            <button onClick={() => setType("albums")}>Albums</button>
+            <button onClick={() => setType("artists")}>Artists</button>
           </div>
-          <div className={styles.column}>
-            {results
-              .filter((_, index) => index % 2 === 1)
-              .map((track: any) => (
-                <NavLink key={track.id} to={`/track/${track.id}`}>
-                  <TrackCard track={track} />
-                </NavLink>
-              ))}
+
+          <div className={styles.container}>
+            {type === "tracks" && (
+              <>
+                <div className={styles.column}>
+                  {results.tracks
+                    .filter((_, index) => index % 2 === 0)
+                    .map((track: any) => (
+                      <NavLink key={track.id} to={`/track/${track.id}`}>
+                        <TrackCard track={track} />
+                      </NavLink>
+                    ))}
+                </div>
+                <div className={styles.column}>
+                  {results.tracks
+                    .filter((_, index) => index % 2 === 1)
+                    .map((track: any) => (
+                      <NavLink key={track.id} to={`/track/${track.id}`}>
+                        <TrackCard track={track} />
+                      </NavLink>
+                    ))}
+                </div>
+              </>
+            )}
+            {type === "albums" && (
+              <>
+                <div className={styles.column}>
+                  {results.albums
+                    .filter((_, index) => index % 2 === 0)
+                    .map((album: any) => (
+                      <NavLink key={album.id} to={`/album/${album.id}`}>
+                        <AlbumCard album={album} />
+                      </NavLink>
+                    ))}
+                </div>
+                <div className={styles.column}>
+                  {results.albums
+                    .filter((_, index) => index % 2 === 1)
+                    .map((album: any) => (
+                      <NavLink key={album.id} to={`/album/${album.id}`}>
+                        <AlbumCard album={album} />
+                      </NavLink>
+                    ))}
+                </div>
+              </>
+            )}
+            {type === "artists" && (
+              <>
+                <div className={styles.column}>
+                  {results.artists
+                    .filter((_, index) => index % 2 === 0)
+                    .map((artist: any) => (
+                      <NavLink key={artist.id} to={`/artist/${artist.id}`}>
+                        <ArtistCard artist={artist} />
+                      </NavLink>
+                    ))}
+                </div>
+                <div className={styles.column}>
+                  {results.artists
+                    .filter((_, index) => index % 2 === 1)
+                    .map((artist: any) => (
+                      <NavLink key={artist.id} to={`/artist/${artist.id}`}>
+                        <ArtistCard artist={artist} />
+                      </NavLink>
+                    ))}
+                </div>
+              </>
+            )}
           </div>
         </>
       )}

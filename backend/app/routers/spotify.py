@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Query
+from fastapi import APIRouter, Query, HTTPException
 from app.services.spotify import get_spotify_access_token
 import requests
 
@@ -15,7 +15,7 @@ def get_track(id: str):
     )
 
     if response.status_code != 200:
-        return {"error": "Failed to fetch track info"}
+        raise HTTPException(status_code=502, detail="Failed to fetch track info")
 
     return response.json()
 
@@ -30,38 +30,39 @@ def get_artist(id: str):
     )
 
     if response.status_code != 200:
-        return {"error": "Failed to fetch track info"}
+        raise HTTPException(status_code=502, detail="Failed to fetch artist info")
 
     return response.json()
 
 
-@router.get("/albums/{id}")
+@router.get("/album/{id}")
 def get_albums(id: str):
     token = get_spotify_access_token()
 
     response = requests.get(
-        f"https://api.spotify.com/v1/artists/{id}",
+        f"https://api.spotify.com/v1/albums/{id}",
         headers={"Authorization": f"Bearer {token}"},
     )
 
     if response.status_code != 200:
-        return {"error": "Failed to fetch track info"}
-
+        raise HTTPException(status_code=502, detail="Failed to fetch album info")
     return response.json()
 
 
 @router.get("/search")
-def search_tracks(query: str = Query(..., min_length=1)):
+def search(query: str = Query(..., min_length=1)):
     token = get_spotify_access_token()
 
-    response = requests.get(
-        "https://api.spotify.com/v1/search",
-        headers={"Authorization": f"Bearer {token}"},
-        params={"q": query, "type": "track", "limit": 30},
-    )
+    try:
+        response = requests.get(
+            "https://api.spotify.com/v1/search",
+            headers={"Authorization": f"Bearer {token}"},
+            params={"q": query, "type": "track,artist,album", "limit": 30},
+            timeout=5,
+        )
+        response.raise_for_status()
+    except requests.RequestException as e:
+        print(f"Error fetching from Spotify API: {e}")
+        raise HTTPException(status_code=502, detail="Spotify search failed")
 
-    if response.status_code != 200:
-        return {"error": "Spotify search failed"}
-
-    data = response.json()
-    return data.get("tracks", {}).get("items", [])
+    return response.json()

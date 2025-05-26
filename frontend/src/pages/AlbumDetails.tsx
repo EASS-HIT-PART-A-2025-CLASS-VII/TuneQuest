@@ -1,7 +1,7 @@
 import { useParams, NavLink } from "react-router-dom";
 import { useEffect, useState } from "react";
 import styles from "./AlbumDetails.module.css";
-import TrackCard from "../components/TrackCard"; // adjust if needed
+import { TrackCard } from "../components/Cards";
 
 export default function AlbumDetails() {
   const { id } = useParams<{ id: string }>();
