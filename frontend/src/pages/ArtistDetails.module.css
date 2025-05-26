@@ -1,0 +1,31 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 1rem;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.container > div:first-child {
+  text-align: center;
+}
+
+.container img {
+  width: 300px;
+  height: auto;
+  border-radius: 0.5rem;
+}
+
+@media (max-width: 900px) {
+  .container img {
+    width: 220px;
+  }
+}
+
+@media (max-width: 600px) {
+  .container img {
+    width: 150px;
+  }
+}

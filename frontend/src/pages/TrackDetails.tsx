@@ -1,7 +1,7 @@
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
-import styles from "./TrackDetail.module.css";
-export default function TrackDetail() {
+import styles from "./TrackDetails.module.css";
+export default function TrackDetails() {
   const { id } = useParams<{ id: string }>();
   const [track, setTrack] = useState<any>(null);
   const [error, setError] = useState<string | null>(null);

@@ -5,7 +5,7 @@ import Profile from "./pages/Profile";
 import SignUp from "./pages/SignUp";
 import LogIn from "./pages/LogIn";
 import Search from "./pages/Search";
-import TrackDetail from "./pages/TrackDetail";
+import TrackDetails from "./pages/TrackDetails";
 import ProtectedRoute from "./components/ProtectedRoute";
 
 function App() {
@@ -25,7 +25,7 @@ function App() {
         <Route path="/signup" element={<SignUp />} />
         <Route path="/login" element={<LogIn />} />
         <Route path="/search" element={<Search />} />
-        <Route path="/track/:id" element={<TrackDetail />} />
+        <Route path="/track/:id" element={<TrackDetails />} />
       </Routes>
     </Router>
   );

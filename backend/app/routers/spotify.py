@@ -20,6 +20,36 @@ def get_track(id: str):
     return response.json()
 
 
+@router.get("/artist/{id}")
+def get_artist(id: str):
+    token = get_spotify_access_token()
+
+    response = requests.get(
+        f"https://api.spotify.com/v1/artists/{id}",
+        headers={"Authorization": f"Bearer {token}"},
+    )
+
+    if response.status_code != 200:
+        return {"error": "Failed to fetch track info"}
+
+    return response.json()
+
+
+@router.get("/albums/{id}")
+def get_albums(id: str):
+    token = get_spotify_access_token()
+
+    response = requests.get(
+        f"https://api.spotify.com/v1/artists/{id}",
+        headers={"Authorization": f"Bearer {token}"},
+    )
+
+    if response.status_code != 200:
+        return {"error": "Failed to fetch track info"}
+
+    return response.json()
+
+
 @router.get("/search")
 def search_tracks(query: str = Query(..., min_length=1)):
     token = get_spotify_access_token()
