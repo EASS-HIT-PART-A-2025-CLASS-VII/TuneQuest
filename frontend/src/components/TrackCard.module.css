@@ -27,3 +27,18 @@
   font-size: 0.875rem;
   color: #666;
 }
+
+@media (max-width: 600px) {
+  .image {
+    width: 2rem;
+    height: 2rem;
+  }
+
+  .title {
+    font-size: 0.8rem;
+  }
+
+  .artist {
+    font-size: 0.7rem;
+  }
+}

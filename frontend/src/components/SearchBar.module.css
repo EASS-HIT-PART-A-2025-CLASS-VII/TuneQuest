@@ -43,3 +43,15 @@
 .seeAll:hover {
   background-color: darkorange;
 }
+
+@media (max-width: 900px) {
+  .searchBar {
+    margin-top: 0.9rem;
+  }
+}
+
+@media (max-width: 600px) {
+  .searchBar {
+    margin-top: 0.4rem;
+  }
+}

@@ -1,12 +1,10 @@
 import styles from "./Profile.module.css";
 import userImage from "../assets/user-image.webp";
 import { useUser } from "../contexts/UserContext";
-import LogoutButton from "../components/LogoutButton";
-import logoutButtonStyles from "../components/LogoutButton.module.css";
-
+import { useNavigate } from "react-router";
 export default function Profile() {
-  const { user } = useUser();
-
+  const { user, setUser } = useUser();
+  const navigate = useNavigate();
   if (!user) return <p>No user logged in.</p>;
 
   return (
@@ -24,7 +22,16 @@ export default function Profile() {
         <p>Username: {user.username}</p>
         <p>Email: {user.email}</p>
         <div>
-          <LogoutButton className={logoutButtonStyles.logoutButtonProfile} />
+          <button
+            className={styles.logoutButtonProfile}
+            onClick={() => {
+              localStorage.removeItem("access_token");
+              setUser(null);
+              navigate("/login");
+            }}
+          >
+            Log Out
+          </button>
         </div>
       </div>
     </div>

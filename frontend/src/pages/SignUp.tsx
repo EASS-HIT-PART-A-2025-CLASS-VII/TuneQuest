@@ -90,11 +90,11 @@ export default function SignUp() {
   }
 
   return (
-    <form onSubmit={handleSubmit} className={styles.SignUpForm}>
-      <div className={styles.SignUpContainer}>
-        <h2 className={styles.Title}>Sign Up</h2>
+    <form onSubmit={handleSubmit} className={styles.signUpForm}>
+      <div className={styles.signUpContainer}>
+        <h2 className={styles.title}>Sign Up</h2>
 
-        <label htmlFor="username" className={styles.InputName}>
+        <label htmlFor="username" className={styles.inputName}>
           Username:
         </label>
         <input
@@ -104,11 +104,11 @@ export default function SignUp() {
           value={formData.username}
           onChange={handleChange}
           required
-          className={styles.InputBar}
+          className={styles.inputBar}
         />
         {errors.username && <p className={styles.error}>{errors.username}</p>}
 
-        <label htmlFor="email" className={styles.InputName}>
+        <label htmlFor="email" className={styles.inputName}>
           Email:
         </label>
         <input
@@ -118,11 +118,11 @@ export default function SignUp() {
           value={formData.email}
           onChange={handleChange}
           required
-          className={styles.InputBar}
+          className={styles.inputBar}
         />
         {errors.email && <p className={styles.error}>{errors.email}</p>}
 
-        <label htmlFor="password" className={styles.InputName}>
+        <label htmlFor="password" className={styles.inputName}>
           Password:
         </label>
         <input
@@ -132,11 +132,11 @@ export default function SignUp() {
           value={formData.password}
           onChange={handleChange}
           required
-          className={styles.InputBar}
+          className={styles.inputBar}
         />
         {errors.password && <p className={styles.error}>{errors.password}</p>}
 
-        <label htmlFor="passwordRep" className={styles.InputName}>
+        <label htmlFor="passwordRep" className={styles.inputName}>
           Repeat Password:
         </label>
         <input
@@ -146,13 +146,13 @@ export default function SignUp() {
           value={formData.confirmPassword}
           onChange={handleChange}
           required
-          className={styles.InputBar}
+          className={styles.inputBar}
         />
         {errors.confirmPassword && (
           <p className={styles.error}>{errors.confirmPassword}</p>
         )}
 
-        <button type="submit" className={styles.Submit}>
+        <button type="submit" className={styles.submit}>
           Create Account
         </button>
       </div>

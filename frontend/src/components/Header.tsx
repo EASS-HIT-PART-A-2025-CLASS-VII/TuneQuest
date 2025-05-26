@@ -1,13 +1,12 @@
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import styles from "./Header.module.css";
 import logo from "../assets/logo-modified.png";
-import LogoutButton from "./LogoutButton";
 import { useUser } from "../contexts/UserContext";
-import logoutButtonStyles from "./LogoutButton.module.css";
 import SearchBar from "./SearchBar.tsx";
 
 export default function Header() {
-  const { user } = useUser();
+  const { user, setUser } = useUser();
+  const navigate = useNavigate();
 
   return (
     <div className={styles.mainHeader}>
@@ -22,7 +21,18 @@ export default function Header() {
               <span>Profile</span>
             </button>
           </NavLink>
-          <LogoutButton className={logoutButtonStyles.logoutButtonHeader} />
+          <div>
+            <button
+              className={styles.btnHeader}
+              onClick={() => {
+                localStorage.removeItem("access_token");
+                setUser(null);
+                navigate("/login");
+              }}
+            >
+              Log Out
+            </button>
+          </div>
         </>
       ) : (
         <>

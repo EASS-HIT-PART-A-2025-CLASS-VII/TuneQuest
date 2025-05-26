@@ -1,4 +1,4 @@
-.SignUpForm {
+.signUpForm {
   height: 100vh;
   min-height: 31rem;
   width: 100vw;
@@ -11,7 +11,7 @@
   background-color: orange;
 }
 
-.SignUpContainer {
+.signUpContainer {
   max-width: 25rem;
   width: 100%;
   padding: 1rem;
@@ -43,12 +43,12 @@
   }
 }
 
-.Title {
+.title {
   text-align: center;
   color: #e9a319;
 }
 
-.Submit {
+.submit {
   background-color: #ffa500;
   border: none;
   padding: 0.5rem;
@@ -56,20 +56,20 @@
   margin-top: 0.5rem;
 }
 
-.InputBar {
+.inputBar {
   border-color: pink;
   background-color: wheat;
   border-radius: 3rem;
   padding: 0.5rem;
 }
 
-.InputName {
+.inputName {
   color: #a76545;
   font-weight: bold;
 }
 
 /* Music-themed floating icons */
-.SignUpForm::before {
+.signUpForm::before {
   content: "";
   position: absolute;
   width: 100%;
@@ -79,4 +79,51 @@
   background-size: 5rem;
   opacity: 0.05;
   z-index: 0;
+}
+
+/* Tablet (medium devices) */
+@media (max-width: 900px) {
+  .signUpForm {
+    height: 90vh;
+  }
+
+  .signUpContainer {
+    max-width: 20rem;
+    padding: 1rem;
+  }
+
+  .inputBar {
+    padding: 0.6rem;
+    font-size: 0.95rem;
+  }
+
+  .submit {
+    padding: 0.6rem;
+    font-size: 0.95rem;
+  }
+}
+
+/* Phone (small devices) */
+@media (max-width: 600px) {
+  .signUpForm {
+    height: auto;
+    min-height: unset;
+    padding: 1rem;
+  }
+
+  .signUpContainer {
+    max-width: 100%;
+    border-radius: 1rem;
+    padding: 1rem;
+  }
+
+  .inputBar {
+    padding: 0.75rem;
+    font-size: 1rem;
+  }
+
+  .submit {
+    padding: 0.75rem;
+    font-size: 1rem;
+  }
 }

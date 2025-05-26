@@ -1,4 +1,4 @@
-import styles from "./login.module.css";
+import styles from "./Login.module.css";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useUser } from "../contexts/UserContext";
@@ -50,11 +50,11 @@ export default function LogIn() {
   }
 
   return (
-    <form onSubmit={handleSubmit} className={styles.LogInForm}>
-      <div className={styles.LogInContainer}>
-        <h2 className={styles.Title}>Log In</h2>
+    <form onSubmit={handleSubmit} className={styles.logInForm}>
+      <div className={styles.logInContainer}>
+        <h2 className={styles.title}>Log In</h2>
 
-        <label htmlFor="username" className={styles.InputName}>
+        <label htmlFor="username" className={styles.inputName}>
           Username:
         </label>
         <input
@@ -64,10 +64,10 @@ export default function LogIn() {
           value={formData.username}
           onChange={handleChange}
           required
-          className={styles.InputBar}
+          className={styles.inputBar}
         />
 
-        <label htmlFor="password" className={styles.InputName}>
+        <label htmlFor="password" className={styles.inputName}>
           Password:
         </label>
         <input
@@ -77,10 +77,10 @@ export default function LogIn() {
           value={formData.password}
           onChange={handleChange}
           required
-          className={styles.InputBar}
+          className={styles.inputBar}
         />
 
-        <button type="submit" className={styles.Submit}>
+        <button type="submit" className={styles.submit}>
           Log In
         </button>
       </div>

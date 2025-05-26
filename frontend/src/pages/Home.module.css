@@ -13,3 +13,23 @@
   font-size: 1.2rem;
   color: #555;
 }
+
+@media (max-width: 900px) {
+  .title {
+    font-size: 1.6rem;
+  }
+
+  .description {
+    font-size: 1rem;
+  }
+}
+
+@media (max-width: 600px) {
+  .title {
+    font-size: 1.2rem;
+  }
+
+  .description {
+    font-size: 0.8rem;
+  }
+}
