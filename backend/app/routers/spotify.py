@@ -35,6 +35,34 @@ def get_artist(id: str):
     return response.json()
 
 
+@router.get("/artist/{id}/top-tracks")
+def get_artist_top_tracks(id: str, market: str = "US"):
+    token = get_spotify_access_token()
+    response = requests.get(
+        f"https://api.spotify.com/v1/artists/{id}/top-tracks?market={market}",
+        headers={"Authorization": f"Bearer {token}"},
+    )
+    if response.status_code != 200:
+        raise HTTPException(status_code=502, detail="Failed to fetch top tracks")
+    return response.json()
+
+
+@router.get("/artist/{id}/albums")
+def get_artist_albums(id: str, include_groups: str = "album,single"):
+    token = get_spotify_access_token()
+
+    response = requests.get(
+        f"https://api.spotify.com/v1/artists/{id}/albums",
+        headers={"Authorization": f"Bearer {token}"},
+        params={"include_groups": include_groups},
+    )
+
+    if response.status_code != 200:
+        raise HTTPException(status_code=502, detail="Failed to fetch albums")
+
+    return response.json()
+
+
 @router.get("/album/{id}")
 def get_albums(id: str):
     token = get_spotify_access_token()

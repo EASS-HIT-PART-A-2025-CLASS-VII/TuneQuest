@@ -51,6 +51,26 @@ export function AlbumCard({ album }: { readonly album: any }) {
   );
 }
 
+export function CompactAlbumCard({ album }: { readonly album: any }) {
+  return (
+    <NavLink to={`/album/${album.id}`} className={styles.card}>
+      <img
+        src={album.images[0]?.url}
+        alt={album.name}
+        className={styles.image}
+      />
+      <div className={styles.info}>
+        <h4 className={styles.title}>{album.name}</h4>
+        <p>
+          {album.release_date_precision === "year"
+            ? album.release_date
+            : new Date(album.release_date).getFullYear()}
+        </p>
+      </div>
+    </NavLink>
+  );
+}
+
 export function ArtistCard({ artist }: { readonly artist: any }) {
   return (
     <NavLink to={`/artist/${artist.id}`} className={styles.card}>

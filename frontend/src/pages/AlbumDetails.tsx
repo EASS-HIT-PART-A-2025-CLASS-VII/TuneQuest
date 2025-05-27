@@ -65,7 +65,7 @@ export default function AlbumDetails() {
                 Release Year:{" "}
                 {album.release_date_precision === "year"
                   ? album.release_date
-                  : new Date(album.release_date).toLocaleDateString()}
+                  : new Date(album.release_date).getFullYear()}
               </p>
 
               <p>Popularity: {album.popularity ?? "N/A"}</p>

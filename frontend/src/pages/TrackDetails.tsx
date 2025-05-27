@@ -64,12 +64,17 @@ export default function TrackDetails() {
             <p>
               {track.artists.map((a: any, idx: number) => (
                 <span key={a.id}>
-                  <NavLink to={`/artist/${a.id}`}>{a.name}</NavLink>
+                  <NavLink className={styles.navigate} to={`/artist/${a.id}`}>
+                    {a.name}
+                  </NavLink>
                   {idx < track.artists.length - 1 ? ", " : ""}
                 </span>
               ))}
             </p>
-            <NavLink to={`/album/${track.album.id}`}>
+            <NavLink
+              className={styles.navigate}
+              to={`/album/${track.album.id}`}
+            >
               <p>Album: {track.album.name}</p>
             </NavLink>
             {genres.length > 0 ? (
