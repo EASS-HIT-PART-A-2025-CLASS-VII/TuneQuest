@@ -19,6 +19,20 @@ export function TrackCard({ track }: { readonly track: any }) {
   );
 }
 
+export function CompactTrackCard({ track }: { readonly track: any }) {
+  return (
+    <NavLink to={`/track/${track.id}`} className={styles.card}>
+      <p>{track.track_number}</p>
+      <div className={styles.info}>
+        <h4 className={styles.title}>{track.name}</h4>
+        <p className={styles.subtitle}>
+          {track.artists.map((a: any) => a.name).join(", ")}
+        </p>
+      </div>
+    </NavLink>
+  );
+}
+
 export function AlbumCard({ album }: { readonly album: any }) {
   return (
     <NavLink to={`/album/${album.id}`} className={styles.card}>

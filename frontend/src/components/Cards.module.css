@@ -4,6 +4,20 @@
   align-items: center;
   gap: 0.75rem;
   border-bottom: 1px solid #eee;
+  color: #222;
+  text-decoration: none;
+}
+
+.card:visited {
+  color: #444;
+}
+
+.card:hover {
+  background-color: blanchedalmond;
+}
+
+.card:active {
+  color: #000;
 }
 
 .card:last-child {

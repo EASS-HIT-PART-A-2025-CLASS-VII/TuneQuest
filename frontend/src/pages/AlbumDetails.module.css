@@ -6,6 +6,7 @@
   padding: 1rem;
   max-width: 600px;
   margin: 0 auto;
+  gap: 1rem;
 }
 
 .container > div:first-child {
@@ -28,4 +29,11 @@
   .container img {
     width: 150px;
   }
+}
+
+.mainInfo {
+  display: flex;
+  text-align: center;
+  justify-content: center;
+  gap: 1rem;
 }

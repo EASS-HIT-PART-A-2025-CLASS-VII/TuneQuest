@@ -79,37 +79,19 @@ export default function SearchBar() {
           </div>
 
           {type === "tracks" &&
-            results.tracks.slice(0, 5).map((track) => (
-              <NavLink
-                key={track.id}
-                to={`/track/${track.id}`}
-                onClick={() => setSearch("")}
-              >
-                <TrackCard track={track} />
-              </NavLink>
-            ))}
+            results.tracks
+              .slice(0, 5)
+              .map((track) => <TrackCard key={track.id} track={track} />)}
 
           {type === "albums" &&
-            results.albums.slice(0, 5).map((album) => (
-              <NavLink
-                key={album.id}
-                to={`/album/${album.id}`}
-                onClick={() => setSearch("")}
-              >
-                <AlbumCard album={album} />
-              </NavLink>
-            ))}
+            results.albums
+              .slice(0, 5)
+              .map((album) => <AlbumCard key={album.id} album={album} />)}
 
           {type === "artists" &&
-            results.artists.slice(0, 5).map((artist) => (
-              <NavLink
-                key={artist.id}
-                to={`/artist/${artist.id}`}
-                onClick={() => setSearch("")}
-              >
-                <ArtistCard artist={artist} />
-              </NavLink>
-            ))}
+            results.artists
+              .slice(0, 5)
+              .map((artist) => <ArtistCard key={artist.id} artist={artist} />)}
 
           <NavLink
             to={`/search?query=${encodeURIComponent(search)}`}

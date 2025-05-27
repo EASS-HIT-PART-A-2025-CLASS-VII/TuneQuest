@@ -70,18 +70,14 @@ export default function Search() {
                   {results.tracks
                     .filter((_, index) => index % 2 === 0)
                     .map((track: any) => (
-                      <NavLink key={track.id} to={`/track/${track.id}`}>
-                        <TrackCard track={track} />
-                      </NavLink>
+                      <TrackCard key={track.id} track={track} />
                     ))}
                 </div>
                 <div className={styles.column}>
                   {results.tracks
                     .filter((_, index) => index % 2 === 1)
                     .map((track: any) => (
-                      <NavLink key={track.id} to={`/track/${track.id}`}>
-                        <TrackCard track={track} />
-                      </NavLink>
+                      <TrackCard key={track.id} track={track} />
                     ))}
                 </div>
               </>

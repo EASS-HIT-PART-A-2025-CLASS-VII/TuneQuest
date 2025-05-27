@@ -1,13 +1,15 @@
-import { useParams, NavLink } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import styles from "./AlbumDetails.module.css";
-import { TrackCard } from "../components/Cards";
+import { CompactTrackCard } from "../components/Cards";
+import { fetchDeezerGenres } from "../api/deezer";
 
 export default function AlbumDetails() {
   const { id } = useParams<{ id: string }>();
   const [album, setAlbum] = useState<any>(null);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const [genres, setGenres] = useState<string[]>([]);
 
   useEffect(() => {
     setLoading(true);
@@ -21,6 +23,16 @@ export default function AlbumDetails() {
       .finally(() => setLoading(false));
   }, [id]);
 
+  useEffect(() => {
+    if (album) {
+      const albumName = album.name;
+      const artistName = album.artists[0].name;
+      fetchDeezerGenres(albumName, artistName).then((deezerGenres) => {
+        setGenres(deezerGenres);
+      });
+    }
+  }, [album]);
+
   if (error) return <p>Error: {error}</p>;
   if (!loading && !album) return null;
 
@@ -29,34 +41,40 @@ export default function AlbumDetails() {
       {loading && <div className={styles.loading}>Loading...</div>}
       {!loading && album && (
         <>
-          <h2>{album.name}</h2>
-          <p>Artists: {album.artists?.map((a: any) => a.name).join(", ")}</p>
-          {album.images?.length > 0 && (
-            <img
-              src={album.images[0].url}
-              alt={album.name}
-              width={300}
-              height="auto"
-            />
-          )}
-          <p>Type: {album.album_type}</p>
-          <p>
-            Release Year:{" "}
-            {album.release_date_precision === "year"
-              ? album.release_date
-              : new Date(album.release_date).toLocaleDateString()}
-          </p>
+          <div className={styles.mainInfo}>
+            {album.images?.length > 0 && (
+              <img
+                src={album.images[0].url}
+                alt={album.name}
+                width={300}
+                height="auto"
+              />
+            )}
+            <div>
+              <h2>{album.name}</h2>
+              <p>
+                Artists: {album.artists?.map((a: any) => a.name).join(", ")}
+              </p>
+              <p>Type: {album.album_type}</p>
+              <p>
+                Release Year:{" "}
+                {album.release_date_precision === "year"
+                  ? album.release_date
+                  : new Date(album.release_date).toLocaleDateString()}
+              </p>
 
-          <p>Popularity: {album.popularity ?? "N/A"}</p>
-          <p>Genres: {album.genres?.join(", ") ?? "N/A"}</p>
-
+              <p>Popularity: {album.popularity ?? "N/A"}</p>
+              {genres.length > 0 ? (
+                <p>Genres: {genres?.join(", ") ?? "N/A"}</p>
+              ) : (
+                <p>Genres: Unknown</p>
+              )}
+            </div>
+          </div>
           {album.tracks?.items?.length > 0 && (
             <div className={styles.tracks}>
-              <h3>Tracks:</h3>
               {album.tracks.items.map((track: any) => (
-                <NavLink key={track.id} to={`/track/${track.id}`}>
-                  <TrackCard track={track} />
-                </NavLink>
+                <CompactTrackCard key={track.id} track={track} />
               ))}
             </div>
           )}

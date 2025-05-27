@@ -1,9 +1,18 @@
 from fastapi import FastAPI
 from app.models.base import Base
 from app.core.db import SessionLocal, engine
-from app.routers import track, user, favorite, user_favorites, top_tracks, spotify
+from app.routers import (
+    track,
+    user,
+    favorite,
+    user_favorites,
+    top_tracks,
+    spotify,
+    deezer,
+)
 from contextlib import asynccontextmanager
 from fastapi.middleware.cors import CORSMiddleware
+from app.services import deezer_genres
 
 
 # Dependency to get the database session
@@ -20,6 +29,8 @@ async def lifespan(app: FastAPI):
     # Startup: create tables
     async with engine.begin() as conn:
         await conn.run_sync(Base.metadata.create_all)
+    deezer_genres.load_deezer_genres()
+
     yield
 
 
@@ -31,6 +42,7 @@ app.include_router(favorite.router)
 app.include_router(user_favorites.router)
 app.include_router(top_tracks.router)
 app.include_router(spotify.router)
+app.include_router(deezer.router)
 
 
 @app.get("/")
@@ -45,3 +57,8 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+
+@app.on_event("startup")
+def on_startup():
+    deezer_genres.load_deezer_genres()
