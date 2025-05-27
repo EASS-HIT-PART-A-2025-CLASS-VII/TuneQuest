@@ -20,3 +20,15 @@ def fetch_deezer_genres(album: str, artist: str):
     genre_data = genre_response.json()
 
     return genre_data.get("name")
+
+
+def fetch_deezer_preview_url(track_name, artist_name):
+    query = f"{track_name} {artist_name}"
+    response = requests.get("https://api.deezer.com/search/track", params={"q": query})
+    response.raise_for_status()
+    data = response.json()
+
+    if not data["data"]:
+        return None
+
+    return data["data"][0].get("preview")

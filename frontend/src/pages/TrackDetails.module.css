@@ -1,11 +1,11 @@
 .container {
   display: flex;
-  flex-direction: column;
   justify-content: center;
   align-items: center;
   padding: 1rem;
   max-width: 600px;
   margin: 0 auto;
+  gap: 1rem;
 }
 
 .container > div:first-child {
@@ -50,4 +50,11 @@
   .audio {
     width: 150px;
   }
+}
+
+.mainInfo {
+  display: flex;
+  text-align: center;
+  justify-content: center;
+  gap: 1rem;
 }

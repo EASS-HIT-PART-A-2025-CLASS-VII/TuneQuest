@@ -11,3 +11,16 @@ export async function fetchDeezerGenres(album: string, artist: string): Promise<
     return [];
   }
 }
+
+export async function fetchDeezerPreviewUrl(track: string, artist: string): Promise<string[]> {
+  try {
+    const res = await fetch(`http://localhost:8000/deezer/tracks?track=${encodeURIComponent(track)}&artist=${encodeURIComponent(artist)}`);
+    if (!res.ok) throw new Error("Failed to fetch preview url");
+    const data = await res.json();
+
+    return data.preview_url ? [String(data.preview_url)] : [];
+  } catch (err) {
+    console.error("Deezer fetch error:", err);
+    return [];
+  }
+}

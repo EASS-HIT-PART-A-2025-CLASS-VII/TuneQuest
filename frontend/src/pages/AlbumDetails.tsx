@@ -1,4 +1,4 @@
-import { useParams } from "react-router-dom";
+import { useParams, NavLink } from "react-router-dom";
 import { useEffect, useState } from "react";
 import styles from "./AlbumDetails.module.css";
 import { CompactTrackCard } from "../components/Cards";
@@ -53,7 +53,12 @@ export default function AlbumDetails() {
             <div>
               <h2>{album.name}</h2>
               <p>
-                Artists: {album.artists?.map((a: any) => a.name).join(", ")}
+                {album.artists.map((a: any, idx: number) => (
+                  <span key={a.id}>
+                    <NavLink to={`/artist/${a.id}`}>{a.name}</NavLink>
+                    {idx < album.artists.length - 1 ? ", " : ""}
+                  </span>
+                ))}
               </p>
               <p>Type: {album.album_type}</p>
               <p>

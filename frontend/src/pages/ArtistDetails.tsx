@@ -1,6 +1,7 @@
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import styles from "./ArtistDetails.module.css";
+import logo from "../assets/logo.png";
 
 export default function ArtistDetails() {
   const { id } = useParams<{ id: string }>();
@@ -34,7 +35,7 @@ export default function ArtistDetails() {
           <p>Popularity: {artist.popularity}</p>
           {artist.images?.length > 0 && (
             <img
-              src={artist.images[0].url}
+              src={artist.images?.[0]?.url ?? logo}
               alt={artist.name}
               width={300}
               height="auto"
