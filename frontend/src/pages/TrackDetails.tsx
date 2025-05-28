@@ -2,6 +2,7 @@ import { useParams, NavLink } from "react-router-dom";
 import { useEffect, useState } from "react";
 import styles from "./TrackDetails.module.css";
 import { fetchDeezerGenres, fetchDeezerPreviewUrl } from "../api/deezer";
+import { AiButton } from "../components/AiButton";
 
 export default function TrackDetails() {
   const { id } = useParams<{ id: string }>();
@@ -53,11 +54,16 @@ export default function TrackDetails() {
       {!loading && track && (
         <div className={styles.mainInfo}>
           <div>
-            <img
-              src={track.album.images[0]?.url}
-              alt={track.name}
-              width={300}
-            />
+            {track.album.images?.length > 0 && (
+              <img
+                src={track.album.images[0].url}
+                alt={track.album.name}
+                className={styles.albumImage}
+                width={300}
+                height="auto"
+              />
+            )}
+            <AiButton type="track" name={track.name} />
           </div>
           <div>
             <h2>{track.name}</h2>

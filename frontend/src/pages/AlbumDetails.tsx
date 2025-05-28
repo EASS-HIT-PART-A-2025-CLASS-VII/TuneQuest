@@ -1,7 +1,7 @@
 import { useParams, NavLink } from "react-router-dom";
 import { useEffect, useState } from "react";
 import styles from "./AlbumDetails.module.css";
-import { CompactTrackCard } from "../components/Cards";
+import { NonImageTrackCard } from "../components/Cards";
 import { fetchDeezerGenres } from "../api/deezer";
 import { AiButton } from "../components/AiButton";
 
@@ -48,6 +48,7 @@ export default function AlbumDetails() {
                 <img
                   src={album.images[0].url}
                   alt={album.name}
+                  className={styles.albumImage}
                   width={300}
                   height="auto"
                 />
@@ -59,7 +60,9 @@ export default function AlbumDetails() {
               <p>
                 {album.artists.map((a: any, idx: number) => (
                   <span key={a.id}>
-                    <NavLink to={`/artist/${a.id}`}>{a.name}</NavLink>
+                    <NavLink className={styles.navigate} to={`/artist/${a.id}`}>
+                      {a.name}
+                    </NavLink>
                     {idx < album.artists.length - 1 ? ", " : ""}
                   </span>
                 ))}
@@ -83,7 +86,7 @@ export default function AlbumDetails() {
           {album.tracks?.items?.length > 0 && (
             <div className={styles.tracks}>
               {album.tracks.items.map((track: any) => (
-                <CompactTrackCard key={track.id} track={track} />
+                <NonImageTrackCard key={track.id} track={track} />
               ))}
             </div>
           )}

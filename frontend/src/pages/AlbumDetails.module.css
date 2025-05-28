@@ -13,7 +13,7 @@
   text-align: center;
 }
 
-.container img {
+.albumImage {
   width: 300px;
   height: auto;
   border-radius: 0.5rem;
@@ -36,4 +36,13 @@
   text-align: center;
   justify-content: center;
   gap: 1rem;
+}
+
+.navigate {
+  color: #222;
+  text-decoration: none;
+}
+
+.navigate:visited {
+  color: #444;
 }

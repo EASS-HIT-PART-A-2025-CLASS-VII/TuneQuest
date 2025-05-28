@@ -4,7 +4,9 @@ from fastapi import HTTPException
 from typing import List
 
 SPOTIFY_TOKEN_URL = "https://accounts.spotify.com/api/token"
-SPOTIFY_API_URL = "https://api.spotify.com/v1/albums"
+SPOTIFY_TRACKS_URL = "https://api.spotify.com/v1/tracks"
+SPOTIFY_ARTISTS_URL = "https://api.spotify.com/v1/artists"
+SPOTIFY_ALBUMS_URL = "https://api.spotify.com/v1/albums"
 
 
 def get_spotify_access_token():
@@ -28,6 +30,46 @@ def get_spotify_access_token():
     return response.json()["access_token"]
 
 
+def get_tracks_by_ids(ids: List[str]):
+    token = get_spotify_access_token()
+    if len(ids) > 20:
+        raise ValueError("Can fetch a maximum of 20 tracks per request")
+
+    headers = {"Authorization": f"Bearer {token}"}
+    params = {"ids": ",".join(ids)}
+    response = requests.get(SPOTIFY_TRACKS_URL, headers=headers, params=params)
+
+    try:
+        response.raise_for_status()
+    except requests.HTTPError as e:
+        raise requests.HTTPError(
+            f"Spotify API error: {response.status_code} - {response.text}"
+        ) from e
+
+    data = response.json()
+    return data.get("tracks", [])
+
+
+def get_artists_by_ids(ids: List[str]):
+    token = get_spotify_access_token()
+    if len(ids) > 20:
+        raise ValueError("Can fetch a maximum of 20 artists per request")
+
+    headers = {"Authorization": f"Bearer {token}"}
+    params = {"ids": ",".join(ids)}
+    response = requests.get(SPOTIFY_ARTISTS_URL, headers=headers, params=params)
+
+    try:
+        response.raise_for_status()
+    except requests.HTTPError as e:
+        raise requests.HTTPError(
+            f"Spotify API error: {response.status_code} - {response.text}"
+        ) from e
+
+    data = response.json()
+    return data.get("artists", [])
+
+
 def get_albums_by_ids(ids: List[str]):
     token = get_spotify_access_token()
     if len(ids) > 20:
@@ -35,12 +77,11 @@ def get_albums_by_ids(ids: List[str]):
 
     headers = {"Authorization": f"Bearer {token}"}
     params = {"ids": ",".join(ids)}
-    response = requests.get(SPOTIFY_API_URL, headers=headers, params=params)
+    response = requests.get(SPOTIFY_ALBUMS_URL, headers=headers, params=params)
 
     try:
         response.raise_for_status()
     except requests.HTTPError as e:
-        # You can add logging here if you want
         raise requests.HTTPError(
             f"Spotify API error: {response.status_code} - {response.text}"
         ) from e

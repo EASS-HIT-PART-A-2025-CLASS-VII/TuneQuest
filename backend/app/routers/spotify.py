@@ -2,7 +2,11 @@ from fastapi import APIRouter, Query, HTTPException
 from app.services.spotify import get_spotify_access_token
 import requests
 from typing import List
-from app.services.spotify import get_albums_by_ids
+from app.services.spotify import (
+    get_tracks_by_ids,
+    get_artists_by_ids,
+    get_albums_by_ids,
+)
 
 router = APIRouter(prefix="/spotify", tags=["spotify"])
 
@@ -79,12 +83,28 @@ def get_album(id: str):
     return response.json()
 
 
+@router.get("/tracks")
+def get_tracks(ids: List[str] = Query(..., description="List of Spotify tracks IDs")):
+    try:
+        tracks = get_tracks_by_ids(ids)
+        return {"tracks": tracks}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.get("/artists")
+def get_artists(ids: List[str] = Query(..., description="List of Spotify artists IDs")):
+    try:
+        artists = get_artists_by_ids(ids)
+        return {"artists": artists}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
 @router.get("/albums")
 def get_albums(ids: List[str] = Query(..., description="List of Spotify album IDs")):
     try:
-        albums = get_albums_by_ids(
-            ids
-        )  # implement this to fetch multiple albums from Spotify API
+        albums = get_albums_by_ids(ids)
         return {"albums": albums}
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))

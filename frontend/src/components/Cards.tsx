@@ -19,7 +19,7 @@ export function TrackCard({ track }: { readonly track: any }) {
   );
 }
 
-export function CompactTrackCard({ track }: { readonly track: any }) {
+export function NonImageTrackCard({ track }: { readonly track: any }) {
   return (
     <NavLink to={`/track/${track.id}`} className={styles.card}>
       <p>{track.track_number}</p>
@@ -45,6 +45,11 @@ export function AlbumCard({ album }: { readonly album: any }) {
         <h4 className={styles.title}>{album.name}</h4>
         <p className={styles.subtitle}>
           {album.artists.map((a: any) => a.name).join(", ")}
+        </p>
+        <p>
+          {album.release_date_precision === "year"
+            ? album.release_date
+            : new Date(album.release_date).getFullYear()}
         </p>
       </div>
     </NavLink>

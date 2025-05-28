@@ -23,7 +23,7 @@ def ai_recommend(request: AIRequest):
         ]
 
         enriched = search_spotify_entities(names, request.type)
-
+        print(enriched)
         return {"results": enriched}
 
     except Exception as e:
