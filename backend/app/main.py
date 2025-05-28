@@ -9,6 +9,7 @@ from app.routers import (
     top_tracks,
     spotify,
     deezer,
+    ai,
 )
 from contextlib import asynccontextmanager
 from fastapi.middleware.cors import CORSMiddleware
@@ -43,6 +44,7 @@ app.include_router(user_favorites.router)
 app.include_router(top_tracks.router)
 app.include_router(spotify.router)
 app.include_router(deezer.router)
+app.include_router(ai.router)
 
 
 @app.get("/")
@@ -57,8 +59,3 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
-
-
-@app.on_event("startup")
-def on_startup():
-    deezer_genres.load_deezer_genres()

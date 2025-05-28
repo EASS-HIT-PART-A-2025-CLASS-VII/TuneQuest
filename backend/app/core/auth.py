@@ -1,5 +1,6 @@
 from datetime import datetime, timedelta, timezone
-from jose import jwt, JWTError
+from authlib.jose import jwt
+from authlib.jose.errors import JoseError
 import os
 from dotenv import load_dotenv
 from passlib.context import CryptContext
@@ -26,7 +27,8 @@ def create_access_token(data: dict, expires_delta: timedelta | None = None):
         expires_delta or timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
     )
     to_encode = {**data, "exp": expire}
-    encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
+    encoded_jwt = jwt.encode({"alg": ALGORITHM}, to_encode, SECRET_KEY)
+
     return encoded_jwt
 
 
@@ -38,7 +40,7 @@ async def get_current_user(
     print(f"Token received: {token}")
 
     try:
-        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+        payload = jwt.decode({"alg": ALGORITHM}, token, SECRET_KEY)
         username: str = payload.get("sub")
         if username is None:
             raise HTTPException(
@@ -51,5 +53,5 @@ async def get_current_user(
             raise HTTPException(status_code=401, detail="User not found")
 
         return user
-    except JWTError:
+    except JoseError:
         raise HTTPException(status_code=401, detail="Could not validate credentials")

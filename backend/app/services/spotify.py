@@ -1,8 +1,10 @@
 import requests
 import os
 from fastapi import HTTPException
+from typing import List
 
 SPOTIFY_TOKEN_URL = "https://accounts.spotify.com/api/token"
+SPOTIFY_API_URL = "https://api.spotify.com/v1/albums"
 
 
 def get_spotify_access_token():
@@ -24,3 +26,24 @@ def get_spotify_access_token():
         )
 
     return response.json()["access_token"]
+
+
+def get_albums_by_ids(ids: List[str]):
+    token = get_spotify_access_token()
+    if len(ids) > 20:
+        raise ValueError("Can fetch a maximum of 20 albums per request")
+
+    headers = {"Authorization": f"Bearer {token}"}
+    params = {"ids": ",".join(ids)}
+    response = requests.get(SPOTIFY_API_URL, headers=headers, params=params)
+
+    try:
+        response.raise_for_status()
+    except requests.HTTPError as e:
+        # You can add logging here if you want
+        raise requests.HTTPError(
+            f"Spotify API error: {response.status_code} - {response.text}"
+        ) from e
+
+    data = response.json()
+    return data.get("albums", [])
