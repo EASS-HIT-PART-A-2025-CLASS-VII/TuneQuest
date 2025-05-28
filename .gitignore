@@ -33,3 +33,28 @@ coverage/
 # ---- Frontend production builds ----
 frontend/build/
 frontend/dist/
+
+# ---- Spotify token cache ----
+.cache
+
+# ---- Additional suggestions ----
+# Python cache files
+*.pyo
+*.pyd
+__pypackages__/
+
+# IDE/editor specific
+*.sublime-project
+*.sublime-workspace
+.vscode/
+
+# Logs and temp files
+*.tmp
+*.swp
+*.swo
+*.bak
+*.orig
+
+# Mac system files
+.AppleDouble
+.LSOverride

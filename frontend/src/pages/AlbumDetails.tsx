@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import styles from "./AlbumDetails.module.css";
 import { CompactTrackCard } from "../components/Cards";
 import { fetchDeezerGenres } from "../api/deezer";
+import { AiButton } from "../components/AiButton";
 
 export default function AlbumDetails() {
   const { id } = useParams<{ id: string }>();
@@ -42,14 +43,17 @@ export default function AlbumDetails() {
       {!loading && album && (
         <>
           <div className={styles.mainInfo}>
-            {album.images?.length > 0 && (
-              <img
-                src={album.images[0].url}
-                alt={album.name}
-                width={300}
-                height="auto"
-              />
-            )}
+            <div>
+              {album.images?.length > 0 && (
+                <img
+                  src={album.images[0].url}
+                  alt={album.name}
+                  width={300}
+                  height="auto"
+                />
+              )}
+              <AiButton type="album" name={album.name} />
+            </div>
             <div>
               <h2>{album.name}</h2>
               <p>

@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import styles from "./ArtistDetails.module.css";
 import logo from "../assets/logo.png";
 import { CompactAlbumCard, TrackCard } from "../components/Cards";
+import { AiButton } from "../components/AiButton";
 
 export default function ArtistDetails() {
   const { id } = useParams<{ id: string }>();
@@ -61,6 +62,7 @@ export default function ArtistDetails() {
                   height="auto"
                 />
               )}
+              <AiButton type="artist" name={artist.name} />
             </div>
             <div>
               <h2>{artist.name}</h2>

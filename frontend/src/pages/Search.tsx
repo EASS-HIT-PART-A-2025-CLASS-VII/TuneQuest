@@ -1,7 +1,7 @@
 import styles from "./Search.module.css";
 import { useEffect, useState } from "react";
 import { useLocation, NavLink } from "react-router";
-import fetchTracks from "../api/fetchSearchResults";
+import { fetchSearchResults } from "../api/fetchSearchResults";
 import { TrackCard, AlbumCard, ArtistCard } from "../components/Cards";
 
 export default function Search() {
@@ -30,7 +30,7 @@ export default function Search() {
 
       setLoading(true);
       try {
-        const data = await fetchTracks(query);
+        const data = await fetchSearchResults(query);
         setResults(data);
       } catch (error) {
         console.error(error);

@@ -1,7 +1,7 @@
 import styles from "./SearchBar.module.css";
 import { useState, useEffect } from "react";
 import { NavLink, useNavigate, useLocation } from "react-router-dom";
-import fetchSearchResults from "../api/fetchSearchResults";
+import { fetchSearchResults } from "../api/fetchSearchResults";
 import { TrackCard, AlbumCard, ArtistCard } from "./Cards.tsx";
 
 export default function SearchBar() {
