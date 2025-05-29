@@ -1,0 +1,29 @@
+.button {
+  width: 300px;
+  background-color: orange;
+  transition: background-color 0.2s ease, transform 0.2s ease;
+}
+
+.button:hover {
+  background-color: darkorange;
+}
+
+.columns {
+  display: flex;
+  gap: 1rem;
+  align-items: stretch;
+}
+
+.columns > div {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+
+  flex: 1;
+  background-color: white;
+  border-color: aqua;
+}
+
+.title {
+  text-decoration: underline;
+}

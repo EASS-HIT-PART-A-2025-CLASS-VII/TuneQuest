@@ -1,4 +1,5 @@
 import styles from "./Home.module.css";
+import { AiHomeButton } from "../components/AihomeButton";
 
 export default function Home() {
   return (
@@ -7,6 +8,7 @@ export default function Home() {
       <p className={styles.description}>
         Discover and manage your favorite tracks with ease.
       </p>
+      <AiHomeButton />
     </div>
   );
 }
