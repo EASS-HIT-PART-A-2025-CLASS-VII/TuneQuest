@@ -46,7 +46,7 @@ Example:
       if (!aiResponse.ok) throw new Error("Failed to fetch AI recommendations");
 
       const aiData = await aiResponse.json();
-      console.log(aiData);
+
       const tracksIds = aiData.results.tracks
         .map((item: any) => item.id)
         .join(",");
@@ -56,7 +56,7 @@ Example:
       const albumsIds = aiData.results.albums
         .map((item: any) => item.id)
         .join(",");
-      console.log(tracksIds);
+
       const [trackRes, artistRes, albumRes] = await Promise.all([
         fetch(`http://localhost:8000/spotify/tracks?ids=${tracksIds}`),
         fetch(`http://localhost:8000/spotify/artists?ids=${artistsIds}`),

@@ -9,6 +9,7 @@ import TrackDetails from "./pages/TrackDetails";
 import ArtistDetails from "./pages/ArtistDetails";
 import AlbumDetails from "./pages/AlbumDetails";
 import ProtectedRoute from "./components/ProtectedRoute";
+import Companion from "./pages/Companion";
 
 function App() {
   return (
@@ -30,6 +31,7 @@ function App() {
         <Route path="/track/:id" element={<TrackDetails />} />
         <Route path="/artist/:id" element={<ArtistDetails />} />
         <Route path="/album/:id" element={<AlbumDetails />} />
+        <Route path="/companion" element={<Companion />} />
       </Routes>
     </Router>
   );

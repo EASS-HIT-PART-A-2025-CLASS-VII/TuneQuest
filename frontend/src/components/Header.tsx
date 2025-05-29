@@ -36,6 +36,11 @@ export default function Header() {
         </>
       ) : (
         <>
+          <NavLink to="/companion">
+            <button className={styles.btnHeader}>
+              <span>Companion</span>
+            </button>
+          </NavLink>
           <NavLink to="/signup">
             <button className={styles.btnHeader}>
               <span>Sign Up</span>
