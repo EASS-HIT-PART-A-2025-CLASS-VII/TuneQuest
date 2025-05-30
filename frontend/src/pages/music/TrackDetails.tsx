@@ -3,6 +3,8 @@ import { useEffect, useState } from "react";
 import styles from "./TrackDetails.module.css";
 import { fetchDeezerGenres, fetchDeezerPreviewUrl } from "@/api/deezer";
 import { AiButton } from "@/components/common/AiButton";
+import { ImSpinner2 } from "react-icons/im";
+import shared from "@/styles/shared.module.css";
 
 export default function TrackDetails() {
   const { id } = useParams<{ id: string }>();
@@ -50,7 +52,11 @@ export default function TrackDetails() {
 
   return (
     <div className={styles.container}>
-      {loading && <div className={styles.loading}>Loading...</div>}
+      {loading && (
+        <div className={shared.loading}>
+          <ImSpinner2 />
+        </div>
+      )}
       {!loading && track && (
         <div className={styles.mainInfo}>
           <div>
@@ -91,10 +97,19 @@ export default function TrackDetails() {
             <p>Duration: {formatDuration(track.duration_ms)}</p>
             <p>Popularity: {track.popularity}</p>
             {deezerPreviewUrl ? (
-              <audio className={styles.audio} controls src={deezerPreviewUrl} />
+              <audio className={styles.audio} controls src={deezerPreviewUrl}>
+                <track
+                  kind="captions"
+                  srcLang="en"
+                  src="path/to/your-captions.vtt"
+                  label="English"
+                  default
+                />
+                Your browser does not support the audio element.
+              </audio>
             ) : (
               <p>No preview available</p>
-            )}{" "}
+            )}
           </div>
         </div>
       )}

@@ -2,6 +2,9 @@ import { useState } from "react";
 import { v4 as uuidv4 } from "uuid";
 import styles from "./Companion.module.css";
 import { TrackCard, AlbumCard, ArtistCard } from "@/components/features/Cards";
+import { FiSend, FiRefreshCw } from "react-icons/fi";
+import { ImSpinner2 } from "react-icons/im";
+import shared from "@/styles/shared.module.css";
 
 type Message = {
   id: string;
@@ -166,32 +169,35 @@ export default function Companion() {
             </div>
           ))}
         </div>
+        {loading && (
+          <div className={shared.loading}>
+            <ImSpinner2 />
+          </div>
+        )}
       </div>
 
-      {loading && <div className={styles.loading}>Loading...</div>}
-
-      <div>
+      <div className={styles.userInput}>
         <input
           type="text"
           className={styles.inputBox}
           value={input}
           onChange={(e) => setInput(e.target.value)}
         />
-        <input
-          type="submit"
-          className={styles.submitButton}
+        <button
+          className={styles.sendButton}
           onClick={() => handleSubmit(input)}
-          value="Send"
           disabled={loading}
-        />
+        >
+          <FiSend />
+        </button>
+        <button
+          className={styles.regenerateButton}
+          onClick={handleRegenerate}
+          disabled={loading}
+        >
+          <FiRefreshCw />
+        </button>
       </div>
-      <input
-        type="submit"
-        className={styles.submitButton}
-        onClick={handleRegenerate}
-        value="Regenerate"
-        disabled={loading}
-      />
     </div>
   );
 }

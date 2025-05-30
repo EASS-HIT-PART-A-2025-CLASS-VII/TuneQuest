@@ -4,6 +4,8 @@ import styles from "./AlbumDetails.module.css";
 import { NonImageTrackCard } from "@/components/features/Cards";
 import { fetchDeezerGenres } from "@/api/deezer";
 import { AiButton } from "@/components/common/AiButton";
+import { ImSpinner2 } from "react-icons/im";
+import shared from "@/styles/shared.module.css";
 
 export default function AlbumDetails() {
   const { id } = useParams<{ id: string }>();
@@ -39,7 +41,11 @@ export default function AlbumDetails() {
 
   return (
     <div className={styles.container}>
-      {loading && <div className={styles.loading}>Loading...</div>}
+      {loading && (
+        <div className={shared.loading}>
+          <ImSpinner2 />
+        </div>
+      )}
       {!loading && album && (
         <>
           <div className={styles.mainInfo}>

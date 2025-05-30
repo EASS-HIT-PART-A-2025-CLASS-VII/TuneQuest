@@ -3,6 +3,8 @@ import { useState, useEffect } from "react";
 import { NavLink, useNavigate, useLocation } from "react-router-dom";
 import { fetchSearchResults } from "@/api/fetchSearchResults";
 import { TrackCard, AlbumCard, ArtistCard } from "../features/Cards";
+import { ImSpinner2 } from "react-icons/im";
+import shared from "@/styles/shared.module.css";
 
 export default function SearchBar() {
   const [search, setSearch] = useState("");
@@ -59,7 +61,11 @@ export default function SearchBar() {
         onKeyDown={checkKey}
       />
 
-      {loading && <div className={styles.loading}>Loading...</div>}
+      {loading && (
+        <div className={shared.loading}>
+          <ImSpinner2 />
+        </div>
+      )}
 
       {!loading && results[type].length > 0 && (
         <div className={styles.dropdown}>

@@ -1,6 +1,8 @@
 import styles from "./AiButton.module.css";
 import { useState } from "react";
 import { TrackCard, ArtistCard, AlbumCard } from "../features/Cards";
+import { ImSpinner2 } from "react-icons/im";
+import shared from "@/styles/shared.module.css";
 
 type AiButtonProps = {
   readonly type: string;
@@ -71,14 +73,19 @@ export function AiButton({ type, name }: AiButtonProps) {
   };
 
   return (
-    <div>
+    <div className={styles.container}>
       <button
         onClick={handleClick}
         className={styles.button}
         disabled={loading}
       >
-        {loading ? "Loading..." : "Ask AI"}
+        Ask AI
       </button>
+      {loading && (
+        <div className={shared.loading}>
+          <ImSpinner2 />
+        </div>
+      )}
       {error && <p className={styles.error}>{error}</p>}
       {results.length > 0 && (
         <div>

@@ -3,6 +3,8 @@ import { useEffect, useState } from "react";
 import { useLocation, NavLink } from "react-router";
 import { fetchSearchResults } from "@/api/fetchSearchResults";
 import { TrackCard, AlbumCard, ArtistCard } from "@/components/features/Cards";
+import { ImSpinner2 } from "react-icons/im";
+import shared from "@/styles/shared.module.css";
 
 export default function Search() {
   const [results, setResults] = useState<{
@@ -45,7 +47,11 @@ export default function Search() {
 
   return (
     <div>
-      {loading && <div className={styles.loading}>Loading...</div>}
+      {loading && (
+        <div className={shared.loading}>
+          <ImSpinner2 />
+        </div>
+      )}
       {!loading && (
         <>
           <div className={styles.buttonsContainer}>

@@ -36,3 +36,27 @@
   word-break: break-word;
   overflow-wrap: break-word;
 }
+
+.userInput {
+  display: flex;
+  justify-content: center;
+  gap: 0.1rem;
+  background-color: aqua;
+  padding: 0.5rem;
+}
+
+.sendButton {
+  background-color: black;
+  color: #fce3cd;
+  cursor: pointer;
+  border: none;
+  border-radius: 0.2rem;
+}
+
+.regenerateButton {
+  background-color: black;
+  color: #fce3cd;
+  cursor: pointer;
+  border: none;
+  border-radius: 0.2rem;
+}

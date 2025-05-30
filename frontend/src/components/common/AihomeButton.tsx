@@ -1,6 +1,8 @@
 import styles from "./AiHomeButton.module.css";
 import { useState } from "react";
 import { TrackCard, ArtistCard, AlbumCard } from "../features/Cards";
+import { ImSpinner2 } from "react-icons/im";
+import shared from "@/styles/shared.module.css";
 
 export function AiHomeButton() {
   const [results, setResults] = useState<{
@@ -85,14 +87,19 @@ Example:
   };
 
   return (
-    <div>
+    <div className={styles.container}>
       <button
         onClick={handleClick}
         className={styles.button}
         disabled={loading}
       >
-        {loading ? "Loading..." : "Ask AI"}
+        Ask AI
       </button>
+      {loading && (
+        <div className={shared.loading}>
+          <ImSpinner2 />
+        </div>
+      )}
       {error && <p className={styles.error}>{error}</p>}
       {results.tracks.length > 0 &&
         results.artists.length > 0 &&

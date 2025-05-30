@@ -4,6 +4,8 @@ import styles from "./ArtistDetails.module.css";
 import logo from "@/assets/logo.png";
 import { CompactAlbumCard, TrackCard } from "@/components/features/Cards";
 import { AiButton } from "@/components/common/AiButton";
+import { ImSpinner2 } from "react-icons/im";
+import shared from "@/styles/shared.module.css";
 
 export default function ArtistDetails() {
   const { id } = useParams<{ id: string }>();
@@ -49,7 +51,11 @@ export default function ArtistDetails() {
   return (
     <>
       <div className={styles.container}>
-        {loading && <div className={styles.loading}>Loading...</div>}
+        {loading && (
+          <div className={shared.loading}>
+            <ImSpinner2 />
+          </div>
+        )}
         {!loading && artist && (
           <div className={styles.mainInfo}>
             <div>
