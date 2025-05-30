@@ -1,6 +1,6 @@
 import styles from "./AiHomeButton.module.css";
 import { useState } from "react";
-import { TrackCard, ArtistCard, AlbumCard } from "./Cards";
+import { TrackCard, ArtistCard, AlbumCard } from "../features/Cards";
 
 export function AiHomeButton() {
   const [results, setResults] = useState<{

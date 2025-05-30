@@ -1,5 +1,5 @@
 import styles from "./Home.module.css";
-import { AiHomeButton } from "../components/AihomeButton";
+import { AiHomeButton } from "@/components/common/AihomeButton";
 
 export default function Home() {
   return (

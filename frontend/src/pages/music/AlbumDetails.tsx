@@ -1,9 +1,9 @@
 import { useParams, NavLink } from "react-router-dom";
 import { useEffect, useState } from "react";
 import styles from "./AlbumDetails.module.css";
-import { NonImageTrackCard } from "../components/Cards";
-import { fetchDeezerGenres } from "../api/deezer";
-import { AiButton } from "../components/AiButton";
+import { NonImageTrackCard } from "@/components/features/Cards";
+import { fetchDeezerGenres } from "@/api/deezer";
+import { AiButton } from "@/components/common/AiButton";
 
 export default function AlbumDetails() {
   const { id } = useParams<{ id: string }>();

@@ -1,7 +1,7 @@
 import styles from "./Login.module.css";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useUser } from "../contexts/UserContext";
+import { useUser } from "@/contexts/UserContext";
 
 export default function LogIn() {
   const [formData, setFormData] = useState({
@@ -9,7 +9,7 @@ export default function LogIn() {
     password: "",
   });
   const navigate = useNavigate();
-  const { setUser } = useUser(); // Use context instead of prop
+  const { setUser } = useUser();
 
   function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
     const { name, value } = e.target;

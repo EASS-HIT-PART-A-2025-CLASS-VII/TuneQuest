@@ -1,8 +1,8 @@
 import styles from "./Search.module.css";
 import { useEffect, useState } from "react";
 import { useLocation, NavLink } from "react-router";
-import { fetchSearchResults } from "../api/fetchSearchResults";
-import { TrackCard, AlbumCard, ArtistCard } from "../components/Cards";
+import { fetchSearchResults } from "@/api/fetchSearchResults";
+import { TrackCard, AlbumCard, ArtistCard } from "@/components/features/Cards";
 
 export default function Search() {
   const [results, setResults] = useState<{

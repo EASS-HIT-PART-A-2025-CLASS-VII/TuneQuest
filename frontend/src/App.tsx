@@ -1,15 +1,15 @@
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
-import Header from "./components/Header";
-import Home from "./pages/Home";
-import Profile from "./pages/Profile";
-import SignUp from "./pages/SignUp";
-import LogIn from "./pages/LogIn";
-import Search from "./pages/Search";
-import TrackDetails from "./pages/TrackDetails";
-import ArtistDetails from "./pages/ArtistDetails";
-import AlbumDetails from "./pages/AlbumDetails";
-import ProtectedRoute from "./components/ProtectedRoute";
-import Companion from "./pages/Companion";
+import Header from "./components/common/Header";
+import Home from "./pages/home/Home";
+import Profile from "./pages/user/Profile";
+import SignUp from "./pages/auth/SignUp";
+import LogIn from "./pages/auth/LogIn";
+import Search from "./pages/music/Search";
+import TrackDetails from "./pages/music/TrackDetails";
+import ArtistDetails from "./pages/music/ArtistDetails";
+import AlbumDetails from "./pages/music/AlbumDetails";
+import ProtectedRoute from "./components/auth/ProtectedRoute";
+import Companion from "./pages/companion/Companion";
 
 function App() {
   return (

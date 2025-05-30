@@ -1,9 +1,9 @@
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import styles from "./ArtistDetails.module.css";
-import logo from "../assets/logo.png";
-import { CompactAlbumCard, TrackCard } from "../components/Cards";
-import { AiButton } from "../components/AiButton";
+import logo from "@/assets/logo.png";
+import { CompactAlbumCard, TrackCard } from "@/components/features/Cards";
+import { AiButton } from "@/components/common/AiButton";
 
 export default function ArtistDetails() {
   const { id } = useParams<{ id: string }>();

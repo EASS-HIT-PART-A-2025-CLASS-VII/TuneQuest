@@ -1,7 +1,7 @@
 import { NavLink, useNavigate } from "react-router-dom";
 import styles from "./Header.module.css";
-import logo from "../assets/logo-modified.png";
-import { useUser } from "../contexts/UserContext";
+import logo from "@/assets/logo-modified.png";
+import { useUser } from "@/contexts/UserContext";
 import SearchBar from "./SearchBar.tsx";
 
 export default function Header() {

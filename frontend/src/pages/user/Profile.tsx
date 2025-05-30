@@ -1,6 +1,6 @@
 import styles from "./Profile.module.css";
-import userImage from "../assets/user-image.webp";
-import { useUser } from "../contexts/UserContext";
+import userImage from "@/assets/user-image.webp";
+import { useUser } from "@/contexts/UserContext";
 import { useNavigate } from "react-router";
 export default function Profile() {
   const { user, setUser } = useUser();

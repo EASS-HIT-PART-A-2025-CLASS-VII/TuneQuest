@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { v4 as uuidv4 } from "uuid";
 import styles from "./Companion.module.css";
-import { TrackCard, AlbumCard, ArtistCard } from "../components/Cards";
+import { TrackCard, AlbumCard, ArtistCard } from "@/components/features/Cards";
 
 type Message = {
   id: string;

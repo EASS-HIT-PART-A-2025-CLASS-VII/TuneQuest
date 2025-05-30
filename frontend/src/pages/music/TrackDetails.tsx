@@ -1,8 +1,8 @@
 import { useParams, NavLink } from "react-router-dom";
 import { useEffect, useState } from "react";
 import styles from "./TrackDetails.module.css";
-import { fetchDeezerGenres, fetchDeezerPreviewUrl } from "../api/deezer";
-import { AiButton } from "../components/AiButton";
+import { fetchDeezerGenres, fetchDeezerPreviewUrl } from "@/api/deezer";
+import { AiButton } from "@/components/common/AiButton";
 
 export default function TrackDetails() {
   const { id } = useParams<{ id: string }>();

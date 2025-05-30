@@ -1,10 +1,10 @@
 import styles from "./AiButton.module.css";
 import { useState } from "react";
-import { TrackCard, ArtistCard, AlbumCard } from "./Cards";
+import { TrackCard, ArtistCard, AlbumCard } from "../features/Cards";
 
 type AiButtonProps = {
-  type: string;
-  name: string;
+  readonly type: string;
+  readonly name: string;
 };
 
 type RecommendationItem = {
