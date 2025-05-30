@@ -18,17 +18,23 @@ type AIResults = {
 export default function Companion() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
+  const [regenerate, setRegenerate] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
-  const handleSubmit = async () => {
-    if (!input.trim()) return;
+  const handleSubmit = async (prompt?: string) => {
+    const messageContent = prompt ?? input.trim();
+    if (!messageContent || loading) return;
+    setLoading(true);
 
     const newMessage: Message = {
       id: uuidv4(),
       sender: "user",
-      content: input,
+      content: messageContent,
     };
 
-    setMessages([...messages, newMessage]);
+    setMessages((prev) => [...prev, newMessage]);
+    setRegenerate(messageContent);
     setInput("");
 
     try {
@@ -74,61 +80,96 @@ export default function Companion() {
         },
       };
       setMessages((prev) => [...prev, aiMessage]);
+      setLoading(false);
     } catch (error) {
       console.error("Error fetching AI response:", error);
+      if (error instanceof Error) {
+        setError(error.message);
+      } else {
+        setError("An unknown error occurred.");
+      }
     }
+  };
+
+  const handleRegenerate = () => {
+    if (!regenerate.trim()) return;
+
+    setMessages((prevMessages) => {
+      const updated = [...prevMessages];
+      const lastMsg = updated[updated.length - 1];
+
+      if (lastMsg?.sender === "ai") {
+        updated.pop();
+      }
+
+      if (updated[updated.length - 1]?.sender === "user") {
+        updated.pop();
+      }
+
+      return updated;
+    });
+
+    setInput(regenerate);
+    handleSubmit(regenerate);
   };
 
   return (
     <div className={styles.container}>
       <div className={styles.chatBox}>
         <h2>Chat With a Friend</h2>
+        {error && <p className={styles.error}>Error: {error}</p>}
         <div className={styles.messages}>
           {messages.map((msg) => (
             <div key={msg.id} className={styles[msg.sender]}>
               {typeof msg.content === "string" ? (
                 <p>{msg.content}</p>
               ) : (
-                <div className={styles.cards}>
-                  <div className={styles.cards}>
-                    {"tracks" in msg.content && (
-                      <>
-                        <p>Tracks</p>
+                <>
+                  {msg.content.tracks?.length > 0 && (
+                    <>
+                      <p>Tracks</p>
+                      <div className={styles.cards}>
                         {msg.content.tracks.map((track: any) => (
                           <div key={track.id} className={styles.card}>
-                            <TrackCard key={track.id} track={track} />
+                            <TrackCard track={track} />
                           </div>
                         ))}
-                      </>
-                    )}
-
-                    {"artists" in msg.content && (
-                      <>
-                        <p>Artists</p>
+                      </div>
+                    </>
+                  )}
+                  {msg.content.artists?.length > 0 && (
+                    <>
+                      <p>Artists</p>
+                      <div className={styles.cards}>
                         {msg.content.artists.map((artist: any) => (
                           <div key={artist.id} className={styles.card}>
-                            <ArtistCard key={artist.id} artist={artist} />
+                            <ArtistCard artist={artist} />
                           </div>
                         ))}
-                      </>
-                    )}
-                    {"albums" in msg.content && (
-                      <>
-                        <p>Albums</p>
+                      </div>
+                    </>
+                  )}
+                  {msg.content.albums?.length > 0 && (
+                    <>
+                      <p>Albums</p>
+                      <div className={styles.cards}>
                         {msg.content.albums.map((album: any) => (
                           <div key={album.id} className={styles.card}>
-                            <AlbumCard key={album.id} album={album} />
+                            <AlbumCard album={album} />
                           </div>
                         ))}
-                      </>
-                    )}
-                  </div>
-                </div>
+                      </div>
+                    </>
+                  )}
+                </>
               )}
             </div>
           ))}
         </div>
       </div>
+
+      {loading && <div className={styles.loading}>Loading...</div>}
+
       <div>
         <input
           type="text"
@@ -139,10 +180,18 @@ export default function Companion() {
         <input
           type="submit"
           className={styles.submitButton}
-          onClick={handleSubmit}
+          onClick={() => handleSubmit(input)}
           value="Send"
+          disabled={loading}
         />
       </div>
+      <input
+        type="submit"
+        className={styles.submitButton}
+        onClick={handleRegenerate}
+        value="Regenerate"
+        disabled={loading}
+      />
     </div>
   );
 }

@@ -21,12 +21,6 @@
   height: auto;
 }
 
-.logoutButtonProfile {
-  background-color: orange;
-  border-radius: 3rem;
-  border: none;
-}
-
 @media (max-width: 900px) {
   .userImage {
     width: 10rem;

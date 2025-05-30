@@ -21,18 +21,6 @@ export default function Profile() {
         <p>Full name: {user.fullName}</p>
         <p>Username: {user.username}</p>
         <p>Email: {user.email}</p>
-        <div>
-          <button
-            className={styles.logoutButtonProfile}
-            onClick={() => {
-              localStorage.removeItem("access_token");
-              setUser(null);
-              navigate("/login");
-            }}
-          >
-            Log Out
-          </button>
-        </div>
       </div>
     </div>
   );

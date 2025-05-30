@@ -40,7 +40,7 @@ async def get_current_user(
     print(f"Token received: {token}")
 
     try:
-        payload = jwt.decode({"alg": ALGORITHM}, token, SECRET_KEY)
+        payload = jwt.decode(token, SECRET_KEY, claims_options={"alg": ALGORITHM})
         username: str = payload.get("sub")
         if username is None:
             raise HTTPException(
