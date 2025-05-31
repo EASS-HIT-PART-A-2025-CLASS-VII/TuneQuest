@@ -7,3 +7,18 @@
     transform: rotate(360deg);
   }
 }
+
+.favoriteButton {
+  background: transparent;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  color: var(--favorite-color, gray); /* fallback color */
+  font-size: 3rem;
+}
+
+.favoriteButton.favorited {
+  color: red;
+}

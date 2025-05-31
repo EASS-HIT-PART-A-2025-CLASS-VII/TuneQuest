@@ -29,7 +29,7 @@ export default function Favorites() {
         const favs = await resFavs.json();
 
         setFavorites(favs);
-      } catch (err) {
+      } catch {
         setError("Failed to fetch favorites");
       } finally {
         setLoading(false);

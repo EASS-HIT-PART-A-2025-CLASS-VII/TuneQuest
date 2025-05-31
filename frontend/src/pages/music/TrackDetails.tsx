@@ -5,6 +5,7 @@ import { fetchDeezerGenres, fetchDeezerPreviewUrl } from "@/api/deezer";
 import { AiButton } from "@/components/common/AiButton";
 import { ImSpinner2 } from "react-icons/im";
 import shared from "@/styles/shared.module.css";
+import { MdFavorite, MdFavoriteBorder } from "react-icons/md";
 
 export default function TrackDetails() {
   const { id } = useParams<{ id: string }>();
@@ -13,6 +14,7 @@ export default function TrackDetails() {
   const [loading, setLoading] = useState(false);
   const [genres, setGenres] = useState<string[]>([]);
   const [deezerPreviewUrl, setDeezerPreviewUrl] = useState<string | null>(null);
+  const [favorite, setFavorite] = useState(false);
 
   useEffect(() => {
     setLoading(true);
@@ -95,7 +97,18 @@ export default function TrackDetails() {
               <p>Genres: Unknown</p>
             )}
             <p>Duration: {formatDuration(track.duration_ms)}</p>
-            <p>Popularity: {track.popularity}</p>
+            <p>Popularity: {track.popularity}</p>{" "}
+            <button
+              className={`${shared.favoriteButton} ${
+                favorite ? shared.favorited : ""
+              }`}
+              onClick={() => setFavorite(!favorite)}
+              aria-label={
+                favorite ? "Remove from favorites" : "Add to favorites"
+              }
+            >
+              {favorite ? <MdFavorite /> : <MdFavoriteBorder />}
+            </button>
             {deezerPreviewUrl ? (
               <audio className={styles.audio} controls src={deezerPreviewUrl}>
                 <track
