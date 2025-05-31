@@ -52,20 +52,22 @@ export default function SearchBar() {
 
   return (
     <div className={styles.container}>
-      <input
-        type="search"
-        className={styles.searchBar}
-        placeholder="Search"
-        value={search}
-        onChange={(e) => setSearch(e.target.value)}
-        onKeyDown={checkKey}
-      />
+      <div className={styles.input}>
+        <input
+          type="search"
+          className={styles.searchBar}
+          placeholder="Search"
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          onKeyDown={checkKey}
+        />
 
-      {loading && (
-        <div className={shared.loading}>
-          <ImSpinner2 />
-        </div>
-      )}
+        {loading && (
+          <div className={shared.loading}>
+            <ImSpinner2 />
+          </div>
+        )}
+      </div>
 
       {!loading && results[type].length > 0 && (
         <div className={styles.dropdown}>
