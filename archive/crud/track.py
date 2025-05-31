@@ -1,7 +1,7 @@
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
-from app.models.track import Track
-from app.schemas.track import TrackCreate, TrackUpdate, TrackReplace
+from archive.models.track import Track
+from archive.schemas.track import TrackCreate, TrackUpdate, TrackReplace
 from sqlalchemy import asc, desc
 
 

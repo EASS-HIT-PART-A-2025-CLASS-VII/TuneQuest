@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, Query
 from sqlalchemy.ext.asyncio import AsyncSession
-from app.core.db import get_db
-from app.crud.top_tracks import get_top_tracks
+from backend.app.core.db import get_db
+from archive.crud.top_tracks import get_top_tracks
 
 router = APIRouter(prefix="/top-tracks", tags=["top-tracks"])
 

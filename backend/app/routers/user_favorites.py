@@ -40,21 +40,21 @@ async def read_all_user_favorites(
     return result
 
 
-@router.get("/{track_id}", response_model=FavoriteRead)
+@router.get("/{spotify_track_id}", response_model=FavoriteRead)
 async def read_favorite(
-    user_id: int, track_id: int, db: AsyncSession = Depends(get_db)
+    user_id: int, spotify_track_id: str, db: AsyncSession = Depends(get_db)
 ):
-    result = await get_favorite(user_id, track_id, db)
+    result = await get_favorite(user_id, spotify_track_id, db)
     if not result:
         raise HTTPException(status_code=404, detail=favorite_not_found)
     return result
 
 
-@router.delete("/{track_id}", status_code=status.HTTP_204_NO_CONTENT)
+@router.delete("/{spotify_track_id}", status_code=status.HTTP_204_NO_CONTENT)
 async def delete_favorite(
-    user_id: int, track_id: int, db: AsyncSession = Depends(get_db)
+    user_id: int, spotify_track_id: str, db: AsyncSession = Depends(get_db)
 ):
-    result = await erase_favorite(user_id, track_id, db)
+    result = await erase_favorite(user_id, spotify_track_id, db)
     if not result:
         raise HTTPException(status_code=404, detail=favorite_not_found)
     return Response(status_code=status.HTTP_204_NO_CONTENT)

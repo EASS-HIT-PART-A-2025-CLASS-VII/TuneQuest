@@ -1,13 +1,13 @@
 from fastapi import APIRouter, Depends, HTTPException, status, Response
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.schemas.track import (
+from archive.schemas.track import (
     TrackRead,
     TrackCreate,
     TrackUpdate,
     TrackReplace,
 )
-from app.crud.track import (
+from archive.crud.track import (
     create_track,
     get_all_tracks,
     get_track,
@@ -16,7 +16,7 @@ from app.crud.track import (
     update_track,
     update_track_full,
 )
-from app.core.db import get_db
+from backend.app.core.db import get_db
 
 router = APIRouter(prefix="/tracks", tags=["tracks"])
 track_not_found = "Track not found"

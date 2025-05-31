@@ -8,7 +8,8 @@ from sqlalchemy import asc, desc
 async def create_favorite(favorite: FavoriteCreate, db: AsyncSession):
     existing_favorite = await db.execute(
         select(Favorite).where(
-            Favorite.user_id == favorite.user_id, Favorite.track_id == favorite.track_id
+            Favorite.user_id == favorite.user_id,
+            Favorite.spotify_track_id == favorite.spotify_track_id,
         )
     )
     if existing_favorite.scalars().first():
@@ -38,19 +39,19 @@ async def get_all_user_favorites(
     return result.scalars().all()
 
 
-async def get_favorite(user_id: int, track_id: int, db: AsyncSession):
+async def get_favorite(user_id: int, spotify_track_id: str, db: AsyncSession):
     result = await db.execute(
         select(Favorite).where(
-            Favorite.user_id == user_id, Favorite.track_id == track_id
+            Favorite.user_id == user_id, Favorite.spotify_track_id == spotify_track_id
         )
     )
     return result.scalar_one_or_none()
 
 
-async def erase_favorite(user_id: int, track_id: int, db: AsyncSession):
+async def erase_favorite(user_id: int, spotify_track_id: str, db: AsyncSession):
     result = await db.execute(
         select(Favorite).where(
-            Favorite.user_id == user_id, Favorite.track_id == track_id
+            Favorite.user_id == user_id, Favorite.spotify_track_id == spotify_track_id
         )
     )
     favorite = result.scalar_one_or_none()

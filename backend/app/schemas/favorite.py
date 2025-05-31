@@ -3,7 +3,7 @@ from pydantic import BaseModel
 
 class FavoriteBase(BaseModel):
     user_id: int
-    track_id: int
+    spotify_track_id: str
 
 
 class FavoriteCreate(FavoriteBase):
