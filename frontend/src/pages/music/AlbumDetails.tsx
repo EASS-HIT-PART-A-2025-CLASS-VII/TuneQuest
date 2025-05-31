@@ -7,6 +7,7 @@ import { AiButton } from "@/components/common/AiButton";
 import { ImSpinner2 } from "react-icons/im";
 import shared from "@/styles/shared.module.css";
 import { MdFavorite, MdFavoriteBorder } from "react-icons/md";
+import { useUser } from "@/contexts/UserContext";
 
 export default function AlbumDetails() {
   const { id } = useParams<{ id: string }>();
@@ -14,7 +15,9 @@ export default function AlbumDetails() {
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [genres, setGenres] = useState<string[]>([]);
-  const [favorite, setFavorite] = useState(false);
+  const [favorite, setFavorite] = useState(true);
+  const { user } = useUser() || {};
+  const token = localStorage.getItem("access_token");
 
   useEffect(() => {
     setLoading(true);
@@ -26,7 +29,20 @@ export default function AlbumDetails() {
       .then((data) => setAlbum(data))
       .catch((err) => setError(err.message))
       .finally(() => setLoading(false));
-  }, [id]);
+
+    if (user) {
+      fetch(`http://localhost:8000/favorites/${id}?type=album`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          setFavorite(Boolean(data.result));
+        })
+        .catch((err) => setError(err.message));
+    }
+  }, [id, user?.id]);
 
   useEffect(() => {
     if (album) {
@@ -37,6 +53,45 @@ export default function AlbumDetails() {
       });
     }
   }, [album]);
+
+  const handleFavorite = async () => {
+    if (!user) {
+      alert("You need to be logged in to use that feature");
+      return;
+    }
+
+    try {
+      let response;
+      if (favorite) {
+        response = await fetch(
+          `http://localhost:8000/favorites/${id}?type=album`,
+          {
+            method: "DELETE",
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+      } else {
+        response = await fetch(
+          `http://localhost:8000/favorites?spotify_id=${id}&type=album`,
+          {
+            method: "POST",
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+      }
+
+      const data = await response.json();
+      if (!data.result) throw new Error("Failed to update favorite");
+      setFavorite((prev) => !prev);
+      setError(null);
+    } catch {
+      setError("");
+    }
+  };
 
   if (error) return <p>Error: {error}</p>;
   if (!loading && !album) return null;
@@ -93,7 +148,13 @@ export default function AlbumDetails() {
                 className={`${shared.favoriteButton} ${
                   favorite ? shared.favorited : ""
                 }`}
-                onClick={() => setFavorite(!favorite)}
+                onClick={() => {
+                  if (user) {
+                    handleFavorite();
+                  } else {
+                    alert("You need to be logged in to use that feature");
+                  }
+                }}
                 aria-label={
                   favorite ? "Remove from favorites" : "Add to favorites"
                 }

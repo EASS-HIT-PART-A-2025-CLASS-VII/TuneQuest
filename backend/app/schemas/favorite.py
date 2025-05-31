@@ -1,11 +1,11 @@
 from pydantic import BaseModel
-from typing import Literal
+from app.models.favorite import FavoriteType
 
 
 class FavoriteBase(BaseModel):
     user_id: int
     spotify_id: str
-    type: Literal["track", "album", "artist"]
+    type: FavoriteType
 
 
 class FavoriteCreate(FavoriteBase):

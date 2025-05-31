@@ -11,6 +11,7 @@ from app.core.db import get_db
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
 
+
 load_dotenv()
 
 SECRET_KEY = os.getenv("JWT_SECRET_KEY")

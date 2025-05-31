@@ -14,6 +14,16 @@ export default function Header() {
         <img src={logo} alt="TuneQuest" className={styles.image} />
       </NavLink>
       <SearchBar />
+      <NavLink to="/companion">
+        <button className={styles.btnHeader}>
+          <span>Companion</span>
+        </button>
+      </NavLink>
+      <NavLink to="/favorites">
+        <button className={styles.btnHeader}>
+          <span>Favorites</span>
+        </button>
+      </NavLink>
       {user ? (
         <>
           <NavLink to="/profile">
@@ -36,11 +46,6 @@ export default function Header() {
         </>
       ) : (
         <>
-          <NavLink to="/companion">
-            <button className={styles.btnHeader}>
-              <span>Companion</span>
-            </button>
-          </NavLink>
           <NavLink to="/signup">
             <button className={styles.btnHeader}>
               <span>Sign Up</span>

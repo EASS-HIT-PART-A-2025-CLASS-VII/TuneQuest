@@ -7,6 +7,7 @@ import { AiButton } from "@/components/common/AiButton";
 import { ImSpinner2 } from "react-icons/im";
 import shared from "@/styles/shared.module.css";
 import { MdFavorite, MdFavoriteBorder } from "react-icons/md";
+import { useUser } from "@/contexts/UserContext";
 
 export default function ArtistDetails() {
   const { id } = useParams<{ id: string }>();
@@ -16,6 +17,8 @@ export default function ArtistDetails() {
   const [albums, setAlbums] = useState<any[] | null>(null);
   const [topTracks, setTopTracks] = useState<any[] | null>(null);
   const [favorite, setFavorite] = useState(false);
+  const { user } = useUser();
+  const token = localStorage.getItem("access_token");
 
   useEffect(() => {
     setLoading(true);
@@ -27,6 +30,19 @@ export default function ArtistDetails() {
       .then((data) => setArtist(data))
       .catch((err) => setError(err.message))
       .finally(() => setLoading(false));
+    if (user) {
+      fetch(`http://localhost:8000/favorites/${id}?type=artist`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          setFavorite(Boolean(data.result));
+        })
+        .catch((err) => setError(err.message));
+    }
+
     fetch(
       `http://localhost:8000/spotify/artist/${id}/albums?include_groups=album,single,appears_on,compilation`
     )
@@ -45,7 +61,46 @@ export default function ArtistDetails() {
       .then((data) => setTopTracks(data.tracks))
       .catch((err) => setError(err.message))
       .finally(() => setLoading(false));
-  }, [id]);
+  }, [id, user?.id]);
+
+  const handleFavorite = async () => {
+    if (!user) {
+      alert("You need to be logged in to use that feature");
+      return;
+    }
+
+    try {
+      let response;
+      if (favorite) {
+        response = await fetch(
+          `http://localhost:8000/favorites/${id}?type=artist`,
+          {
+            method: "DELETE",
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+      } else {
+        response = await fetch(
+          `http://localhost:8000/favorites?spotify_id=${id}&type=artist`,
+          {
+            method: "POST",
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+      }
+
+      const data = await response.json();
+      if (!data.result) throw new Error("Failed to update favorite");
+      setFavorite((prev) => !prev);
+      setError(null);
+    } catch {
+      setError("");
+    }
+  };
 
   if (error) return <p>Error: {error}</p>;
   if (!loading && !artist) return null;
@@ -81,7 +136,13 @@ export default function ArtistDetails() {
                 className={`${shared.favoriteButton} ${
                   favorite ? shared.favorited : ""
                 }`}
-                onClick={() => setFavorite(!favorite)}
+                onClick={() => {
+                  if (user) {
+                    handleFavorite();
+                  } else {
+                    alert("You need to be logged in to use that feature");
+                  }
+                }}
                 aria-label={
                   favorite ? "Remove from favorites" : "Add to favorites"
                 }

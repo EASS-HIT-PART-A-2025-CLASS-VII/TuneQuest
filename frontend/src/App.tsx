@@ -33,7 +33,14 @@ function App() {
         <Route path="/artist/:id" element={<ArtistDetails />} />
         <Route path="/album/:id" element={<AlbumDetails />} />
         <Route path="/companion" element={<Companion />} />
-        <Route path="/favorites" element={<Favorites />} />
+        <Route
+          path="/favorites"
+          element={
+            <ProtectedRoute>
+              <Favorites />
+            </ProtectedRoute>
+          }
+        />
       </Routes>
     </Router>
   );
