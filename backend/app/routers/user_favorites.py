@@ -8,6 +8,7 @@ from app.crud.favorite import (
     get_favorite,
     erase_favorite,
     get_all_user_favorites,
+    get_spotify_metadata_for_user_favorites,
 )
 from app.core.db import get_db
 from app.core.auth import get_current_user
@@ -16,13 +17,13 @@ from app.models.user import User
 
 router = APIRouter(prefix="/favorites", tags=["favorites"])
 favorite_not_found = "Favorite not found"
-type = "Favorite type: track, album, artist"
+favorite_type_description = "Favorite type: track, album, artist"
 
 
 @router.post("/", response_model=dict)
 async def add_favorite(
     spotify_id: str,
-    type: Optional[str] = Query(None, description=type),
+    type: Optional[str] = Query(None, description=favorite_type_description),
     db: AsyncSession = Depends(get_db),
     current_user: User = Depends(get_current_user),
 ):
@@ -32,25 +33,31 @@ async def add_favorite(
 
 @router.get("/", response_model=list[FavoriteRead])
 async def read_all_user_favorites(
-    sort_by: Optional[str] = None,
-    ascending: bool = True,
-    type: Optional[str] = Query(None, description=type),
     db: AsyncSession = Depends(get_db),
     current_user: User = Depends(get_current_user),
 ):
-    if type and type not in {"track", "album", "artist"}:
-        raise HTTPException(status_code=400, detail="Invalid favorite type")
-
-    result = await get_all_user_favorites(current_user.id, db, sort_by, ascending, type)
+    result = await get_all_user_favorites(current_user.id, db)
     if not result:
         raise HTTPException(status_code=404, detail="Favorites not found")
     return result
 
 
+@router.get("/spotify")
+async def get_all_spotify_metadata_for_user_favorites(
+    db: AsyncSession = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+):
+    try:
+        metadata = await get_spotify_metadata_for_user_favorites(current_user.id, db)
+        return metadata
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
 @router.get("/{spotify_id}", response_model=dict)
 async def read_favorite(
     spotify_id: str,
-    type: Optional[str] = Query(None, description=type),
+    type: Optional[str] = Query(None, description=favorite_type_description),
     db: AsyncSession = Depends(get_db),
     current_user: User = Depends(get_current_user),
 ):
@@ -61,10 +68,12 @@ async def read_favorite(
     return {"result": result is not None}
 
 
-@router.delete("/{spotify_id}", status_code=dict)
+# In main.py
+# ...
+@router.delete("/{spotify_id}", status_code=200)  # <--- CHANGE THIS from dict to 200
 async def delete_favorite(
     spotify_id: str,
-    type: Optional[str] = Query(None, description=type),
+    type: Optional[str] = Query(None, description=favorite_type_description),
     db: AsyncSession = Depends(get_db),
     current_user: User = Depends(get_current_user),
 ):

@@ -5,18 +5,30 @@ import { ImSpinner2 } from "react-icons/im";
 import shared from "@/styles/shared.module.css";
 import { useUser } from "@/contexts/UserContext";
 
-type Favorite = {
-  id: number;
-  user_id: number;
-  spotify_id: string;
-  type: "track" | "album" | "artist";
+type RecommendationItem = {
+  id: string;
+  name: string;
+  type: string;
+  image: string;
+  url: string;
+};
+
+type SpotifyFavorites = {
+  tracks: RecommendationItem[];
+  artists: RecommendationItem[];
+  albums: RecommendationItem[];
 };
 
 export default function Favorites() {
-  const [favorites, setFavorites] = useState<Favorite[]>([]);
+  const [favorites, setFavorites] = useState<SpotifyFavorites>({
+    tracks: [],
+    artists: [],
+    albums: [],
+  });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const { user } = useUser();
+  const token = localStorage.getItem("access_token");
 
   useEffect(() => {
     const fetchFavorites = async () => {
@@ -24,8 +36,13 @@ export default function Favorites() {
       try {
         setLoading(true);
 
-        const resFavs = await fetch(`http://localhost:8000/favorites`);
+        const resFavs = await fetch(`http://localhost:8000/favorites/spotify`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
         const favs = await resFavs.json();
+        console.log(favs);
 
         setFavorites(favs);
       } catch {
@@ -40,48 +57,50 @@ export default function Favorites() {
 
   return (
     <div className={styles.container}>
-      <div>
-        <p>Favorites</p>
-      </div>
+      {error && <p className={shared.error}>{error}</p>}
+      {loading && (
+        <div className={shared.loading}>
+          <ImSpinner2 />
+        </div>
+      )}
       <div className={styles.mainInfo}>
-        {error && <p className={shared.error}>{error}</p>}
-
-        {loading && (
-          <div className={shared.loading}>
-            <ImSpinner2 />
-          </div>
-        )}
-        {!loading && favorites?.length > 0 && (
-          <>
+        <div>
+          {!loading && favorites?.tracks?.length > 0 && (
             <div className={styles.tracks}>
-              {favorites
-                .filter((fav) => fav.type === "track")
-                .map((item) => (
-                  <TrackCard key={`track-${item.id}`} track={item.spotify_id} />
-                ))}{" "}
+              <h2>Tracks</h2>
+              {favorites.tracks.map((track) => (
+                <TrackCard key={track.id} track={track} />
+              ))}
             </div>
+          )}
+        </div>
+        <div>
+          {!loading && favorites?.albums?.length > 0 && (
+            <div className={styles.albums}>
+              <h2>Albums</h2>
+              {favorites.albums.map((album) => (
+                <AlbumCard key={album.id} album={album} />
+              ))}
+            </div>
+          )}
+        </div>
+        <div>
+          {!loading && favorites?.artists?.length > 0 && (
             <div className={styles.artists}>
-              {favorites
-                .filter((fav) => fav.type === "artist")
-                .map((item) => (
-                  <ArtistCard
-                    key={`artist-${item.id}`}
-                    artist={item.spotify_id}
-                  />
-                ))}{" "}
+              <h2>Artists</h2>
+              {favorites.artists.map((artist) => (
+                <ArtistCard key={artist.id} artist={artist} />
+              ))}
             </div>
-            <div className={styles.album}>
-              {favorites
-                .filter((fav) => fav.type === "album")
-                .map((item) => (
-                  <AlbumCard key={`album-${item.id}`} album={item.spotify_id} />
-                ))}{" "}
-            </div>
-          </>
-        )}
-        {!loading && favorites.length === 0 && (
-          <p className={styles.empty}>No favorites yet.</p>
-        )}
+          )}
+        </div>
+        {!loading &&
+          favorites &&
+          !(
+            (favorites.tracks && favorites.tracks.length > 0) ||
+            (favorites.artists && favorites.artists.length > 0) ||
+            (favorites.albums && favorites.albums.length > 0)
+          ) && <p className={styles.empty}>No favorites yet.</p>}{" "}
       </div>
     </div>
   );

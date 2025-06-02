@@ -30,7 +30,7 @@ def get_spotify_access_token():
     return response.json()["access_token"]
 
 
-def get_tracks_by_ids(ids: List[str]):
+async def get_tracks_by_ids(ids: List[str]):
     token = get_spotify_access_token()
     if len(ids) > 20:
         raise ValueError("Can fetch a maximum of 20 tracks per request")
@@ -50,7 +50,7 @@ def get_tracks_by_ids(ids: List[str]):
     return data.get("tracks", [])
 
 
-def get_artists_by_ids(ids: List[str]):
+async def get_artists_by_ids(ids: List[str]):
     token = get_spotify_access_token()
     if len(ids) > 20:
         raise ValueError("Can fetch a maximum of 20 artists per request")
@@ -70,7 +70,7 @@ def get_artists_by_ids(ids: List[str]):
     return data.get("artists", [])
 
 
-def get_albums_by_ids(ids: List[str]):
+async def get_albums_by_ids(ids: List[str]):
     token = get_spotify_access_token()
     if len(ids) > 20:
         raise ValueError("Can fetch a maximum of 20 albums per request")
