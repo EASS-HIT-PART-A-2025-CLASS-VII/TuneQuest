@@ -68,9 +68,7 @@ async def read_favorite(
     return {"result": result is not None}
 
 
-# In main.py
-# ...
-@router.delete("/{spotify_id}", status_code=200)  # <--- CHANGE THIS from dict to 200
+@router.delete("/{spotify_id}", status_code=200)
 async def delete_favorite(
     spotify_id: str,
     type: Optional[str] = Query(None, description=favorite_type_description),

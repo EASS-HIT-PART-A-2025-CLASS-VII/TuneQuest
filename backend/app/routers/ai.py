@@ -5,19 +5,25 @@ from app.crud.ai_history import (
     get_recommendations_home,
     get_companion,
     get_recommendations_button,
+    get_companion_history,
 )
+from fastapi import Depends
+from app.core.auth import get_current_user
+from sqlalchemy.ext.asyncio import AsyncSession
+from app.core.db import get_db
+
 
 router = APIRouter(prefix="/ai", tags=["ai"])
+ai_response_is_not_valid = "AI response is not valid JSON"
 
 
 @router.post("/recommend-home")
 def ai_recommend_home(request: AIRequest):
-    print(request)
     try:
         result = get_recommendations_home(request.prompt)
         return result
     except json.JSONDecodeError:
-        raise HTTPException(status_code=400, detail="AI response is not valid JSON")
+        raise HTTPException(status_code=400, detail=ai_response_is_not_valid)
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
@@ -32,12 +38,28 @@ def ai_recommend(request: AISpecificRequest):
 
 
 @router.post("/companion")
-def ai_companion(request: AIRequest):
+async def ai_companion(
+    request: AIRequest,
+    current_user=Depends(get_current_user),
+    db: AsyncSession = Depends(get_db),
+):
     try:
-        result = get_companion(request.prompt)
+        result = await get_companion(db, request.prompt, user_id=current_user.id)
         return result
-
     except json.JSONDecodeError:
-        raise HTTPException(status_code=400, detail="AI response is not valid JSON")
+        raise HTTPException(status_code=400, detail=ai_response_is_not_valid)
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.get("/companion")
+async def ai_companion_get_history(
+    current_user=Depends(get_current_user), db: AsyncSession = Depends(get_db)
+):
+    try:
+        result = await get_companion_history(db, user_id=current_user.id)
+        return result
+    except json.JSONDecodeError:
+        raise HTTPException(status_code=400, detail=ai_response_is_not_valid)
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { v4 as uuidv4 } from "uuid";
 import styles from "./Companion.module.css";
 import { TrackCard, AlbumCard, ArtistCard } from "@/components/features/Cards";
@@ -24,6 +24,82 @@ export default function Companion() {
   const [regenerate, setRegenerate] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const token = localStorage.getItem("access_token");
+
+  useEffect(() => {
+    async function fetchHistory() {
+      try {
+        const response = await fetch("http://localhost:8000/ai/companion", {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        if (!response.ok) throw new Error("Failed to load history");
+        const history = await response.json();
+        console.log(history);
+        // Convert API response to Message[] format:
+        const formattedMessages: Message[] = [];
+
+        for (const entry of history) {
+          formattedMessages.push({
+            id: uuidv4(),
+            sender: "user",
+            content: entry.prompt,
+          });
+
+          const responseData = entry.response;
+          const tracksIds = responseData.results.tracks
+            .map((item: any) => item.id)
+            .join(",");
+          const artistsIds = responseData.results.artists
+            .map((item: any) => item.id)
+            .join(",");
+          const albumsIds = responseData.results.albums
+            .map((item: any) => item.id)
+            .join(",");
+
+          const [trackRes, artistRes, albumRes] = await Promise.all([
+            fetch(`http://localhost:8000/spotify/tracks?ids=${tracksIds}`),
+            fetch(`http://localhost:8000/spotify/artists?ids=${artistsIds}`),
+            fetch(`http://localhost:8000/spotify/albums?ids=${albumsIds}`),
+          ]);
+
+          if (trackRes.ok && artistRes.ok && albumRes.ok) {
+            const [trackData, artistData, albumData] = await Promise.all([
+              trackRes.json(),
+              artistRes.json(),
+              albumRes.json(),
+            ]);
+
+            formattedMessages.push({
+              id: uuidv4(),
+              sender: "ai",
+              content: {
+                tracks: trackData.tracks,
+                artists: artistData.artists,
+                albums: albumData.albums,
+              },
+            });
+          } else {
+            // fallback: show raw response
+            formattedMessages.push({
+              id: uuidv4(),
+              sender: "ai",
+              content: JSON.stringify(responseData),
+            });
+          }
+        }
+
+        setMessages(formattedMessages);
+      } catch (err) {
+        console.error(err);
+        setError("Failed to load chat history.");
+      }
+    }
+    fetchHistory();
+  }, [token]);
 
   const handleSubmit = async (prompt?: string) => {
     const messageContent = prompt ?? input.trim();
@@ -43,10 +119,12 @@ export default function Companion() {
     try {
       const response = await fetch("http://localhost:8000/ai/companion", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
         body: JSON.stringify({ prompt: newMessage.content }),
       });
-
       const data = await response.json();
       const tracksIds = data.results.tracks
         .map((item: any) => item.id)
