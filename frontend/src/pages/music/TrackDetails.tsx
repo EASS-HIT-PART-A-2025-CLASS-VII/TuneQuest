@@ -152,37 +152,39 @@ export default function TrackDetails() {
             )}
             <p>Duration: {formatDuration(track.duration_ms)}</p>
             <p>Popularity: {track.popularity}</p>{" "}
-            <button
-              className={`${shared.favoriteButton} ${
-                favorite ? shared.favorited : ""
-              }`}
-              onClick={() => {
-                if (user) {
-                  handleFavorite();
-                } else {
-                  alert("You need to be logged in to use that feature");
+            <div className={styles.buttonAndAudio}>
+              <button
+                className={`${shared.favoriteButton} ${
+                  favorite ? shared.favorited : ""
+                }`}
+                onClick={() => {
+                  if (user) {
+                    handleFavorite();
+                  } else {
+                    alert("You need to be logged in to use that feature");
+                  }
+                }}
+                aria-label={
+                  favorite ? "Remove from favorites" : "Add to favorites"
                 }
-              }}
-              aria-label={
-                favorite ? "Remove from favorites" : "Add to favorites"
-              }
-            >
-              {favorite ? <MdFavorite /> : <MdFavoriteBorder />}
-            </button>
-            {deezerPreviewUrl ? (
-              <audio className={styles.audio} controls src={deezerPreviewUrl}>
-                <track
-                  kind="captions"
-                  srcLang="en"
-                  src="path/to/your-captions.vtt"
-                  label="English"
-                  default
-                />
-                Your browser does not support the audio element.
-              </audio>
-            ) : (
-              <p>No preview available</p>
-            )}
+              >
+                {favorite ? <MdFavorite /> : <MdFavoriteBorder />}
+              </button>
+              {deezerPreviewUrl ? (
+                <audio className={styles.audio} controls src={deezerPreviewUrl}>
+                  <track
+                    kind="captions"
+                    srcLang="en"
+                    src="path/to/your-captions.vtt"
+                    label="English"
+                    default
+                  />
+                  Your browser does not support the audio element.
+                </audio>
+              ) : (
+                <p>No preview available</p>
+              )}
+            </div>
           </div>
         </div>
       )}

@@ -6,21 +6,21 @@
   z-index: 20;
 }
 
-.input {
+.inputWrapper {
   display: flex;
-  align-items: center;
-  gap: 0.5rem;
   flex-direction: column;
+  gap: 0.5rem;
+  align-items: stretch;
 }
 
 .searchBar {
   width: 100%;
-  padding: 0.5rem 0.75rem;
+  padding: 0.6rem 0.9rem;
   font-size: 1rem;
   border: 1px solid #ccc;
   border-radius: 0.5rem;
-  box-sizing: border-box;
   margin-top: 1.5rem;
+  box-sizing: border-box;
 }
 
 .dropdown {
@@ -28,57 +28,71 @@
   top: 100%;
   left: 0;
   right: 0;
+  margin-top: 0.3rem;
   max-height: 25rem;
   overflow-y: auto;
-  background-color: white;
+  background: white;
   border: 1px solid #ccc;
   border-radius: 0.5rem;
   box-shadow: 0 0.25rem 0.75rem rgba(0, 0, 0, 0.15);
   z-index: 999;
-  margin-top: 0.25rem;
+  padding: 0.5rem 0.75rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.tabs {
+  display: flex;
+  justify-content: space-around;
+  margin-bottom: 0.5rem;
+  gap: 0.5rem;
+}
+
+.tab {
+  flex: 1;
+  padding: 0.4rem;
+  border: none;
+  border-bottom: 2px solid transparent;
+  background: none;
+  font-weight: bold;
+  cursor: pointer;
+  transition: border-bottom 0.2s ease, color 0.2s ease;
+}
+
+.tab:hover {
+  color: darkorange;
+}
+
+.activeTab {
+  border-bottom: 2px solid orange;
+  color: orange;
+}
+
+.results {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
 }
 
 .seeAll {
   background-color: orange;
   width: 100%;
-  min-height: 2rem;
+  padding: 0.5rem;
   border: none;
+  border-radius: 0.3rem;
+  color: black;
+  font-weight: bold;
   cursor: pointer;
-  transition: background-color 0.2s ease, transform 0.2s ease;
+  transition: background-color 0.2s ease;
 }
 
 .seeAll:hover {
   background-color: darkorange;
 }
 
-.buttonsContainer {
-  display: flex;
-  text-align: center;
-  justify-content: space-around;
-}
-
-.button {
-  width: 100%;
-  border-width: 0.2rem;
-  border-radius: 0rem;
-  border-color: white;
-  background-color: orange;
-  cursor: pointer;
-  transition: background-color 0.2s ease, transform 0.2s ease;
-}
-
-.button:hover {
-  background-color: darkorange;
-}
-
-@media (max-width: 900px) {
-  .searchBar {
-    margin-top: 0.9rem;
-  }
-}
-
 @media (max-width: 600px) {
   .searchBar {
-    margin-top: 0.4rem;
+    margin-top: 1rem;
   }
 }

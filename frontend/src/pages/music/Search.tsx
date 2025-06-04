@@ -1,6 +1,6 @@
 import styles from "./Search.module.css";
 import { useEffect, useState } from "react";
-import { useLocation, NavLink } from "react-router";
+import { useLocation } from "react-router";
 import { fetchSearchResults } from "@/api/fetchSearchResults";
 import { TrackCard, AlbumCard, ArtistCard } from "@/components/features/Cards";
 import { ImSpinner2 } from "react-icons/im";
@@ -94,18 +94,14 @@ export default function Search() {
                   {results.albums
                     .filter((_, index) => index % 2 === 0)
                     .map((album: any) => (
-                      <NavLink key={album.id} to={`/album/${album.id}`}>
-                        <AlbumCard album={album} />
-                      </NavLink>
+                      <AlbumCard key={album.id} album={album} />
                     ))}
                 </div>
                 <div className={styles.column}>
                   {results.albums
                     .filter((_, index) => index % 2 === 1)
                     .map((album: any) => (
-                      <NavLink key={album.id} to={`/album/${album.id}`}>
-                        <AlbumCard album={album} />
-                      </NavLink>
+                      <AlbumCard key={album.id} album={album} />
                     ))}
                 </div>
               </>
@@ -116,18 +112,14 @@ export default function Search() {
                   {results.artists
                     .filter((_, index) => index % 2 === 0)
                     .map((artist: any) => (
-                      <NavLink key={artist.id} to={`/artist/${artist.id}`}>
-                        <ArtistCard artist={artist} />
-                      </NavLink>
+                      <ArtistCard key={artist.id} artist={artist} />
                     ))}
                 </div>
                 <div className={styles.column}>
                   {results.artists
                     .filter((_, index) => index % 2 === 1)
                     .map((artist: any) => (
-                      <NavLink key={artist.id} to={`/artist/${artist.id}`}>
-                        <ArtistCard artist={artist} />
-                      </NavLink>
+                      <ArtistCard key={artist.id} artist={artist} />
                     ))}
                 </div>
               </>

@@ -26,8 +26,11 @@ export default function Favorites() {
     albums: [],
   });
   const [loading, setLoading] = useState(false);
+  const [type, setType] = useState<"tracks" | "albums" | "artists">("tracks");
+
   const [error, setError] = useState<string | null>(null);
   const { user } = useUser();
+
   const token = localStorage.getItem("access_token");
 
   useEffect(() => {
@@ -63,37 +66,55 @@ export default function Favorites() {
           <ImSpinner2 />
         </div>
       )}
+      <div className={styles.buttonsContainer}>
+        <button className={styles.button} onClick={() => setType("tracks")}>
+          Tracks
+        </button>
+        <button className={styles.button} onClick={() => setType("albums")}>
+          Albums
+        </button>
+        <button className={styles.button} onClick={() => setType("artists")}>
+          Artists
+        </button>
+      </div>
+
       <div className={styles.mainInfo}>
-        <div>
-          {!loading && favorites?.tracks?.length > 0 && (
-            <div className={styles.tracks}>
-              <h2>Tracks</h2>
-              {favorites.tracks.map((track) => (
-                <TrackCard key={track.id} track={track} />
-              ))}
-            </div>
-          )}
-        </div>
-        <div>
-          {!loading && favorites?.albums?.length > 0 && (
-            <div className={styles.albums}>
-              <h2>Albums</h2>
-              {favorites.albums.map((album) => (
-                <AlbumCard key={album.id} album={album} />
-              ))}
-            </div>
-          )}
-        </div>
-        <div>
-          {!loading && favorites?.artists?.length > 0 && (
-            <div className={styles.artists}>
-              <h2>Artists</h2>
-              {favorites.artists.map((artist) => (
-                <ArtistCard key={artist.id} artist={artist} />
-              ))}
-            </div>
-          )}
-        </div>
+        {type === "tracks" && (
+          <>
+            {!loading && favorites?.tracks?.length > 0 && (
+              <div className={styles.tracks}>
+                <h2>Tracks</h2>
+                {favorites.tracks.map((track) => (
+                  <TrackCard key={track.id} track={track} />
+                ))}
+              </div>
+            )}
+          </>
+        )}
+        {type === "albums" && (
+          <>
+            {!loading && favorites?.albums?.length > 0 && (
+              <div className={styles.column}>
+                <h2>Albums</h2>
+                {favorites.albums.map((album) => (
+                  <AlbumCard key={album.id} album={album} />
+                ))}
+              </div>
+            )}
+          </>
+        )}
+        {type === "artists" && (
+          <>
+            {!loading && favorites?.artists?.length > 0 && (
+              <div className={styles.column}>
+                <h2>Artists</h2>
+                {favorites.artists.map((artist) => (
+                  <ArtistCard key={artist.id} artist={artist} />
+                ))}
+              </div>
+            )}
+          </>
+        )}
         {!loading &&
           favorites &&
           !(
