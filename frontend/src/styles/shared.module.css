@@ -1,4 +1,9 @@
 .loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 1rem 0;
+  font-size: 2rem;
   animation: loading 1s linear infinite;
 }
 

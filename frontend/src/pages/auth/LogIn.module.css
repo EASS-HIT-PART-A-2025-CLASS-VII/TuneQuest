@@ -5,7 +5,6 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  position: relative;
   z-index: 1;
   margin: 0;
 }
@@ -67,14 +66,13 @@
   font-weight: bold;
 }
 
-/* Tablet (medium devices) */
 @media (max-width: 900px) {
   .logInForm {
     height: 90vh;
   }
 
   .logInContainer {
-    max-width: 20rem;
+    max-width: 60vw;
     padding: 1rem;
   }
 
@@ -89,16 +87,13 @@
   }
 }
 
-/* Phone (small devices) */
 @media (max-width: 600px) {
   .logInForm {
-    height: auto;
-    min-height: unset;
     padding: 1rem;
   }
 
   .logInContainer {
-    max-width: 100%;
+    max-width: 60vw;
     border-radius: 1rem;
     padding: 1rem;
   }

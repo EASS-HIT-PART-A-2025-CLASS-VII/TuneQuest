@@ -2,10 +2,27 @@
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
-  margin: 0;
+  flex-wrap: wrap;
   padding: 0.5rem;
   gap: 1rem;
-  z-index: 1;
+}
+
+.left {
+  display: flex;
+  align-items: center;
+}
+
+.center {
+  flex-grow: 1;
+  display: flex;
+  justify-content: center;
+}
+
+.right {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: nowrap;
   position: relative;
 }
 
@@ -15,7 +32,7 @@
 
 .btnHeader {
   cursor: pointer;
-  background-color: orange;
+  background: linear-gradient(135deg, #ffa450 50%, #d64c68 100%);
   margin-top: 0.5rem;
   width: 8rem;
   height: 4rem;
@@ -34,6 +51,61 @@
 .btnHeader:active {
   transform: translateY(0.2rem);
 }
+
+.hamburger {
+  display: none;
+  font-size: 2rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+  margin-top: 0.5rem;
+}
+
+.mobileMenu {
+  position: absolute;
+  top: 4rem;
+  right: 0;
+  background-color: white;
+  border: 1px solid #ddd;
+  border-radius: 0.5rem;
+  box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
+  z-index: 100;
+}
+
+.dropdownList {
+  list-style: none;
+  padding: 0.5rem;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.dropdownList a,
+.dropdownButton {
+  display: block;
+  padding: 0.5rem 1rem;
+  font-size: 0.9rem;
+  text-decoration: none;
+  color: #333;
+  border-radius: 0.25rem;
+  background: none;
+  border: none;
+  text-align: left;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.dropdownList a:hover,
+.dropdownButton:hover {
+  background-color: #f0f0f0;
+}
+
+.desktopMenu {
+  display: flex;
+  gap: 0.5rem;
+}
+
 @media (max-width: 900px) {
   .image {
     width: 4rem;
@@ -44,6 +116,17 @@
     height: 3.5rem;
     font-size: 0.8rem;
     margin-top: 0.2rem;
+  }
+  .desktopMenu {
+    display: none;
+  }
+
+  .hamburger {
+    display: block;
+  }
+
+  .mobileMenu {
+    display: flex;
   }
 }
 
@@ -57,5 +140,8 @@
     height: 3rem;
     font-size: 0.8rem;
     margin-top: 0rem;
+  }
+  .hamburger {
+    margin-top: 0;
   }
 }

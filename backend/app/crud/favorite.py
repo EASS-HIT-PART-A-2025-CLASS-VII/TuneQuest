@@ -2,7 +2,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
 from app.models.favorite import Favorite, FavoriteType
 from sqlalchemy import asc, desc
-from typing import Optional, List
+from typing import List, Dict, Any, Callable, Optional
 from app.services.spotify import (
     get_tracks_by_ids,
     get_artists_by_ids,
@@ -69,56 +69,74 @@ async def get_all_user_favorites(
     return result.scalars().all()
 
 
+async def _fetch_spotify_data_in_batches_threaded(
+    spotify_ids: List[str], fetch_func_sync: Callable[[List[str]], Any], batch_size: int
+) -> List[Dict[str, Any]]:
+    """
+    Helper to fetch Spotify data in concurrent batches, running synchronous
+    fetch functions in separate threads.
+    """
+    all_results = []
+    if not spotify_ids:
+        return all_results
+
+    tasks = []
+    for i in range(0, len(spotify_ids), batch_size):
+        batch_ids = spotify_ids[i : i + batch_size]
+        # Use asyncio.to_thread to run the synchronous function in a separate thread
+        tasks.append(asyncio.to_thread(fetch_func_sync, batch_ids))
+
+    # asyncio.gather will wait for all threads to complete
+    batch_results = await asyncio.gather(*tasks, return_exceptions=True)
+
+    for result in batch_results:
+        if isinstance(result, HTTPException):
+            print(
+                f"Warning: Error fetching batch for {fetch_func_sync.__name__}: {result.detail}"
+            )
+        elif isinstance(
+            result, Exception
+        ):  # Catch any other exceptions from the thread
+            print(
+                f"Warning: Unexpected error fetching batch for {fetch_func_sync.__name__}: {result}"
+            )
+        else:
+            all_results.extend(result)
+    return all_results
+
+
 async def get_spotify_metadata_for_user_favorites(user_id: int, db: AsyncSession):
     favorites = await get_all_user_favorites(user_id, db)
 
     grouped = {"tracks": [], "artists": [], "albums": []}
     for fav in favorites:
         plural_type_key = fav.type.value + "s"
-        # Use fav.type.value to get the string representation for the dictionary key
-        if (
-            fav.type and plural_type_key in grouped
-        ):  # Defensive check for unexpected types
-            print("hey")
+        if fav.type and plural_type_key in grouped:
             grouped[plural_type_key].append(fav.spotify_id)
 
-    metadata = {
-        "tracks": [],
-        "artists": [],
-        "albums": [],
-    }  # Initialize with empty lists for safety
+    # Prepare the tasks for asyncio.gather using the new top-level helper
+    # Pass the synchronous get_by_ids functions and their appropriate batch sizes
+    tracks_task = _fetch_spotify_data_in_batches_threaded(
+        grouped["tracks"], get_tracks_by_ids, 20
+    )
+    artists_task = _fetch_spotify_data_in_batches_threaded(
+        grouped["artists"], get_artists_by_ids, 20
+    )
+    albums_task = _fetch_spotify_data_in_batches_threaded(
+        grouped["albums"], get_albums_by_ids, 20
+    )
 
-    # Helper function for batching Spotify API calls
-    async def fetch_spotify_data_in_batches(spotify_ids: List[str], fetch_func):
-        all_results = []
-        if not spotify_ids:
-            return all_results
-        # Spotify API limit is 20 ids per request (or adjust if your function allows more)
-        for i in range(0, len(spotify_ids), 20):
-            batch_ids = spotify_ids[i : i + 20]
-            try:
-                batch_data = await fetch_func(batch_ids)
-                all_results.extend(batch_data)
-            except HTTPException as e:
-                print(
-                    f"Warning: Error fetching batch for {fetch_func.__name__}: {e.detail}"
-                )
-                # You might choose to re-raise, or just skip this batch
-                # For now, we'll let the main try-except in router handle a 500 if unhandled here
-        return all_results
-
-    tracks_task = fetch_spotify_data_in_batches(grouped["tracks"], get_tracks_by_ids)
-    artists_task = fetch_spotify_data_in_batches(grouped["artists"], get_artists_by_ids)
-    albums_task = fetch_spotify_data_in_batches(grouped["albums"], get_albums_by_ids)
-
+    # Execute all tasks concurrently
     tracks, artists, albums = await asyncio.gather(
         tracks_task, artists_task, albums_task
     )
 
-    metadata["tracks"] = tracks
-    metadata["artists"] = artists
-    metadata["albums"] = albums
-
+    metadata = {
+        "tracks": tracks,
+        "artists": artists,
+        "albums": albums,
+    }
+    print(metadata)
     return metadata
 
 

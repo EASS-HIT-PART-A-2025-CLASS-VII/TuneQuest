@@ -9,9 +9,16 @@
 .button {
   width: 300px;
   background-color: orange;
+  border-radius: 12px;
+  font-size: 1rem;
+  color: black;
+  border: none;
+  cursor: pointer;
+  padding: 0.75rem;
   transition: background-color 0.2s ease, transform 0.2s ease;
 }
 
 .button:hover {
   background-color: darkorange;
+  transform: translate(1px, 1px);
 }

@@ -38,7 +38,6 @@ async def get_current_user(
     db: AsyncSession = Depends(get_db),
 ) -> User:
     token = credentials.credentials
-    print(f"Token received: {token}")
 
     try:
         payload = jwt.decode(token, SECRET_KEY, claims_options={"alg": ALGORITHM})

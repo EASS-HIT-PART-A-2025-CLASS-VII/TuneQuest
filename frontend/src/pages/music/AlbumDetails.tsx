@@ -99,18 +99,19 @@ export default function AlbumDetails() {
   return (
     <div className={styles.container}>
       {loading && (
-        <div className={shared.loading}>
+        <div className={shared.loading} aria-live="polite" aria-busy="true">
           <ImSpinner2 />
         </div>
       )}
+
       {!loading && album && (
         <>
-          <div className={styles.mainInfo}>
+          <section className={styles.mainInfo} aria-label="Album information">
             <div>
-              {album.images?.length > 0 && (
+              {album.images?.[0]?.url && (
                 <img
                   src={album.images[0].url}
-                  alt={album.name}
+                  alt={`Album cover for ${album.name}`}
                   className={styles.albumImage}
                   width={300}
                   height="auto"
@@ -118,19 +119,26 @@ export default function AlbumDetails() {
               )}
               <AiButton type="album" name={album.name} />
             </div>
+
             <div>
               <h2>{album.name}</h2>
+
               <p>
-                {album.artists.map((a: any, idx: number) => (
-                  <span key={a.id}>
-                    <NavLink className={styles.navigate} to={`/artist/${a.id}`}>
-                      {a.name}
+                {album.artists.map((artist: any, idx: number) => (
+                  <span key={artist.id}>
+                    <NavLink
+                      className={styles.navigate}
+                      to={`/artist/${artist.id}`}
+                    >
+                      {artist.name}
                     </NavLink>
-                    {idx < album.artists.length - 1 ? ", " : ""}
+                    {idx < album.artists.length - 1 && ", "}
                   </span>
                 ))}
               </p>
+
               <p>Type: {album.album_type}</p>
+
               <p>
                 Release Year:{" "}
                 {album.release_date_precision === "year"
@@ -139,11 +147,9 @@ export default function AlbumDetails() {
               </p>
 
               <p>Popularity: {album.popularity ?? "N/A"}</p>
-              {genres.length > 0 ? (
-                <p>Genres: {genres?.join(", ") ?? "N/A"}</p>
-              ) : (
-                <p>Genres: Unknown</p>
-              )}
+
+              <p>Genres: {genres.length > 0 ? genres.join(", ") : "Unknown"}</p>
+
               <button
                 className={`${shared.favoriteButton} ${
                   favorite ? shared.favorited : ""
@@ -155,6 +161,7 @@ export default function AlbumDetails() {
                     alert("You need to be logged in to use that feature");
                   }
                 }}
+                aria-pressed={favorite}
                 aria-label={
                   favorite ? "Remove from favorites" : "Add to favorites"
                 }
@@ -162,14 +169,16 @@ export default function AlbumDetails() {
                 {favorite ? <MdFavorite /> : <MdFavoriteBorder />}
               </button>
             </div>
-          </div>
+          </section>
+
           {album.tracks?.items?.length > 0 && (
-            <div className={styles.tracks}>
+            <section className={styles.tracks} aria-label="Album tracks">
               {album.tracks.items.map((track: any) => (
                 <NonImageTrackCard key={track.id} track={track} />
               ))}
-            </div>
+            </section>
           )}
+
           <p>Release Date: {album.release_date}</p>
         </>
       )}

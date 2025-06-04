@@ -8,17 +8,28 @@
 
 .button {
   width: 300px;
-  background-color: orange;
+  background-color: #7b5e99;
+  border-radius: 12px;
+  font-size: 1rem;
+  font-weight: bold;
+  color: white;
+  border: none;
+  cursor: pointer;
+  padding: 0.75rem;
   transition: background-color 0.2s ease, transform 0.2s ease;
 }
 
 .button:hover {
   background-color: darkorange;
+  transform: translate(1px, 1px);
 }
 
 .columns {
   display: flex;
+  flex-wrap: wrap;
   gap: 1rem;
+  justify-content: center;
+  margin-top: 1.5rem;
   align-items: stretch;
 }
 
@@ -26,12 +37,20 @@
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
-
   flex: 1;
-  background-color: white;
-  border-color: aqua;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 255, 255, 0.1);
+  background-color: #f8f4f2;
+  gap: 1rem;
 }
 
 .title {
   text-decoration: underline;
+  color: black;
+  text-align: center;
+}
+
+.error {
+  color: red;
+  font-weight: bold;
 }

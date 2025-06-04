@@ -110,9 +110,7 @@ async def get_companion_history(db: AsyncSession, user_id: int):
             .limit(10)
         )
         result = await db.execute(stmt)
-        print(result)
         entries = result.scalars().all()
-        print(entries)
         return [
             {
                 "prompt": entry.prompt,

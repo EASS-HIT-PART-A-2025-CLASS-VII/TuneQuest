@@ -24,7 +24,7 @@ export function AiHomeButton() {
 
     try {
       const prompt = `
-Recommend 20 random tracks, 20 random artists, and 20 random albums.
+Recommend 10 random tracks, 10 random artists, and 10 random albums.
 Return *only* a valid JSON object with exactly 3 keys: "tracks", "artists", and "albums".
 Each key must map to an array of names (strings).
 No explanations or extra text — only valid JSON.

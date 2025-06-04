@@ -1,7 +1,6 @@
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import styles from "./ArtistDetails.module.css";
-import logo from "@/assets/logo.png";
 import { CompactAlbumCard, TrackCard } from "@/components/features/Cards";
 import { AiButton } from "@/components/common/AiButton";
 import { ImSpinner2 } from "react-icons/im";
@@ -106,19 +105,20 @@ export default function ArtistDetails() {
   if (!loading && !artist) return null;
 
   return (
-    <>
-      <div className={styles.container}>
-        {loading && (
-          <div className={shared.loading}>
-            <ImSpinner2 />
-          </div>
-        )}
-        {!loading && artist && (
+    <div className={styles.container}>
+      {loading && (
+        <div className={shared.loading}>
+          <ImSpinner2 />
+        </div>
+      )}
+
+      {!loading && artist && (
+        <>
           <div className={styles.mainInfo}>
-            <div>
+            <div className={styles.leftSide}>
               {artist.images?.length > 0 && (
                 <img
-                  src={artist.images?.[0]?.url ?? logo}
+                  src={artist.images[0].url}
                   alt={artist.name}
                   className={styles.artistImage}
                   width={300}
@@ -127,7 +127,8 @@ export default function ArtistDetails() {
               )}
               <AiButton type="artist" name={artist.name} />
             </div>
-            <div>
+
+            <div className={styles.rightSide}>
               <h2>{artist.name}</h2>
               <p>Genres: {artist.genres?.join(", ") ?? "N/A"}</p>
               <p>Followers: {artist.followers?.total.toLocaleString()}</p>
@@ -137,11 +138,8 @@ export default function ArtistDetails() {
                   favorite ? shared.favorited : ""
                 }`}
                 onClick={() => {
-                  if (user) {
-                    handleFavorite();
-                  } else {
-                    alert("You need to be logged in to use that feature");
-                  }
+                  if (user) handleFavorite();
+                  else alert("You need to be logged in to use that feature");
                 }}
                 aria-label={
                   favorite ? "Remove from favorites" : "Add to favorites"
@@ -150,21 +148,27 @@ export default function ArtistDetails() {
                 {favorite ? <MdFavorite /> : <MdFavoriteBorder />}
               </button>
             </div>
-            <div>
+            <div className={styles.topTracksSection}>
               {Array.isArray(topTracks) &&
-                topTracks?.length > 0 &&
+                topTracks.length > 0 &&
                 topTracks
                   .slice(0, 5)
-                  .map((a: any) => <TrackCard key={a.id} track={a} />)}
+                  .map((track: any) => (
+                    <TrackCard key={track.id} track={track} />
+                  ))}
             </div>
           </div>
-        )}
-      </div>
-      <div>
-        {Array.isArray(albums) &&
-          albums?.length > 0 &&
-          albums.map((a: any) => <CompactAlbumCard key={a.id} album={a} />)}
-      </div>{" "}
-    </>
+
+          <div className={styles.albumsSection}>
+            <h2>Albums</h2>
+            {Array.isArray(albums) &&
+              albums.length > 0 &&
+              albums.map((album: any) => (
+                <CompactAlbumCard key={album.id} album={album} />
+              ))}
+          </div>
+        </>
+      )}
+    </div>
   );
 }

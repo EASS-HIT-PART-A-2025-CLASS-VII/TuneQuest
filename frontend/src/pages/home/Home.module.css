@@ -1,17 +1,24 @@
 .container {
-  padding: 2rem;
-  text-align: center;
+  background: linear-gradient(135deg, #ffa450 0%, #d64c68 100%);
+  border-radius: 12px;
+  color: white;
+  padding: 3rem 2rem;
+  max-width: 50vw;
+  margin: 3rem auto;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
 }
 
 .title {
-  font-size: 2rem;
-  font-weight: bold;
+  font-family: "Poppins", sans-serif;
+  font-weight: 700;
+  line-height: 1.2;
   margin-bottom: 1rem;
 }
 
 .description {
-  font-size: 1.2rem;
+  font-family: "Roboto", sans-serif;
   color: #555;
+  line-height: 1.5;
 }
 
 @media (max-width: 900px) {

@@ -1,4 +1,4 @@
-import styles from "./Login.module.css";
+import styles from "./LogIn.module.css";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useUser } from "@/contexts/UserContext";

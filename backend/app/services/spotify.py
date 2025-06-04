@@ -32,8 +32,8 @@ def get_spotify_access_token():
 
 def get_tracks_by_ids(ids: List[str]):
     token = get_spotify_access_token()
-    if len(ids) > 20:
-        raise ValueError("Can fetch a maximum of 20 tracks per request")
+    if len(ids) > 10:
+        raise ValueError("Can fetch a maximum of 10 tracks per request")
 
     headers = {"Authorization": f"Bearer {token}"}
     params = {"ids": ",".join(ids)}
@@ -52,8 +52,8 @@ def get_tracks_by_ids(ids: List[str]):
 
 def get_artists_by_ids(ids: List[str]):
     token = get_spotify_access_token()
-    if len(ids) > 20:
-        raise ValueError("Can fetch a maximum of 20 artists per request")
+    if len(ids) > 10:
+        raise ValueError("Can fetch a maximum of 10 artists per request")
 
     headers = {"Authorization": f"Bearer {token}"}
     params = {"ids": ",".join(ids)}
@@ -72,8 +72,8 @@ def get_artists_by_ids(ids: List[str]):
 
 def get_albums_by_ids(ids: List[str]):
     token = get_spotify_access_token()
-    if len(ids) > 20:
-        raise ValueError("Can fetch a maximum of 20 albums per request")
+    if len(ids) > 10:
+        raise ValueError("Can fetch a maximum of 10 albums per request")
 
     headers = {"Authorization": f"Bearer {token}"}
     params = {"ids": ",".join(ids)}
