@@ -6,8 +6,6 @@ from dotenv import load_dotenv
 from pathlib import Path
 from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession, async_sessionmaker
 from sqlalchemy.pool import NullPool
-from app.schemas.user import UserCreate
-from app.core.auth import create_access_token
 from app.models.user import User
 from app.core.security import hash_password
 from httpx import AsyncClient, ASGITransport
@@ -20,7 +18,7 @@ ROOT_DIR = Path(__file__).parent.parent.parent
 load_dotenv(ROOT_DIR / ".env.test")
 
 os.environ["ENV"] = "testing"
-init_db()  # Initialize the database after setting ENV and loading .env.test
+init_db()
 
 
 TEST_DB_URL = os.getenv("TEST_DB_URL")

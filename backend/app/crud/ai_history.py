@@ -54,18 +54,21 @@ async def get_companion(db: AsyncSession, prompt: str, user_id: int = None):
     )
     full_prompt = f"User asked: '{prompt}'.\n{system_prompt}"
 
-    # 1. Call the AI
     ai_response_text = ask_gemini(full_prompt)
 
-    # 2. Clean markdown formatting
-    cleaned_response = re.sub(
-        r"```(?:json)?\n(.+?)\n```", r"\1", ai_response_text, flags=re.DOTALL
-    )
+    match = re.search(r"```(?:json)?\s*(.+?)\s*```", ai_response_text, flags=re.DOTALL)
+    if match:
+        extracted_content = match.group(1)
+        cleaned_response = " ".join(extracted_content.split()).strip()
+    else:
+        cleaned_response = " ".join(ai_response_text.split()).strip()
 
-    # 3. Validate JSON
     try:
         data = json.loads(cleaned_response)
     except json.JSONDecodeError:
+        print(
+            f"DEBUG: Failed to parse JSON. Cleaned response was: '{cleaned_response}'"
+        )
         raise json.JSONDecodeError("Failed to parse AI JSON", cleaned_response, 0)
 
     tracks = data.get("tracks", [])
