@@ -12,7 +12,6 @@ from app.crud.ai_history import (
 )
 from app.schemas.ai import AISpecificRequest
 from app.models.history import AiHistory
-from app.models.user import User
 
 
 @pytest.fixture
@@ -131,8 +130,7 @@ async def test_get_companion_success(
 
 @pytest.mark.asyncio
 async def test_get_companion_history_success(db_session, create_test_user):
-    # Use the fixture to create the user
-    user = await create_test_user("testuser", "testpassword")
+    user = await create_test_user("testcompanionhistory", "testpassword")
 
     entry1 = AiHistory(
         user_id=user.id,

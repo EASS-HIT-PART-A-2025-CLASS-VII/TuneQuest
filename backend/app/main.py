@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from app.models.base import Base
-from app.core.db import init_db, engine
+from app.core.db import init_db
 from app.routers import (
     user,
     favorite,
