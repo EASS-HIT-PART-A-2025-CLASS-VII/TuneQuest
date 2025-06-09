@@ -70,7 +70,7 @@ export default function SignUp() {
     const { confirmPassword, ...newForm } = formData;
     console.log(newForm);
     try {
-      const response = await fetch("http://localhost:8000/users/", {
+      const response = await fetch("http://localhost:8000/users/register", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

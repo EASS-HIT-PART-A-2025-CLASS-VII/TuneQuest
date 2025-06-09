@@ -5,6 +5,8 @@ import React, {
   useEffect,
   useMemo,
 } from "react";
+import shared from "@/styles/shared.module.css";
+import { ImSpinner2 } from "react-icons/im";
 
 interface User {
   id: number;
@@ -60,7 +62,13 @@ export function UserProvider({
 
   return (
     <UserContext.Provider value={value}>
-      {loading ? <p>Loading...</p> : children}
+      {loading ? (
+        <div className={shared.loading}>
+          <ImSpinner2 />
+        </div>
+      ) : (
+        children
+      )}
     </UserContext.Provider>
   );
 }

@@ -1,4 +1,4 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict
 from app.models.favorite import FavoriteType
 
 
@@ -14,6 +14,4 @@ class FavoriteCreate(FavoriteBase):
 
 class FavoriteRead(FavoriteBase):
     id: int
-
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)

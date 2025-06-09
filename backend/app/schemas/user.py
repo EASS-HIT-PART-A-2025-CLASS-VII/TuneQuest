@@ -1,4 +1,4 @@
-from pydantic import BaseModel, EmailStr, Field
+from pydantic import BaseModel, EmailStr, Field, ConfigDict
 from typing import Optional
 
 
@@ -23,9 +23,7 @@ class UserReplace(UserBase):
 
 class UserRead(UserBase):
     id: int
-
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
 
 class UserLogin(BaseModel):
@@ -34,5 +32,5 @@ class UserLogin(BaseModel):
 
 
 class PasswordChange(BaseModel):
-    old_password: str
-    new_password: str
+    current_password: str = Field(min_length=1)
+    new_password: str = Field(min_length=8, max_length=20)

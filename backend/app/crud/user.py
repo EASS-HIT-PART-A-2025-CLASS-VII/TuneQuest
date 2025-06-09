@@ -112,8 +112,8 @@ async def change_password(db: AsyncSession, payload: PasswordChange, username: s
 
     if not user:
         return False
-    if not verify_password(payload.old_password, user.hashed_password):
+    if not verify_password(payload.current_password, user.hashed_password):
         return False
-    user.password = hash_password(payload.new_password)
+    user.hashed_password = hash_password(payload.new_password)
     await db.commit()
     return True

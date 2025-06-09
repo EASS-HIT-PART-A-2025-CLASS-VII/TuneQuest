@@ -31,7 +31,7 @@ router = APIRouter(prefix="/users", tags=["users"])
 VALID_SORT_FIELDS = ["id", "username", "email"]
 
 
-@router.post("/", response_model=UserRead)
+@router.post("/register", response_model=UserRead)
 async def create_user_endpoint(user: UserCreate, db: AsyncSession = Depends(get_db)):
     existing_user = await get_user_by_username(db, user.username)
     if existing_user:

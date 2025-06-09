@@ -20,7 +20,7 @@ ACCESS_TOKEN_EXPIRE_MINUTES = 30
 
 # Argon2 password context
 pwd_context = CryptContext(schemes=["argon2"], deprecated="auto")
-security = HTTPBearer()
+security = HTTPBearer(auto_error=False)
 
 
 def create_access_token(data: dict, expires_delta: timedelta | None = None):
@@ -37,6 +37,9 @@ async def get_current_user(
     credentials: HTTPAuthorizationCredentials = Depends(security),
     db: AsyncSession = Depends(get_db),
 ) -> User:
+    if not credentials:
+        raise HTTPException(status_code=401, detail="Not authenticated")
+
     token = credentials.credentials
 
     try:

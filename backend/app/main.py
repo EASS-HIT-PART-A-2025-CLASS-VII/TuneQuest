@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from app.models.base import Base
-from app.core.db import SessionLocal, engine
+from app.core.db import init_db, engine
 from app.routers import (
     user,
     favorite,
@@ -14,19 +14,15 @@ from fastapi.middleware.cors import CORSMiddleware
 from app.services import deezer_genres
 
 
-# Dependency to get the database session
-def get_db():
-    db = SessionLocal()
-    try:
-        yield db
-    finally:
-        db.close()
-
-
 @asynccontextmanager
 async def lifespan(app: FastAPI):
+    # Initialize the database and get the engine
+    db_engine = init_db()
+    if not db_engine:
+        raise RuntimeError("Failed to initialize database")
+
     # Startup: create tables
-    async with engine.begin() as conn:
+    async with db_engine.begin() as conn:
         await conn.run_sync(Base.metadata.create_all)
     deezer_genres.load_deezer_genres()
 
