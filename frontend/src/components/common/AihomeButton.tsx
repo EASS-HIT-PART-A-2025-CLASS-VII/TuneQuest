@@ -1,19 +1,18 @@
-import styles from "./AiHomeButton.module.css";
+import styles from "./AihomeButton.module.css";
 import { useState } from "react";
 import { TrackCard, ArtistCard, AlbumCard } from "../features/Cards";
 import { ImSpinner2 } from "react-icons/im";
 import shared from "@/styles/shared.module.css";
 
+/**
+ * Component that fetches AI recommendations for tracks, albums, and artists.
+ */
 export function AiHomeButton() {
   const [results, setResults] = useState<{
     tracks: any[];
     albums: any[];
     artists: any[];
-  }>({
-    tracks: [],
-    albums: [],
-    artists: [],
-  });
+  }>({ tracks: [], albums: [], artists: [] });
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
@@ -48,26 +47,28 @@ Example:
       if (!aiResponse.ok) throw new Error("Failed to fetch AI recommendations");
 
       const aiData = await aiResponse.json();
-
-      const tracksIds = aiData.results.tracks
-        .map((item: any) => item.id)
-        .join(",");
-      const artistsIds = aiData.results.artists
-        .map((item: any) => item.id)
-        .join(",");
-      const albumsIds = aiData.results.albums
-        .map((item: any) => item.id)
-        .join(",");
-
       const [trackRes, artistRes, albumRes] = await Promise.all([
-        fetch(`http://localhost:8000/spotify/tracks?ids=${tracksIds}`),
-        fetch(`http://localhost:8000/spotify/artists?ids=${artistsIds}`),
-        fetch(`http://localhost:8000/spotify/albums?ids=${albumsIds}`),
+        fetch(
+          `http://localhost:8000/spotify/tracks?ids=${aiData.results.tracks
+            .map((t: any) => t.id)
+            .join(",")}`
+        ),
+        fetch(
+          `http://localhost:8000/spotify/artists?ids=${aiData.results.artists
+            .map((a: any) => a.id)
+            .join(",")}`
+        ),
+        fetch(
+          `http://localhost:8000/spotify/albums?ids=${aiData.results.albums
+            .map((a: any) => a.id)
+            .join(",")}`
+        ),
       ]);
 
       if (!trackRes.ok || !artistRes.ok || !albumRes.ok) {
         throw new Error("One or more Spotify fetches failed");
       }
+
       const [trackData, artistData, albumData] = await Promise.all([
         trackRes.json(),
         artistRes.json(),

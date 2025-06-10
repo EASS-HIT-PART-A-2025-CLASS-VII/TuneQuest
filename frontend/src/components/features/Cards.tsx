@@ -1,6 +1,9 @@
 import { NavLink } from "react-router-dom";
 import styles from "./Cards.module.css";
 
+/**
+ * Card component for displaying a track with image.
+ */
 export function TrackCard({ track }: { readonly track: any }) {
   return (
     <NavLink to={`/track/${track.id}`} className={styles.card}>
@@ -19,6 +22,9 @@ export function TrackCard({ track }: { readonly track: any }) {
   );
 }
 
+/**
+ * Card component for displaying a track without image.
+ */
 export function NonImageTrackCard({ track }: { readonly track: any }) {
   return (
     <NavLink to={`/track/${track.id}`} className={styles.card}>
@@ -33,6 +39,9 @@ export function NonImageTrackCard({ track }: { readonly track: any }) {
   );
 }
 
+/**
+ * Card component for displaying an album with full details.
+ */
 export function AlbumCard({ album }: { readonly album: any }) {
   return (
     <NavLink to={`/album/${album.id}`} className={styles.card}>
@@ -56,6 +65,9 @@ export function AlbumCard({ album }: { readonly album: any }) {
   );
 }
 
+/**
+ * Compact card component for displaying an album with minimal details.
+ */
 export function CompactAlbumCard({ album }: { readonly album: any }) {
   return (
     <NavLink to={`/album/${album.id}`} className={styles.card}>
@@ -76,6 +88,9 @@ export function CompactAlbumCard({ album }: { readonly album: any }) {
   );
 }
 
+/**
+ * Card component for displaying an artist.
+ */
 export function ArtistCard({ artist }: { readonly artist: any }) {
   return (
     <NavLink to={`/artist/${artist.id}`} className={styles.card}>

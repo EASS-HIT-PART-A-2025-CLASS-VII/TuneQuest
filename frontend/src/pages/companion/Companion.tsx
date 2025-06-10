@@ -6,17 +6,17 @@ import { FiSend, FiRefreshCw } from "react-icons/fi";
 import { ImSpinner2 } from "react-icons/im";
 import shared from "@/styles/shared.module.css";
 
-type Message = {
+interface Message {
   id: string;
   sender: "user" | "ai";
   content: string | AIResults;
-};
+}
 
-type AIResults = {
+interface AIResults {
   tracks: any[];
   artists: any[];
   albums: any[];
-};
+}
 
 export default function Companion() {
   const [messages, setMessages] = useState<Message[]>([]);
@@ -36,10 +36,10 @@ export default function Companion() {
             Authorization: `Bearer ${token}`,
           },
         });
+
         if (!response.ok) throw new Error("Failed to load history");
         const history = await response.json();
         console.log(history);
-        // Convert API response to Message[] format:
         const formattedMessages: Message[] = [];
 
         for (const entry of history) {
@@ -83,7 +83,6 @@ export default function Companion() {
               },
             });
           } else {
-            // fallback: show raw response
             formattedMessages.push({
               id: uuidv4(),
               sender: "ai",

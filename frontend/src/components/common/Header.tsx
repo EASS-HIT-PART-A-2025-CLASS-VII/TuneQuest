@@ -2,13 +2,19 @@ import { NavLink, useNavigate } from "react-router-dom";
 import styles from "./Header.module.css";
 import logo from "@/assets/logo-modified.png";
 import { useUser } from "@/contexts/UserContext";
-import SearchBar from "./SearchBar.tsx";
+import SearchBar from "./SearchBar";
 import { useState } from "react";
 
 export default function Header() {
   const { user, setUser } = useUser();
   const navigate = useNavigate();
-  const [menuOpen, setMenuOpen] = useState(false);
+  const [menuOpen, setMenuOpen] = useState<boolean>(false);
+
+  const handleLogout = () => {
+    localStorage.removeItem("access_token");
+    setUser(null);
+    navigate("/login");
+  };
 
   return (
     <div className={styles.mainHeader}>
@@ -35,25 +41,9 @@ export default function Header() {
             </button>
           </NavLink>
           {user ? (
-            <>
-              <NavLink to="/profile">
-                <button className={styles.btnHeader}>
-                  <span>Profile</span>
-                </button>
-              </NavLink>
-              <div>
-                <button
-                  className={styles.btnHeader}
-                  onClick={() => {
-                    localStorage.removeItem("access_token");
-                    setUser(null);
-                    navigate("/login");
-                  }}
-                >
-                  Log Out
-                </button>
-              </div>
-            </>
+            <button className={styles.btnHeader} onClick={handleLogout}>
+              Log Out
+            </button>
           ) : (
             <>
               <NavLink to="/signup">
@@ -97,19 +87,15 @@ export default function Header() {
                     Profile
                   </NavLink>
                 </li>
-                <li>
-                  <button
-                    onClick={() => {
-                      localStorage.removeItem("access_token");
-                      setUser(null);
-                      navigate("/login");
-                      setMenuOpen(false);
-                    }}
-                    className={styles.dropdownButton}
-                  >
-                    Log Out
-                  </button>
-                </li>
+                <button
+                  onClick={() => {
+                    handleLogout();
+                    setMenuOpen(false);
+                  }}
+                  className={styles.dropdownButton}
+                >
+                  Log Out
+                </button>
               </>
             ) : (
               <>

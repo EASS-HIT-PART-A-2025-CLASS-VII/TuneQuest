@@ -1,22 +1,36 @@
 import styles from "./SignUp.module.css";
 import { useState } from "react";
 
+interface FormData {
+  username: string;
+  email: string;
+  password: string;
+  confirmPassword: string;
+}
+
+interface Errors {
+  username: string;
+  email: string;
+  password: string;
+  confirmPassword: string;
+}
+
 export default function SignUp() {
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<FormData>({
     username: "",
     email: "",
     password: "",
     confirmPassword: "",
   });
 
-  const [errors, setErrors] = useState({
+  const [errors, setErrors] = useState<Errors>({
     username: "",
     email: "",
     password: "",
     confirmPassword: "",
   });
 
-  function validate(name: string, value: string) {
+  function validate(name: keyof FormData, value: string) {
     let error = "";
     const trimmedValue = value.trim();
 
@@ -58,7 +72,7 @@ export default function SignUp() {
   function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
-    validate(name, value);
+    validate(name as keyof FormData, value);
   }
 
   async function handleSubmit(e: React.FormEvent) {
@@ -67,8 +81,8 @@ export default function SignUp() {
       alert("Passwords do not match!");
       return;
     }
+
     const { confirmPassword, ...newForm } = formData;
-    console.log(newForm);
     try {
       const response = await fetch("http://localhost:8000/users/register", {
         method: "POST",
@@ -77,6 +91,7 @@ export default function SignUp() {
         },
         body: JSON.stringify(newForm),
       });
+
       const data = await response.json();
       if (!response.ok) {
         alert(data.detail ?? "Invalid login");

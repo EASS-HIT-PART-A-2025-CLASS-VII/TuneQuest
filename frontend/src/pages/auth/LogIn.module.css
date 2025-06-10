@@ -1,4 +1,4 @@
-.logInForm {
+.loginForm {
   height: 80vh;
   min-height: 31rem;
   width: 100vw;
@@ -9,7 +9,7 @@
   margin: 0;
 }
 
-.logInContainer {
+.loginContainer {
   max-width: 25rem;
   width: 100%;
   padding: 1rem;

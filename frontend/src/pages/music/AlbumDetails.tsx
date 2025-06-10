@@ -9,14 +9,31 @@ import shared from "@/styles/shared.module.css";
 import { MdFavorite, MdFavoriteBorder } from "react-icons/md";
 import { useUser } from "@/contexts/UserContext";
 
+/**
+ * Interface for the Album object
+ */
+interface Album {
+  id: string;
+  name: string;
+  album_type: string;
+  release_date: string;
+  release_date_precision: string;
+  popularity: number;
+  images: Array<{ url: string }>;
+  artists: Array<{ id: string; name: string }>;
+  tracks: {
+    items: Array<{ id: string; name: string }>;
+  };
+}
+
 export default function AlbumDetails() {
   const { id } = useParams<{ id: string }>();
-  const [album, setAlbum] = useState<any>(null);
+  const [album, setAlbum] = useState<Album | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [genres, setGenres] = useState<string[]>([]);
-  const [favorite, setFavorite] = useState(true);
-  const { user } = useUser() || {};
+  const [favorite, setFavorite] = useState(false);
+  const { user } = useUser();
   const token = localStorage.getItem("access_token");
 
   useEffect(() => {
@@ -124,7 +141,7 @@ export default function AlbumDetails() {
               <h2>{album.name}</h2>
 
               <p>
-                {album.artists.map((artist: any, idx: number) => (
+                {album.artists.map((artist) => (
                   <span key={artist.id}>
                     <NavLink
                       className={styles.navigate}
@@ -132,7 +149,7 @@ export default function AlbumDetails() {
                     >
                       {artist.name}
                     </NavLink>
-                    {idx < album.artists.length - 1 && ", "}
+                    {album.artists.indexOf(artist) < album.artists.length - 1 && ", "}
                   </span>
                 ))}
               </p>
@@ -173,7 +190,7 @@ export default function AlbumDetails() {
 
           {album.tracks?.items?.length > 0 && (
             <section className={styles.tracks} aria-label="Album tracks">
-              {album.tracks.items.map((track: any) => (
+              {album.tracks.items.map((track) => (
                 <NonImageTrackCard key={track.id} track={track} />
               ))}
             </section>

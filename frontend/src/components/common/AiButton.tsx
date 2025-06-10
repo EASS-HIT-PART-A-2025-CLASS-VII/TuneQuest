@@ -4,25 +4,25 @@ import { TrackCard, ArtistCard, AlbumCard } from "../features/Cards";
 import { ImSpinner2 } from "react-icons/im";
 import shared from "@/styles/shared.module.css";
 
-type AiButtonProps = {
+interface AiButtonProps {
   readonly type: string;
   readonly name: string;
-};
+}
 
-type RecommendationItem = {
+interface RecommendationItem {
   id: string;
   name: string;
   type: string;
   image: string;
   url: string;
-};
+}
 
 export function AiButton({ type, name }: AiButtonProps) {
   const [results, setResults] = useState<RecommendationItem[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
-  const handleClick = async () => {
+  const handleAskAi = async () => {
     setError(null);
     setResults([]);
     setLoading(true);
@@ -75,7 +75,7 @@ export function AiButton({ type, name }: AiButtonProps) {
   return (
     <div className={styles.container}>
       <button
-        onClick={handleClick}
+        onClick={handleAskAi}
         className={styles.button}
         disabled={loading}
       >
@@ -89,28 +89,12 @@ export function AiButton({ type, name }: AiButtonProps) {
       {error && <p className={styles.error}>{error}</p>}
       {results.length > 0 && (
         <div>
-          {type === "track" && (
-            <div>
-              {results.map((item) => (
-                <TrackCard key={item.id} track={item} />
-              ))}
-            </div>
-          )}
-          {type === "artist" && (
-            <div>
-              {results.map((item) => (
-                <ArtistCard key={item.id} artist={item} />
-              ))}
-            </div>
-          )}
-
-          {type === "album" && (
-            <div>
-              {results.map((item) => (
-                <AlbumCard key={item.id} album={item} />
-              ))}
-            </div>
-          )}
+          {type === "track" &&
+            results.map((item) => <TrackCard key={item.id} track={item} />)}
+          {type === "artist" &&
+            results.map((item) => <ArtistCard key={item.id} artist={item} />)}
+          {type === "album" &&
+            results.map((item) => <AlbumCard key={item.id} album={item} />)}
         </div>
       )}
     </div>

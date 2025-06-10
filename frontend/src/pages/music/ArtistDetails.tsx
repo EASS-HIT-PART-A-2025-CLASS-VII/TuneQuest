@@ -8,13 +8,33 @@ import shared from "@/styles/shared.module.css";
 import { MdFavorite, MdFavoriteBorder } from "react-icons/md";
 import { useUser } from "@/contexts/UserContext";
 
+interface Artist {
+  id: string;
+  name: string;
+  genres: string[];
+  followers: { total: number };
+  popularity: number;
+  images: Array<{ url: string }>;
+}
+
+interface Album {
+  id: string;
+  name: string;
+  images: Array<{ url: string }>;
+}
+
+interface Track {
+  id: string;
+  name: string;
+}
+
 export default function ArtistDetails() {
   const { id } = useParams<{ id: string }>();
-  const [artist, setArtist] = useState<any>(null);
+  const [artist, setArtist] = useState<Artist | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
-  const [albums, setAlbums] = useState<any[] | null>(null);
-  const [topTracks, setTopTracks] = useState<any[] | null>(null);
+  const [albums, setAlbums] = useState<Album[] | null>(null);
+  const [topTracks, setTopTracks] = useState<Track[] | null>(null);
   const [favorite, setFavorite] = useState(false);
   const { user } = useUser();
   const token = localStorage.getItem("access_token");
@@ -29,6 +49,7 @@ export default function ArtistDetails() {
       .then((data) => setArtist(data))
       .catch((err) => setError(err.message))
       .finally(() => setLoading(false));
+
     if (user) {
       fetch(`http://localhost:8000/favorites/${id}?type=artist`, {
         headers: {
@@ -52,6 +73,7 @@ export default function ArtistDetails() {
       .then((data) => setAlbums(data.items))
       .catch((err) => setError(err.message))
       .finally(() => setLoading(false));
+
     fetch(`http://localhost:8000/spotify/artist/${id}/top-tracks`)
       .then((res) => {
         if (!res.ok) throw new Error("Failed to fetch top tracks");
@@ -116,7 +138,7 @@ export default function ArtistDetails() {
         <>
           <div className={styles.mainInfo}>
             <div className={styles.leftSide}>
-              {artist.images?.length > 0 && (
+              {artist.images?.[0]?.url && (
                 <img
                   src={artist.images[0].url}
                   alt={artist.name}
@@ -153,9 +175,7 @@ export default function ArtistDetails() {
                 topTracks.length > 0 &&
                 topTracks
                   .slice(0, 5)
-                  .map((track: any) => (
-                    <TrackCard key={track.id} track={track} />
-                  ))}
+                  .map((track) => <TrackCard key={track.id} track={track} />)}
             </div>
           </div>
 
@@ -163,7 +183,7 @@ export default function ArtistDetails() {
             <h2>Albums</h2>
             {Array.isArray(albums) &&
               albums.length > 0 &&
-              albums.map((album: any) => (
+              albums.map((album) => (
                 <CompactAlbumCard key={album.id} album={album} />
               ))}
           </div>

@@ -8,9 +8,22 @@ import shared from "@/styles/shared.module.css";
 import { MdFavorite, MdFavoriteBorder } from "react-icons/md";
 import { useUser } from "@/contexts/UserContext";
 
+interface Track {
+  id: string;
+  name: string;
+  album: {
+    id: string;
+    name: string;
+    images: Array<{ url: string }>;
+  };
+  artists: Array<{ id: string; name: string }>;
+  duration_ms: number;
+  popularity: number;
+}
+
 export default function TrackDetails() {
   const { id } = useParams<{ id: string }>();
-  const [track, setTrack] = useState<any>(null);
+  const [track, setTrack] = useState<Track | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [genres, setGenres] = useState<string[]>([]);
@@ -29,6 +42,7 @@ export default function TrackDetails() {
       .then((data) => setTrack(data))
       .catch((err) => setError(err.message))
       .finally(() => setLoading(false));
+
     if (user) {
       fetch(`http://localhost:8000/favorites/${id}?type=track`, {
         headers: {
@@ -130,12 +144,14 @@ export default function TrackDetails() {
           <div>
             <h2>{track.name}</h2>
             <p>
-              {track.artists.map((a: any, idx: number) => (
+              {track.artists.map((a) => (
                 <span key={a.id}>
                   <NavLink className={styles.navigate} to={`/artist/${a.id}`}>
                     {a.name}
                   </NavLink>
-                  {idx < track.artists.length - 1 ? ", " : ""}
+                  {track.artists.indexOf(a) < track.artists.length - 1
+                    ? ", "
+                    : ""}
                 </span>
               ))}
             </p>
@@ -151,7 +167,7 @@ export default function TrackDetails() {
               <p>Genres: Unknown</p>
             )}
             <p>Duration: {formatDuration(track.duration_ms)}</p>
-            <p>Popularity: {track.popularity}</p>{" "}
+            <p>Popularity: {track.popularity}</p>
             <div className={styles.buttonAndAudio}>
               <button
                 className={`${shared.favoriteButton} ${

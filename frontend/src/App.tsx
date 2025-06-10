@@ -1,9 +1,8 @@
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import Header from "./components/common/Header";
 import Home from "./pages/home/Home";
-import Profile from "./pages/user/Profile";
 import SignUp from "./pages/auth/SignUp";
-import LogIn from "./pages/auth/LogIn";
+import Login from "./pages/auth/Login";
 import Search from "./pages/music/Search";
 import TrackDetails from "./pages/music/TrackDetails";
 import ArtistDetails from "./pages/music/ArtistDetails";
@@ -18,16 +17,8 @@ function App() {
       <Header />
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route
-          path="/profile"
-          element={
-            <ProtectedRoute>
-              <Profile />
-            </ProtectedRoute>
-          }
-        />{" "}
         <Route path="/signup" element={<SignUp />} />
-        <Route path="/login" element={<LogIn />} />
+        <Route path="/login" element={<Login />} />
         <Route path="/search" element={<Search />} />
         <Route path="/track/:id" element={<TrackDetails />} />
         <Route path="/artist/:id" element={<ArtistDetails />} />

@@ -6,19 +6,21 @@ import { TrackCard, AlbumCard, ArtistCard } from "../features/Cards";
 import { ImSpinner2 } from "react-icons/im";
 import shared from "@/styles/shared.module.css";
 
+interface SearchResult {
+  tracks: { id: string; name: string; artists: { id: string; name: string }[] }[];
+  albums: { id: string; name: string; artists: { id: string; name: string }[] }[];
+  artists: { id: string; name: string }[];
+}
+
 export default function SearchBar() {
   const [search, setSearch] = useState("");
-  const [results, setResults] = useState<{
-    tracks: any[];
-    albums: any[];
-    artists: any[];
-  }>({
+  const [results, setResults] = useState<SearchResult>({
     tracks: [],
     albums: [],
     artists: [],
   });
   const [loading, setLoading] = useState(false);
-  const [type, setType] = useState<"tracks" | "albums" | "artists">("tracks");
+  const [type, setType] = useState("tracks");
   const navigate = useNavigate();
   const location = useLocation();
   const types = ["tracks", "albums", "artists"] as const;
@@ -44,12 +46,12 @@ export default function SearchBar() {
     return () => clearTimeout(timeout);
   }, [search]);
 
-  function checkKey(e: React.KeyboardEvent<HTMLInputElement>) {
+  const handleEnter = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {
       navigate(`/search?query=${encodeURIComponent(search)}`);
       setSearch("");
     }
-  }
+  };
 
   return (
     <div className={styles.container}>
@@ -60,7 +62,7 @@ export default function SearchBar() {
           placeholder="Search for music..."
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          onKeyDown={checkKey}
+          onKeyDown={handleEnter}
         />
 
         {loading && (
@@ -70,7 +72,7 @@ export default function SearchBar() {
         )}
       </div>
 
-      {!loading && results[type]?.length > 0 && (
+      {!loading && results[type as keyof SearchResult]?.length > 0 && (
         <div className={styles.dropdown}>
           <div className={styles.tabs}>
             {types.map((t) => (

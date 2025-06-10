@@ -6,12 +6,19 @@ import { TrackCard, AlbumCard, ArtistCard } from "@/components/features/Cards";
 import { ImSpinner2 } from "react-icons/im";
 import shared from "@/styles/shared.module.css";
 
+interface SearchResults {
+  tracks: any[];
+  albums: any[];
+  artists: any[];
+}
+
+interface SearchResult {
+  id: string;
+  name: string;
+}
+
 export default function Search() {
-  const [results, setResults] = useState<{
-    tracks: any[];
-    albums: any[];
-    artists: any[];
-  }>({
+  const [results, setResults] = useState<SearchResults>({
     tracks: [],
     albums: [],
     artists: [],
@@ -75,14 +82,14 @@ export default function Search() {
                 <div className={styles.column}>
                   {results.tracks
                     .filter((_, index) => index % 2 === 0)
-                    .map((track: any) => (
+                    .map((track) => (
                       <TrackCard key={track.id} track={track} />
                     ))}
                 </div>
                 <div className={styles.column}>
                   {results.tracks
                     .filter((_, index) => index % 2 === 1)
-                    .map((track: any) => (
+                    .map((track) => (
                       <TrackCard key={track.id} track={track} />
                     ))}
                 </div>
@@ -93,14 +100,14 @@ export default function Search() {
                 <div className={styles.column}>
                   {results.albums
                     .filter((_, index) => index % 2 === 0)
-                    .map((album: any) => (
+                    .map((album) => (
                       <AlbumCard key={album.id} album={album} />
                     ))}
                 </div>
                 <div className={styles.column}>
                   {results.albums
                     .filter((_, index) => index % 2 === 1)
-                    .map((album: any) => (
+                    .map((album) => (
                       <AlbumCard key={album.id} album={album} />
                     ))}
                 </div>
@@ -111,14 +118,14 @@ export default function Search() {
                 <div className={styles.column}>
                   {results.artists
                     .filter((_, index) => index % 2 === 0)
-                    .map((artist: any) => (
+                    .map((artist) => (
                       <ArtistCard key={artist.id} artist={artist} />
                     ))}
                 </div>
                 <div className={styles.column}>
                   {results.artists
                     .filter((_, index) => index % 2 === 1)
-                    .map((artist: any) => (
+                    .map((artist) => (
                       <ArtistCard key={artist.id} artist={artist} />
                     ))}
                 </div>
