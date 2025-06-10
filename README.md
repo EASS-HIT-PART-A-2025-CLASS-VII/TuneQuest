@@ -23,6 +23,10 @@
 - **TypeScript** – Type-safe development
 - **React Router** – Client-side routing
 
+![Homepage Screenshot](frontend/src/assets/home-page.png)
+![Companion Page Screenshot](frontend/src/assets/companion-page.png)
+![Album Screenshot](frontend/src/assets/silk-sonic.png)
+
 ## 📁 Project Structure
 
 ```
@@ -58,7 +62,7 @@ TuneQuest/
 
 1. Clone the repository
 ```bash
-git clone https://github.com/your-username/tunequest.git
+git clone https://github.com/EASS-HIT-PART-A-2025-CLASS-VII/TuneQuest.git
 cd tunequest
 ```
 
@@ -106,19 +110,47 @@ docker-compose up --build
 
 ## 📝 Environment Variables
 
-Create `.env` files in the backend and frontend directories:
+Create `.env` files in the `backend/` and `frontend/` directories.
 
+You can copy and rename `.env.example` to `.env` to get started.
+
+### 🔧 `.env` (for development)
 ```ini
-# backend/.env
+# Database settings
 DB_USER=your_db_user
 DB_PASSWORD=your_db_password
 DB_NAME=tunequest_db
-DB_URL=postgresql://your_db_user:your_db_password@localhost:5432/tunequest_db
-BACKEND_PORT=8000
+DB_HOST=localhost               # or 'db' if using Docker
+DB_PORT=5432
+DB_URL=postgresql+asyncpg://your_db_user:your_db_password@localhost:5432/tunequest_db
 
-# frontend/.env
-VITE_API_URL=http://localhost:8000
-```
+# Optional: Used only for Alembic migrations (uses psycopg2)
+MIGRATION_DB_URL=postgresql+psycopg2://your_db_user:your_db_password@db:5432/tunequest_db
+
+# Backend config
+BACKEND_PORT=8000
+ENV=development                 # Options: development, testing
+
+# Auth
+JWT_SECRET_KEY=your_jwt_secret_key
+
+# External APIs
+SPOTIFY_CLIENT_ID=your_spotify_client_id
+SPOTIFY_CLIENT_SECRET=your_spotify_client_secret
+GOOGLE_API_KEY=your_google_api_key
+
+# 🧪 .env.test (for running tests)
+
+# Async test database connection (used by SQLAlchemy + AsyncSession)
+TEST_DB_URL=postgresql+asyncpg://your_db_user:your_db_password@localhost:5432/tunequest_test
+
+# External API keys (can be mocked or reused from dev)
+SPOTIFY_CLIENT_ID=your_spotify_client_id
+SPOTIFY_CLIENT_SECRET=your_spotify_client_secret
+GOOGLE_API_KEY=your_google_api_key
+
+# App environment
+ENV=testing
 
 ## 🧪 Testing
 
@@ -138,4 +170,4 @@ Coming soon: Docker Compose + production server setup with full deployment instr
 
 ---
 
-> Made with ❤️ by [Your Name] | [GitHub](https://github.com/your-username/tunequest) | [Twitter](https://twitter.com/your_username)
+> Made with ❤️ by Dvir Manos | [GitHub](https://github.com/zoroflamingo/tunequest)
