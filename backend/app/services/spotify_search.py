@@ -3,14 +3,13 @@ from spotipy import Spotify
 from spotipy.oauth2 import SpotifyClientCredentials
 from typing import List
 
-
+# Initialize Spotify client
 client_id = os.getenv("SPOTIFY_CLIENT_ID")
 client_secret = os.getenv("SPOTIFY_CLIENT_SECRET")
-
 sp = Spotify(auth_manager=SpotifyClientCredentials(client_id, client_secret))
 
-
 def search_spotify_entities(names: List[str], type_: str):
+    """Search Spotify for entities by name and type."""
     results = []
 
     for name in names:

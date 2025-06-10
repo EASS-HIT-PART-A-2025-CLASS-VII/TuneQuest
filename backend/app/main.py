@@ -3,7 +3,6 @@ from app.models.base import Base
 from app.core.db import init_db
 from app.routers import (
     user,
-    favorite,
     user_favorites,
     spotify,
     deezer,
@@ -32,7 +31,6 @@ async def lifespan(app: FastAPI):
 app = FastAPI(lifespan=lifespan)
 
 app.include_router(user.router)
-app.include_router(favorite.router)
 app.include_router(user_favorites.router)
 app.include_router(spotify.router)
 app.include_router(deezer.router)

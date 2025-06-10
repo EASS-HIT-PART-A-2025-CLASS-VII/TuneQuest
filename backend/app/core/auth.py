@@ -11,40 +11,39 @@ from app.core.db import get_db
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
 
-
 load_dotenv()
 
+# JWT configuration
 SECRET_KEY = os.getenv("JWT_SECRET_KEY")
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 30
 
-# Argon2 password context
+# Security components
 pwd_context = CryptContext(schemes=["argon2"], deprecated="auto")
 security = HTTPBearer(auto_error=False)
 
 
-def create_access_token(data: dict, expires_delta: timedelta | None = None):
+def create_access_token(data: dict, expires_delta: timedelta | None = None) -> str:
+    """Create a JWT access token with expiration."""
     expire = datetime.now(timezone.utc) + (
         expires_delta or timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
     )
     to_encode = {**data, "exp": expire}
-    encoded_jwt = jwt.encode({"alg": ALGORITHM}, to_encode, SECRET_KEY)
-
-    return encoded_jwt
+    return jwt.encode({"alg": ALGORITHM}, to_encode, SECRET_KEY)
 
 
 async def get_current_user(
     credentials: HTTPAuthorizationCredentials = Depends(security),
-    db: AsyncSession = Depends(get_db),
+    db: AsyncSession = Depends(get_db)
 ) -> User:
+    """Authenticate and return current user from JWT token."""
     if not credentials:
         raise HTTPException(status_code=401, detail="Not authenticated")
 
     token = credentials.credentials
-
     try:
         payload = jwt.decode(token, SECRET_KEY, claims_options={"alg": ALGORITHM})
-        username: str = payload.get("sub")
+        username = payload.get("sub")
         if username is None:
             raise HTTPException(
                 status_code=401, detail="Could not validate credentials"

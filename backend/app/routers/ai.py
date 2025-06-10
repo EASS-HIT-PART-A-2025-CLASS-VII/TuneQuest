@@ -12,25 +12,26 @@ from app.core.auth import get_current_user
 from sqlalchemy.ext.asyncio import AsyncSession
 from app.core.db import get_db
 
-
+# AI endpoints
 router = APIRouter(prefix="/ai", tags=["ai"])
 ai_response_is_not_valid = "AI response is not valid JSON"
 
 
 @router.post("/recommend-home")
 def ai_recommend_home(request: AIRequest):
+    """Get AI home recommendations."""
     try:
-        print(request)
         result = get_recommendations_home(request.prompt)
         return result
     except json.JSONDecodeError:
-        raise HTTPException(status_code=400, detail=ai_response_is_not_valid)
+        raise HTTPException(status_code=400, detail="Invalid AI response")
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
 
 @router.post("/recommend")
 def ai_recommend(request: AISpecificRequest):
+    """Get specific AI recommendations."""
     try:
         result = get_recommendations_button(request)
         return result
@@ -44,11 +45,12 @@ async def ai_companion(
     current_user=Depends(get_current_user),
     db: AsyncSession = Depends(get_db),
 ):
+    """Get AI companion response."""
     try:
         result = await get_companion(db, request.prompt, user_id=current_user.id)
         return result
     except json.JSONDecodeError:
-        raise HTTPException(status_code=400, detail=ai_response_is_not_valid)
+        raise HTTPException(status_code=400, detail="Invalid AI response")
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 

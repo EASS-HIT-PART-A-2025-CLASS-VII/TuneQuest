@@ -7,25 +7,24 @@ from app.models.history import AiHistory
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
 
+# AI history operations
+
 
 def get_recommendations_home(request: str):
-    print("1")
+    """Get AI home recommendations."""
     ai_response = ask_gemini(request)
-    print("2")
     cleaned_response = re.sub(
         r"```(?:json)?\n(.+?)\n```", r"\1", ai_response, flags=re.DOTALL
     )
-    print("3")
     data = json.loads(cleaned_response)
-    print("4")
     tracks = data.get("tracks", [])
     artists = data.get("artists", [])
     albums = data.get("albums", [])
-    print("5")
+
     enriched_tracks = search_spotify_entities(tracks, "track") if tracks else []
     enriched_artists = search_spotify_entities(artists, "artist") if artists else []
     enriched_albums = search_spotify_entities(albums, "album") if albums else []
-    print("6")
+
     return {
         "results": {
             "tracks": enriched_tracks,
@@ -36,20 +35,19 @@ def get_recommendations_home(request: str):
 
 
 def get_recommendations_button(request: AISpecificRequest):
+    """Get AI button recommendations."""
     ai_response = ask_gemini(request.prompt)
-
     names = [
         line.strip("- ").strip()
         for line in ai_response.strip().splitlines()
         if line.strip()
     ]
-
     enriched = search_spotify_entities(names, request.type)
-
     return {"results": enriched}
 
 
 async def get_companion(db: AsyncSession, prompt: str, user_id: int = None):
+    """Get AI companion response."""
     system_prompt = (
         "Return *only* a valid JSON object with exactly 3 keys: 'tracks', 'artists', and 'albums'. "
         "Each key must map to an array of names (strings). "
@@ -58,7 +56,6 @@ async def get_companion(db: AsyncSession, prompt: str, user_id: int = None):
     full_prompt = f"User asked: '{prompt}'.\n{system_prompt}"
 
     ai_response_text = ask_gemini(full_prompt)
-
     match = re.search(r"```(?:json)?\s*(.+?)\s*```", ai_response_text, flags=re.DOTALL)
     if match:
         extracted_content = match.group(1)
@@ -69,16 +66,12 @@ async def get_companion(db: AsyncSession, prompt: str, user_id: int = None):
     try:
         data = json.loads(cleaned_response)
     except json.JSONDecodeError:
-        print(
-            f"DEBUG: Failed to parse JSON. Cleaned response was: '{cleaned_response}'"
-        )
         raise json.JSONDecodeError("Failed to parse AI JSON", cleaned_response, 0)
 
     tracks = data.get("tracks", [])
     artists = data.get("artists", [])
     albums = data.get("albums", [])
 
-    # 4. Enrich via Spotify
     enriched_tracks = search_spotify_entities(tracks, "track") if tracks else []
     enriched_artists = search_spotify_entities(artists, "artist") if artists else []
     enriched_albums = search_spotify_entities(albums, "album") if albums else []

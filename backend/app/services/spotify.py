@@ -3,13 +3,14 @@ import os
 from fastapi import HTTPException
 from typing import List
 
+# Spotify API endpoints
 SPOTIFY_TOKEN_URL = "https://accounts.spotify.com/api/token"
 SPOTIFY_TRACKS_URL = "https://api.spotify.com/v1/tracks"
 SPOTIFY_ARTISTS_URL = "https://api.spotify.com/v1/artists"
 SPOTIFY_ALBUMS_URL = "https://api.spotify.com/v1/albums"
 
-
 def get_spotify_access_token():
+    """Get Spotify API access token."""
     client_id = os.getenv("SPOTIFY_CLIENT_ID")
     client_secret = os.getenv("SPOTIFY_CLIENT_SECRET")
 
@@ -29,8 +30,8 @@ def get_spotify_access_token():
 
     return response.json()["access_token"]
 
-
 def get_tracks_by_ids(ids: List[str]):
+    """Get Spotify tracks by IDs."""
     token = get_spotify_access_token()
     if len(ids) > 10:
         raise ValueError("Can fetch a maximum of 10 tracks per request")
@@ -49,8 +50,8 @@ def get_tracks_by_ids(ids: List[str]):
     data = response.json()
     return data.get("tracks", [])
 
-
 def get_artists_by_ids(ids: List[str]):
+    """Get Spotify artists by IDs."""
     token = get_spotify_access_token()
     if len(ids) > 10:
         raise ValueError("Can fetch a maximum of 10 artists per request")
@@ -69,8 +70,8 @@ def get_artists_by_ids(ids: List[str]):
     data = response.json()
     return data.get("artists", [])
 
-
 def get_albums_by_ids(ids: List[str]):
+    """Get Spotify albums by IDs."""
     token = get_spotify_access_token()
     if len(ids) > 10:
         raise ValueError("Can fetch a maximum of 10 albums per request")

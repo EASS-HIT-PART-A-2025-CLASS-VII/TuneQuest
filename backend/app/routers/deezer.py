@@ -1,12 +1,13 @@
 from fastapi import APIRouter, HTTPException, status
 from app.services.deezer import fetch_deezer_genres, fetch_deezer_preview_url
 
-router = APIRouter()
+# Deezer API endpoints
 router = APIRouter(prefix="/deezer", tags=["deezer"])
 
 
 @router.get("/genres")
 def get_deezer_genres(album: str, artist: str):
+    """Get Deezer genre info."""
     try:
         genre_name = fetch_deezer_genres(album, artist)
         return {"genre": genre_name}
@@ -16,6 +17,7 @@ def get_deezer_genres(album: str, artist: str):
 
 @router.get("/tracks")
 def get_deezer_preview_url(track: str, artist: str):
+    """Get Deezer track preview URL."""
     try:
         preview_url = fetch_deezer_preview_url(track, artist)
         if not preview_url:

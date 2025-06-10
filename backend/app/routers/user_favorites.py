@@ -1,7 +1,6 @@
 from typing import Optional
 from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy.ext.asyncio import AsyncSession
-
 from app.schemas.favorite import FavoriteRead
 from app.crud.favorite import (
     create_favorite,
@@ -14,7 +13,7 @@ from app.core.db import get_db
 from app.core.auth import get_current_user
 from app.models.user import User
 
-
+# User favorites endpoints
 router = APIRouter(prefix="/favorites", tags=["favorites"])
 favorite_not_found = "Favorite not found"
 favorite_type_description = "Favorite type: track, album, artist"
@@ -27,6 +26,7 @@ async def add_favorite(
     db: AsyncSession = Depends(get_db),
     current_user: User = Depends(get_current_user),
 ):
+    """Add a favorite item."""
     result = await create_favorite(current_user.id, spotify_id, db, type)
     return {"result": result is not None}
 
@@ -36,6 +36,7 @@ async def read_all_user_favorites(
     db: AsyncSession = Depends(get_db),
     current_user: User = Depends(get_current_user),
 ):
+    """Get all user favorites."""
     result = await get_all_user_favorites(current_user.id, db)
     if not result:
         raise HTTPException(status_code=404, detail="Favorites not found")
@@ -47,6 +48,7 @@ async def get_all_spotify_metadata_for_user_favorites(
     db: AsyncSession = Depends(get_db),
     current_user: User = Depends(get_current_user),
 ):
+    """Get Spotify metadata for all favorites."""
     try:
         metadata = await get_spotify_metadata_for_user_favorites(current_user.id, db)
         return metadata
@@ -61,6 +63,7 @@ async def read_favorite(
     db: AsyncSession = Depends(get_db),
     current_user: User = Depends(get_current_user),
 ):
+    """Check if item is favorited."""
     if type and type not in {"track", "album", "artist"}:
         raise HTTPException(status_code=400, detail="Invalid favorite type")
 
@@ -75,5 +78,6 @@ async def delete_favorite(
     db: AsyncSession = Depends(get_db),
     current_user: User = Depends(get_current_user),
 ):
+    """Delete a favorite item."""
     result = await erase_favorite(current_user.id, spotify_id, db, type)
     return {"result": result is not None}

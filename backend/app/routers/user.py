@@ -24,15 +24,18 @@ from app.core.db import get_db
 from app.core.auth import create_access_token, get_current_user
 from app.core.security import verify_password
 from app.models.user import User
-from app.constants import invalid_username_or_password, user_not_found
+from app.constants import user_not_found
 
-
+# User management router
 router = APIRouter(prefix="/users", tags=["users"])
+
+# Valid sort fields for user listing
 VALID_SORT_FIELDS = ["id", "username", "email"]
 
 
 @router.post("/register", response_model=UserRead)
 async def create_user_endpoint(user: UserCreate, db: AsyncSession = Depends(get_db)):
+    """Register a new user."""
     existing_user = await get_user_by_username(db, user.username)
     if existing_user:
         raise HTTPException(
@@ -50,12 +53,10 @@ async def create_user_endpoint(user: UserCreate, db: AsyncSession = Depends(get_
 
 @router.post("/login")
 async def login(user_login: UserLogin, db: AsyncSession = Depends(get_db)):
+    """Authenticate user and return JWT token."""
     user = await get_user_by_username(db, user_login.username)
-    if not user:
-        raise HTTPException(status_code=401, detail=invalid_username_or_password)
-
-    if not verify_password(user_login.password, user.hashed_password):
-        raise HTTPException(status_code=401, detail=invalid_username_or_password)
+    if not user or not verify_password(user_login.password, user.hashed_password):
+        raise HTTPException(status_code=401, detail="Invalid credentials")
 
     access_token = create_access_token(data={"sub": user.username})
     return {"access_token": access_token, "token_type": "bearer"}
@@ -63,22 +64,25 @@ async def login(user_login: UserLogin, db: AsyncSession = Depends(get_db)):
 
 @router.get("/me", response_model=UserRead)
 async def get_current_user_endpoint(current_user: User = Depends(get_current_user)):
+    """Get current authenticated user."""
     return current_user
 
 
 @router.get("/{user_id}", response_model=UserRead)
 async def read_user(user_id: int, db: AsyncSession = Depends(get_db)):
+    """Get user by ID."""
     user = await get_user_by_id(db, user_id)
     if not user:
-        raise HTTPException(status_code=404, detail=user_not_found)
+        raise HTTPException(status_code=404, detail="User not found")
     return user
 
 
 @router.get("/username/{username}", response_model=UserRead)
 async def read_user_by_username(username: str, db: AsyncSession = Depends(get_db)):
+    """Get user by username."""
     user = await get_user_by_username(db, username)
     if not user:
-        raise HTTPException(status_code=404, detail=user_not_found)
+        raise HTTPException(status_code=404, detail="User not found")
     return user
 
 
@@ -89,6 +93,7 @@ async def read_all_users(
     sort: str | None = None,
     db: AsyncSession = Depends(get_db),
 ):
+    """List all users with optional filtering and sorting."""
     validated_sort = []
     if sort:
         fields = sort.split(",")

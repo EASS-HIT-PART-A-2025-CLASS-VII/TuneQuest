@@ -1,8 +1,8 @@
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
-from app.models.favorite import Favorite, FavoriteType
 from sqlalchemy import asc, desc
-from typing import List, Dict, Any, Callable, Optional
+from app.models.favorite import Favorite, FavoriteType
+from typing import List, Any, Callable, Optional
 from app.services.spotify import (
     get_tracks_by_ids,
     get_artists_by_ids,
@@ -11,6 +11,8 @@ from app.services.spotify import (
 from fastapi import HTTPException
 import asyncio
 
+# Favorite CRUD operations
+
 
 async def create_favorite(
     user_id: int,
@@ -18,6 +20,7 @@ async def create_favorite(
     db: AsyncSession,
     type: Optional[str] = None,
 ):
+    """Create a new favorite."""
     result = await db.execute(
         select(Favorite).where(
             Favorite.user_id == user_id,
@@ -25,7 +28,6 @@ async def create_favorite(
         )
     )
     existing = result.scalar_one_or_none()
-    print(existing)
     if existing:
         return False
 
@@ -55,6 +57,7 @@ async def create_favorite(
 async def get_all_favorites(
     db: AsyncSession, sort_by: str = None, ascending: bool = True
 ):
+    """Get all favorites with optional sorting."""
     query = select(Favorite)
     query = apply_sorting(query, Favorite, sort_by, ascending)
     result = await db.execute(query)
@@ -65,6 +68,7 @@ async def get_all_user_favorites(
     user_id: int,
     db: AsyncSession,
 ):
+    """Get all favorites for a user."""
     query = select(Favorite).where(Favorite.user_id == user_id)
     query = apply_sorting(query, Favorite)
     result = await db.execute(query)
@@ -73,11 +77,8 @@ async def get_all_user_favorites(
 
 async def _fetch_spotify_data_in_batches_threaded(
     spotify_ids: List[str], fetch_func_sync: Callable[[List[str]], Any], batch_size: int
-) -> List[Dict[str, Any]]:
-    """
-    Helper to fetch Spotify data in concurrent batches, running synchronous
-    fetch functions in separate threads.
-    """
+):
+    """Fetch Spotify data in concurrent batches."""
     if not spotify_ids:
         return []
 
@@ -87,8 +88,9 @@ async def _fetch_spotify_data_in_batches_threaded(
 
 
 async def get_spotify_metadata_for_user_favorites(user_id: int, db: AsyncSession):
+    """Get Spotify metadata for all user favorites."""
     print(f"\n=== STARTING METADATA FETCH FOR USER {user_id} ===")
-    
+
     # Get all favorites
     favorites = await get_all_user_favorites(user_id, db)
     print(f"Found {len(favorites)} favorites:")
@@ -135,7 +137,7 @@ async def get_spotify_metadata_for_user_favorites(user_id: int, db: AsyncSession
     }
     print("\nFinal metadata:")
     print(metadata)
-    
+
     return metadata
 
 
