@@ -12,11 +12,6 @@ interface SearchResults {
   artists: any[];
 }
 
-interface SearchResult {
-  id: string;
-  name: string;
-}
-
 export default function Search() {
   const [results, setResults] = useState<SearchResults>({
     tracks: [],
