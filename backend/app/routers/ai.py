@@ -20,6 +20,7 @@ ai_response_is_not_valid = "AI response is not valid JSON"
 @router.post("/recommend-home")
 def ai_recommend_home(request: AIRequest):
     try:
+        print(request)
         result = get_recommendations_home(request.prompt)
         return result
     except json.JSONDecodeError:

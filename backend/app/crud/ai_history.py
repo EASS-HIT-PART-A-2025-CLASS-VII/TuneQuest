@@ -9,20 +9,23 @@ from sqlalchemy import select
 
 
 def get_recommendations_home(request: str):
+    print("1")
     ai_response = ask_gemini(request)
+    print("2")
     cleaned_response = re.sub(
         r"```(?:json)?\n(.+?)\n```", r"\1", ai_response, flags=re.DOTALL
     )
+    print("3")
     data = json.loads(cleaned_response)
-
+    print("4")
     tracks = data.get("tracks", [])
     artists = data.get("artists", [])
     albums = data.get("albums", [])
-
+    print("5")
     enriched_tracks = search_spotify_entities(tracks, "track") if tracks else []
     enriched_artists = search_spotify_entities(artists, "artist") if artists else []
     enriched_albums = search_spotify_entities(albums, "album") if albums else []
-
+    print("6")
     return {
         "results": {
             "tracks": enriched_tracks,

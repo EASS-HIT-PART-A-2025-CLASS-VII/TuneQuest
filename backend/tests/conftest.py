@@ -71,6 +71,24 @@ async def db_session():
 
 
 @pytest_asyncio.fixture
+async def db_sessions():
+    """Fixture that provides multiple database sessions for concurrent operations."""
+    sessions = []
+    for _ in range(5):  # Create 5 sessions
+        session = TestingSessionLocal()
+        await session.begin()
+        sessions.append(session)
+    
+    try:
+        yield sessions
+    finally:
+        # Clean up all sessions
+        for session in sessions:
+            await session.rollback()
+            await session.close()
+
+
+@pytest_asyncio.fixture
 async def async_client():
     async with AsyncClient(
         transport=ASGITransport(app=app), base_url="http://testserver"

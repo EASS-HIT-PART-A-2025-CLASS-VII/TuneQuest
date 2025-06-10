@@ -77,7 +77,7 @@ async def delete_user(db: AsyncSession, user_id: int) -> bool:
 
 async def update_user(db: AsyncSession, user_id: int, user_update: UserUpdate):
     result = await db.execute(select(User).filter(User.id == user_id))
-    user = result.scalar_one_or_none()
+    user = await result.scalar_one_or_none()
 
     if not user:
         return None
@@ -93,7 +93,7 @@ async def update_user(db: AsyncSession, user_id: int, user_update: UserUpdate):
 
 async def replace_user(db: AsyncSession, user_id: int, user_replace: UserReplace):
     result = await db.execute(select(User).filter(User.id == user_id))
-    user = result.scalar_one_or_none()
+    user = await result.scalar_one_or_none()
 
     if not user:
         return None
@@ -116,4 +116,5 @@ async def change_password(db: AsyncSession, payload: PasswordChange, username: s
         return False
     user.hashed_password = hash_password(payload.new_password)
     await db.commit()
+    await db.refresh(user)
     return True

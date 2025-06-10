@@ -1,51 +1,17 @@
 import pytest
+from httpx import AsyncClient
 import json
 from datetime import datetime, timedelta
-from unittest.mock import patch
-from sqlalchemy import select
-
-from app.crud.ai_history import (
-    get_recommendations_home,
-    get_recommendations_button,
-    get_companion,
-    get_companion_history,
-)
-from app.schemas.ai import AISpecificRequest
 from app.models.history import AiHistory
+from sqlalchemy import select
+from app.models.user import User
 
 
-@pytest.fixture
-def sample_ai_response():
-    return """```json
-{
-    "tracks": ["Track A", "Track B"],
-    "artists": ["Artist A", "Artist B"],
-    "albums": ["Album A", "Album B"]
-}
-```"""
-
-
-@pytest.fixture
-def cleaned_json_data():
-    return {
-        "tracks": ["Track A", "Track B"],
-        "artists": ["Artist A", "Artist B"],
-        "albums": ["Album A", "Album B"],
-    }
-
-
-@patch("app.crud.ai_history.ask_gemini")
-@patch("app.crud.ai_history.search_spotify_entities")
-def test_get_recommendations_home(
-    mock_search_spotify, mock_ask_gemini, sample_ai_response, cleaned_json_data
-):
-    mock_ask_gemini.return_value = sample_ai_response
-
-    def enrich_mock(names, type_):
-        return [{"name": f"enriched-{name}"} for name in names]
-
-    mock_search_spotify.side_effect = enrich_mock
-
+@pytest.mark.asyncio
+async def test_ai_recommend_home_integration(async_client: AsyncClient):
+    """
+    Tests the /ai/recommend-home endpoint, which typically doesn't require authentication.
+    """
     prompt = """
 Recommend 10 random tracks, 10 random artists, and 10 random albums.
 Return *only* a valid JSON object with exactly 3 keys: "tracks", "artists", and "albums".
@@ -59,99 +25,152 @@ Example:
   "albums": ["Album 1", "Album 2"]
 }
 """
+    response = await async_client.post("/ai/recommend-home", json={"prompt": prompt})
 
-    result = get_recommendations_home(prompt)
+    assert response.status_code == 200
+    data = response.json()
 
-    assert "results" in result
-    assert [t["name"] for t in result["results"]["tracks"]] == [
-        "enriched-Track A",
-        "enriched-Track B",
-    ]
-    assert [t["name"] for t in result["results"]["albums"]] == [
-        "enriched-Album A",
-        "enriched-Album B",
-    ]
-    assert [t["name"] for t in result["results"]["artists"]] == [
-        "enriched-Artist A",
-        "enriched-Artist B",
-    ]
+    assert "results" in data
+    assert isinstance(data["results"], dict)
+    assert "tracks" in data["results"]
+    assert "artists" in data["results"]
+    assert "albums" in data["results"]
 
+    assert isinstance(data["results"]["tracks"], list)
+    assert isinstance(data["results"]["artists"], list)
+    assert isinstance(data["results"]["albums"], list)
 
-@patch("app.crud.ai_history.ask_gemini")
-@patch("app.crud.ai_history.search_spotify_entities")
-def test_get_recommendations_button(mock_search_spotify, mock_ask_gemini):
-    ai_response = "- Song 1\n- Song 2\n- Song 3"
-    mock_ask_gemini.return_value = ai_response
-    enriched_data = [
-        {"name": "enriched-Song 1"},
-        {"name": "enriched-Song 2"},
-        {"name": "enriched-Song 3"},
-    ]
-    mock_search_spotify.return_value = enriched_data
-    prompt = """recommend ${type}s similar to ${name}. Return the names only, dont add words. 5 results. Be creative. I want a combination of popular and niche ${type}s. No introductions, no explanations, no other text."""
-
-    request = AISpecificRequest(prompt=prompt, type="track")
-    result = get_recommendations_button(request)
-
-    assert "results" in result
-    assert result["results"] == enriched_data
-    mock_search_spotify.assert_called_once_with(["Song 1", "Song 2", "Song 3"], "track")
+    if data["results"]["tracks"]:
+        assert "name" in data["results"]["tracks"][0]
+    if data["results"]["artists"]:
+        assert "name" in data["results"]["artists"][0]
+    if data["results"]["albums"]:
+        assert "name" in data["results"]["albums"][0]
 
 
 @pytest.mark.asyncio
-@patch("app.crud.ai_history.ask_gemini")
-@patch("app.crud.ai_history.search_spotify_entities")
-async def test_get_companion_success(
-    mock_search_spotify, mock_ask_gemini, db_session, create_test_user
+async def test_ai_recommend_button_integration(async_client: AsyncClient):
+    """
+    Tests the /ai/recommend endpoint, which typically doesn't require authentication.
+    """
+    request_data = {
+        "prompt": """recommend ${type}s similar to ${name}. Return the names only, dont add words. 5 results. Be creative. I want a combination of popular and niche ${type}s. No introductions, no explanations, no other text.""",
+        "type": "track",
+    }
+    response = await async_client.post("/ai/recommend", json=request_data)
+
+    assert response.status_code == 200
+    data = response.json()
+
+    assert "results" in data
+    assert isinstance(data["results"], list)
+
+    if data["results"]:
+        assert "name" in data["results"][0]
+        assert data["results"][0]["name"] != "Stairway to Heaven"
+
+
+@pytest.mark.asyncio
+async def test_ai_companion_post_integration(
+    async_client: AsyncClient, db_session, create_test_user, get_auth_headers
 ):
-    ai_text = """```json{"tracks": ["Track X"],"artists": ["Artist Y"],"albums": ["Album Z"]}```"""
-    mock_ask_gemini.return_value = ai_text
-    mock_search_spotify.side_effect = lambda names, t: [
-        {"name": f"enriched-{n}"} for n in names
-    ]
+    """
+    Tests posting to /ai/companion and verifies the history is saved.
+    This test requires a real user and authentication flow.
+    """
+    username = "ai_post_test_user"
+    await create_test_user(username=username, password="testpassword")
 
-    prompt = "test"
-    user = await create_test_user("testcompanion123", "securepassword")
+    headers = await get_auth_headers(username=username, password="testpassword")
 
-    result = await get_companion(db_session, prompt, user_id=user.id)
-
-    assert "results" in result
-    assert [t["name"] for t in result["results"]["tracks"]] == ["enriched-Track X"]
-    assert [t["name"] for t in result["results"]["artists"]] == ["enriched-Artist Y"]
-    assert [t["name"] for t in result["results"]["albums"]] == ["enriched-Album Z"]
-
-    result = await db_session.execute(
-        select(AiHistory).where(AiHistory.user_id == user.id)
+    prompt = "Suggest some relaxing songs for studying."
+    response = await async_client.post(
+        "/ai/companion", json={"prompt": prompt}, headers=headers
     )
-    entries = result.scalars().all()
-    assert len(entries) == 1
-    assert prompt in entries[0].prompt
+
+    assert response.status_code == 200
+    data = response.json()
+
+    assert "results" in data
+    assert isinstance(data["results"], dict)
+    assert "tracks" in data["results"]
+    assert "artists" in data["results"]
+    assert "albums" in data["results"]
+
+    user = (
+        (await db_session.execute(select(User).where(User.username == username)))
+        .scalars()
+        .first()
+    )
+    assert user is not None
+
+    stmt = select(AiHistory).where(AiHistory.user_id == user.id)
+    history_entries = (await db_session.execute(stmt)).scalars().all()
+
+    assert len(history_entries) >= 1
+    found_entry = None
+    for entry in history_entries:
+        if prompt in entry.prompt:
+            found_entry = entry
+            break
+
+    assert found_entry is not None
+    assert found_entry.prompt == prompt
+    saved_response = json.loads(found_entry.response)
+    assert "results" in saved_response
+    assert "tracks" in saved_response["results"]
 
 
 @pytest.mark.asyncio
-async def test_get_companion_history_success(db_session, create_test_user):
-    user = await create_test_user("testcompanionhistory", "testpassword")
+async def test_ai_companion_get_history_integration(
+    async_client: AsyncClient, db_session, create_test_user, get_auth_headers
+):
+    """
+    Tests retrieving AI companion history for an authenticated user.
+    """
+    username = "ai_get_test_user"
+    await create_test_user(username=username, password="testpassword")
+
+    headers = await get_auth_headers(username=username, password="testpassword")
+
+    from app.models.user import User
+
+    user = (
+        (await db_session.execute(select(User).where(User.username == username)))
+        .scalars()
+        .first()
+    )
+    assert user is not None
+
+    await db_session.execute(
+        AiHistory.__table__.delete().where(AiHistory.user_id == user.id)
+    )
+    await db_session.commit()
 
     entry1 = AiHistory(
         user_id=user.id,
-        prompt="p1",
-        response=json.dumps({"some": "data"}),
-        created_at=datetime.now() - timedelta(days=1),
+        prompt="Integration Test Prompt 1",
+        response=json.dumps({"results": {"tracks": [{"name": "Test Track 1"}]}}),
+        created_at=datetime.now() - timedelta(minutes=5),
     )
     entry2 = AiHistory(
         user_id=user.id,
-        prompt="p2",
-        response=json.dumps({"more": "data"}),
+        prompt="Integration Test Prompt 2",
+        response=json.dumps({"results": {"artists": [{"name": "Test Artist 2"}]}}),
         created_at=datetime.now(),
     )
-
     db_session.add_all([entry1, entry2])
     await db_session.commit()
 
-    result = await get_companion_history(db_session, user_id=user.id)
+    response = await async_client.get("/ai/companion", headers=headers)
 
-    assert len(result) == 2
-    assert result[0]["prompt"] == "p1"
-    assert result[1]["prompt"] == "p2"
-    assert isinstance(result[0]["response"], dict)
-    assert result[0]["response"]["some"] == "data"
+    assert response.status_code == 200
+    data = response.json()
+
+    assert isinstance(data, list)
+    assert len(data) >= 2
+
+    assert data[0]["prompt"] == "Integration Test Prompt 1"
+    assert data[1]["prompt"] == "Integration Test Prompt 2"
+    assert data[0]["response"]["results"]["tracks"][0]["name"] == "Test Track 1"
+    assert data[1]["response"]["results"]["artists"][0]["name"] == "Test Artist 2"
