@@ -1,18 +1,19 @@
 import pytest
 from httpx import AsyncClient
 
-
 @pytest.mark.asyncio
 async def test_register_user(create_test_user):
+    """Test user registration."""
     response = await create_test_user("testuser", "securepassword")
-
     assert response.username == "testuser"
-
 
 @pytest.mark.asyncio
 async def test_register_duplicate_user(async_client: AsyncClient, create_test_user):
-    await create_test_user("testuserduplicate", "securepassword")
-
+    """Test duplicate user registration."""
+    # First create a user
+    await create_test_user("testuser", "securepassword")
+    
+    # Try to create the same user again
     response = await async_client.post(
         "/users/register",
         json={
@@ -22,10 +23,11 @@ async def test_register_duplicate_user(async_client: AsyncClient, create_test_us
         },
     )
     assert response.status_code == 400
-
+    assert response.json()["detail"] == "Username already exists"
 
 @pytest.mark.asyncio
 async def test_login_user(async_client: AsyncClient):
+    """Test user login."""
     await async_client.post(
         "/users/register",
         json={
@@ -34,17 +36,15 @@ async def test_login_user(async_client: AsyncClient):
             "password": "securepassword",
         },
     )
-
     response = await async_client.post(
         "/users/login", json={"username": "loginuser", "password": "securepassword"}
     )
-
     assert response.status_code == 200
     assert "access_token" in response.json()
 
-
 @pytest.mark.asyncio
 async def test_login_invalid_credentials(async_client: AsyncClient):
+    """Test login with invalid credentials."""
     await async_client.post(
         "/users/register",
         json={
@@ -53,16 +53,14 @@ async def test_login_invalid_credentials(async_client: AsyncClient):
             "password": "correctpassword",
         },
     )
-
     response = await async_client.post(
         "/users/login", json={"username": "invalidlogin", "password": "wrongpassword"}
     )
-
     assert response.status_code == 401
-
 
 @pytest.mark.asyncio
 async def test_get_current_user(async_client: AsyncClient):
+    """Test getting current user."""
     await async_client.post(
         "/users/register",
         json={
@@ -74,18 +72,15 @@ async def test_get_current_user(async_client: AsyncClient):
     login_response = await async_client.post(
         "/users/login", json={"username": "currentuser", "password": "securepassword"}
     )
-
     token = login_response.json()["access_token"]
     headers = {"Authorization": f"Bearer {token}"}
-
     response = await async_client.get("/users/me", headers=headers)
-
     assert response.status_code == 200
     assert response.json()["username"] == "currentuser"
 
-
 @pytest.mark.asyncio
 async def test_register_invalid_username(async_client: AsyncClient):
+    """Test registration with invalid usernames."""
     invalid_usernames = ["", "ab", "a" * 21]
     for username in invalid_usernames:
         response = await async_client.post(

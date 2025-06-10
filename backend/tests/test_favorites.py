@@ -1,11 +1,9 @@
 import pytest
 from httpx import AsyncClient
 
-
 @pytest.mark.asyncio
-async def test_add_and_read_favorite(
-    async_client: AsyncClient, create_test_user, get_auth_headers
-):
+async def test_add_and_read_favorite(async_client: AsyncClient, create_test_user, get_auth_headers):
+    """Test adding and reading a favorite."""
     username = "favtestuser1"
     password = "password123"
     await create_test_user(username, password)
@@ -30,16 +28,13 @@ async def test_add_and_read_favorite(
 
     response = await async_client.get("/favorites/", headers=headers)
     assert response.status_code == 200
-
     favorites = response.json()
     assert isinstance(favorites, list)
     assert any(f["spotify_id"] == spotify_id for f in favorites)
 
-
 @pytest.mark.asyncio
-async def test_delete_favorite(
-    async_client: AsyncClient, create_test_user, get_auth_headers
-):
+async def test_delete_favorite(async_client: AsyncClient, create_test_user, get_auth_headers):
+    """Test deleting a favorite."""
     username = "favtestuser2"
     password = "password123"
     await create_test_user(username, password)
@@ -65,11 +60,9 @@ async def test_delete_favorite(
     assert response.status_code == 200
     assert response.json()["result"] is False
 
-
 @pytest.mark.asyncio
-async def test_invalid_favorite_type(
-    async_client: AsyncClient, create_test_user, get_auth_headers
-):
+async def test_invalid_favorite_type(async_client: AsyncClient, create_test_user, get_auth_headers):
+    """Test invalid favorite type."""
     username = "favtestuser3"
     password = "password123"
     await create_test_user(username, password)
@@ -81,11 +74,9 @@ async def test_invalid_favorite_type(
     )
     assert response.status_code in {400, 422}
 
-
 @pytest.mark.asyncio
-async def test_get_spotify_metadata(
-    async_client: AsyncClient, create_test_user, get_auth_headers
-):
+async def test_get_spotify_metadata(async_client: AsyncClient, create_test_user, get_auth_headers):
+    """Test getting Spotify metadata."""
     username = "favtestuser4"
     password = "password123"
     await create_test_user(username, password)

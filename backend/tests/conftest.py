@@ -3,7 +3,6 @@ import pytest
 import asyncio
 import pytest_asyncio
 from dotenv import load_dotenv
-from pathlib import Path
 from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession, async_sessionmaker
 from sqlalchemy.pool import NullPool
 from app.models.user import User
@@ -11,16 +10,15 @@ from app.core.security import hash_password
 from httpx import AsyncClient, ASGITransport
 from app.main import app
 from app.core.db import init_db
+from pathlib import Path
 
-
+# Setup test environment
 ROOT_DIR = Path(__file__).parent.parent.parent
-
 load_dotenv(ROOT_DIR / ".env.test")
-
 os.environ["ENV"] = "testing"
 init_db()
 
-
+# Database setup
 TEST_DB_URL = os.getenv("TEST_DB_URL")
 test_engine = create_async_engine(
     TEST_DB_URL,
@@ -29,7 +27,6 @@ test_engine = create_async_engine(
     poolclass=NullPool,
 )
 print(f"Using test DB URL: {TEST_DB_URL}")
-
 
 TestingSessionLocal = async_sessionmaker(
     bind=test_engine,
@@ -40,18 +37,31 @@ TestingSessionLocal = async_sessionmaker(
 )
 
 
+# Test fixtures
 @pytest.fixture(scope="session")
 def event_loop():
-    """Create an instance of the default event loop for each test case."""
+    """Create event loop for test session."""
     policy = asyncio.get_event_loop_policy()
     loop = policy.new_event_loop()
     yield loop
     loop.close()
 
 
-@pytest_asyncio.fixture(scope="session", autouse=True)
+@pytest_asyncio.fixture(scope="function", autouse=True)
 async def create_tables():
-    """Create all tables for testing."""
+    """Create and drop tables for each test function."""
+    from app.models.base import Base
+
+    async with test_engine.begin() as conn:
+        await conn.run_sync(Base.metadata.drop_all)
+        await conn.run_sync(Base.metadata.create_all)
+
+    yield
+
+    # Cleanup after test
+    async with test_engine.begin() as conn:
+        await conn.run_sync(Base.metadata.drop_all)
+    """Create test database tables."""
     from app.models.base import Base
 
     async with test_engine.begin() as conn:
@@ -61,6 +71,7 @@ async def create_tables():
 
 @pytest_asyncio.fixture(scope="function")
 async def db_session():
+    """Create database session for test function."""
     session = TestingSessionLocal()
     try:
         await session.begin()
@@ -72,17 +83,16 @@ async def db_session():
 
 @pytest_asyncio.fixture
 async def db_sessions():
-    """Fixture that provides multiple database sessions for concurrent operations."""
+    """Create multiple database sessions for concurrent tests."""
     sessions = []
-    for _ in range(5):  # Create 5 sessions
+    for _ in range(5):
         session = TestingSessionLocal()
         await session.begin()
         sessions.append(session)
-    
+
     try:
         yield sessions
     finally:
-        # Clean up all sessions
         for session in sessions:
             await session.rollback()
             await session.close()
@@ -90,6 +100,7 @@ async def db_sessions():
 
 @pytest_asyncio.fixture
 async def async_client():
+    """Create async HTTP client for testing."""
     async with AsyncClient(
         transport=ASGITransport(app=app), base_url="http://testserver"
     ) as client:
@@ -98,6 +109,8 @@ async def async_client():
 
 @pytest_asyncio.fixture
 async def create_test_user(db_session):
+    """Create test user."""
+
     async def _create(username: str, password: str):
         user = User(
             username=username,
