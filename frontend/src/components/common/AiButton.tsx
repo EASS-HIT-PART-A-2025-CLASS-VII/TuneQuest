@@ -3,19 +3,8 @@ import { useState } from "react";
 import { TrackCard, ArtistCard, AlbumCard } from "../features/Cards";
 import { ImSpinner2 } from "react-icons/im";
 import shared from "@/styles/shared.module.css";
+import type { RecommendationItem, AiButtonProps } from "@/types/ai/AITypes";
 
-interface AiButtonProps {
-  readonly type: string;
-  readonly name: string;
-}
-
-interface RecommendationItem {
-  id: string;
-  name: string;
-  type: string;
-  image: string;
-  url: string;
-}
 
 export function AiButton({ type, name }: AiButtonProps) {
   const [results, setResults] = useState<RecommendationItem[]>([]);

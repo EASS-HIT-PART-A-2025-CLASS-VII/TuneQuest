@@ -4,87 +4,22 @@ import { useState, useEffect } from "react";
 import { ImSpinner2 } from "react-icons/im";
 import shared from "@/styles/shared.module.css";
 import { useUser } from "@/contexts/UserContext";
+import type { SpotifyFavorites } from "@/types/user/UserTypes";
 
-/**
- * Interface for a recommendation item
- */
-interface RecommendationItem {
-  /**
-   * Unique identifier for the item
-   */
-  id: string;
-  /**
-   * Name of the item
-   */
-  name: string;
-  /**
-   * Type of the item (e.g. track, artist, album)
-   */
-  type: string;
-  /**
-   * Image URL for the item
-   */
-  image: string;
-  /**
-   * URL for the item
-   */
-  url: string;
-}
-
-/**
- * Interface for Spotify favorites data
- */
-interface SpotifyFavorites {
-  /**
-   * Array of track recommendation items
-   */
-  tracks: RecommendationItem[];
-  /**
-   * Array of artist recommendation items
-   */
-  artists: RecommendationItem[];
-  /**
-   * Array of album recommendation items
-   */
-  albums: RecommendationItem[];
-}
-
-/**
- * Favorites page component
- */
 export default function Favorites() {
-  /**
-   * State for storing favorites data
-   */
+
   const [favorites, setFavorites] = useState<SpotifyFavorites>({
     tracks: [],
     artists: [],
     albums: [],
   });
-  /**
-   * State for loading indicator
-   */
+
   const [loading, setLoading] = useState(false);
-  /**
-   * State for current type of favorites to display
-   */
   const [type, setType] = useState<"tracks" | "albums" | "artists">("tracks");
-  /**
-   * State for error message
-   */
   const [error, setError] = useState<string | null>(null);
-  /**
-   * Get user data from context
-   */
   const { user } = useUser();
-  /**
-   * Get access token from local storage
-   */
   const token = localStorage.getItem("access_token");
 
-  /**
-   * Effect hook to fetch favorites data on mount
-   */
   useEffect(() => {
     const fetchFavorites = async () => {
       if (!user) return;

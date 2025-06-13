@@ -1,18 +1,8 @@
 import { createContext, useContext, useState, useEffect, useMemo } from "react";
 import shared from "@/styles/shared.module.css";
 import { ImSpinner2 } from "react-icons/im";
+import type { User, UserContextType } from "@/types/user/UserTypes";
 
-interface User {
-  id: number;
-  username: string;
-  email: string;
-}
-
-interface UserContextType {
-  user: User | null;
-  setUser: React.Dispatch<React.SetStateAction<User | null>>;
-  loading: boolean;
-}
 
 const UserContext = createContext<UserContextType | undefined>(undefined);
 

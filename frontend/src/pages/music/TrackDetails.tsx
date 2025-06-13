@@ -7,23 +7,11 @@ import { ImSpinner2 } from "react-icons/im";
 import shared from "@/styles/shared.module.css";
 import { MdFavorite, MdFavoriteBorder } from "react-icons/md";
 import { useUser } from "@/contexts/UserContext";
-
-interface Track {
-  id: string;
-  name: string;
-  album: {
-    id: string;
-    name: string;
-    images: Array<{ url: string }>;
-  };
-  artists: Array<{ id: string; name: string }>;
-  duration_ms: number;
-  popularity: number;
-}
+import type { FullTrack } from "@/types/music/MusicTypes";
 
 export default function TrackDetails() {
   const { id } = useParams<{ id: string }>();
-  const [track, setTrack] = useState<Track | null>(null);
+  const [track, setTrack] = useState<FullTrack | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [genres, setGenres] = useState<string[]>([]);

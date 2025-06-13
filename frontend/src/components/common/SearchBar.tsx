@@ -5,12 +5,8 @@ import { fetchSearchResults } from "@/api/fetchSearchResults";
 import { TrackCard, AlbumCard, ArtistCard } from "../features/Cards";
 import { ImSpinner2 } from "react-icons/im";
 import shared from "@/styles/shared.module.css";
+import type { SearchResult } from "@/types/music/MusicTypes";
 
-interface SearchResult {
-  tracks: { id: string; name: string; artists: { id: string; name: string }[] }[];
-  albums: { id: string; name: string; artists: { id: string; name: string }[] }[];
-  artists: { id: string; name: string }[];
-}
 
 export default function SearchBar() {
   const [search, setSearch] = useState("");

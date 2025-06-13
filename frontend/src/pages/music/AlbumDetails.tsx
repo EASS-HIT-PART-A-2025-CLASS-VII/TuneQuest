@@ -8,27 +8,12 @@ import { ImSpinner2 } from "react-icons/im";
 import shared from "@/styles/shared.module.css";
 import { MdFavorite, MdFavoriteBorder } from "react-icons/md";
 import { useUser } from "@/contexts/UserContext";
+import type { FullAlbum } from "@/types/music/MusicTypes";
 
-/**
- * Interface for the Album object
- */
-interface Album {
-  id: string;
-  name: string;
-  album_type: string;
-  release_date: string;
-  release_date_precision: string;
-  popularity: number;
-  images: Array<{ url: string }>;
-  artists: Array<{ id: string; name: string }>;
-  tracks: {
-    items: Array<{ id: string; name: string }>;
-  };
-}
 
 export default function AlbumDetails() {
   const { id } = useParams<{ id: string }>();
-  const [album, setAlbum] = useState<Album | null>(null);
+  const [album, setAlbum] = useState<FullAlbum | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [genres, setGenres] = useState<string[]>([]);

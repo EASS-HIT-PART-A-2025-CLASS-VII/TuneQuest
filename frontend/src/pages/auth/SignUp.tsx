@@ -1,19 +1,7 @@
 import styles from "./SignUp.module.css";
 import { useState } from "react";
+import type { FormData, FormErrors } from "@/types/user/UserTypes";
 
-interface FormData {
-  username: string;
-  email: string;
-  password: string;
-  confirmPassword: string;
-}
-
-interface Errors {
-  username: string;
-  email: string;
-  password: string;
-  confirmPassword: string;
-}
 
 export default function SignUp() {
   const [formData, setFormData] = useState<FormData>({
@@ -23,7 +11,7 @@ export default function SignUp() {
     confirmPassword: "",
   });
 
-  const [errors, setErrors] = useState<Errors>({
+  const [errors, setErrors] = useState<FormErrors>({
     username: "",
     email: "",
     password: "",

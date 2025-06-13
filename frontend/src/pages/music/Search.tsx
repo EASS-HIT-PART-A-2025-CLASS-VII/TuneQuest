@@ -5,12 +5,8 @@ import { fetchSearchResults } from "@/api/fetchSearchResults";
 import { TrackCard, AlbumCard, ArtistCard } from "@/components/features/Cards";
 import { ImSpinner2 } from "react-icons/im";
 import shared from "@/styles/shared.module.css";
+import type { SearchResults } from "@/types/music/MusicTypes";
 
-interface SearchResults {
-  tracks: any[];
-  albums: any[];
-  artists: any[];
-}
 
 export default function Search() {
   const [results, setResults] = useState<SearchResults>({

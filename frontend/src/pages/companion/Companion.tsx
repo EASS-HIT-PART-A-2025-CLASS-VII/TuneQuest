@@ -5,18 +5,8 @@ import { TrackCard, AlbumCard, ArtistCard } from "@/components/features/Cards";
 import { FiSend, FiRefreshCw } from "react-icons/fi";
 import { ImSpinner2 } from "react-icons/im";
 import shared from "@/styles/shared.module.css";
+import type { Message } from "@/types/ai/AITypes";
 
-interface Message {
-  id: string;
-  sender: "user" | "ai";
-  content: string | AIResults;
-}
-
-interface AIResults {
-  tracks: any[];
-  artists: any[];
-  albums: any[];
-}
 
 export default function Companion() {
   const [messages, setMessages] = useState<Message[]>([]);

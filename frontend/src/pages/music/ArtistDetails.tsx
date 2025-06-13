@@ -7,34 +7,18 @@ import { ImSpinner2 } from "react-icons/im";
 import shared from "@/styles/shared.module.css";
 import { MdFavorite, MdFavoriteBorder } from "react-icons/md";
 import { useUser } from "@/contexts/UserContext";
+import type { Artist } from "@/types/music/MusicTypes";
+import type { BaseAlbum } from "@/types/music/MusicTypes";
+import type { BaseTrack } from "@/types/music/MusicTypes";
 
-interface Artist {
-  id: string;
-  name: string;
-  genres: string[];
-  followers: { total: number };
-  popularity: number;
-  images: Array<{ url: string }>;
-}
-
-interface Album {
-  id: string;
-  name: string;
-  images: Array<{ url: string }>;
-}
-
-interface Track {
-  id: string;
-  name: string;
-}
 
 export default function ArtistDetails() {
   const { id } = useParams<{ id: string }>();
   const [artist, setArtist] = useState<Artist | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
-  const [albums, setAlbums] = useState<Album[] | null>(null);
-  const [topTracks, setTopTracks] = useState<Track[] | null>(null);
+  const [albums, setAlbums] = useState<BaseAlbum[] | null>(null);
+  const [topTracks, setTopTracks] = useState<BaseTrack[] | null>(null);
   const [favorite, setFavorite] = useState(false);
   const { user } = useUser();
   const token = localStorage.getItem("access_token");
