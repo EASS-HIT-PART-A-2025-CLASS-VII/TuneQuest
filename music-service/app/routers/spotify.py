@@ -7,6 +7,7 @@ from app.services.spotify import (
     get_albums_by_ids,
     get_spotify_access_token,
 )
+from app.services.spotify_search import search_spotify_entities
 
 # Spotify API endpoints
 router = APIRouter(prefix="/spotify", tags=["spotify"])
@@ -110,7 +111,6 @@ def get_albums(ids: List[str] = Query(..., description="List of Spotify album ID
 @router.get("/search")
 def search(query: str = Query(..., min_length=1)):
     token = get_spotify_access_token()
-
     try:
         response = requests.get(
             "https://api.spotify.com/v1/search",
@@ -120,7 +120,14 @@ def search(query: str = Query(..., min_length=1)):
         )
         response.raise_for_status()
     except requests.RequestException as e:
-        print(f"Error fetching from Spotify API: {e}")
         raise HTTPException(status_code=502, detail="Spotify search failed")
 
     return response.json()
+
+@router.get("/entities")
+def get_spotify_entities(
+    names: List[str] = Query(..., description="List of names to search"),
+    type_: str = Query(..., description="Entity type: track, artist, or album")
+):
+    print("8")
+    return search_spotify_entities(names, type_)

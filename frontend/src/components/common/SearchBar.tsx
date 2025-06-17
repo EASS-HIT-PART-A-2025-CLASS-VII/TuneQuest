@@ -4,7 +4,6 @@ import { NavLink, useNavigate, useLocation } from "react-router-dom";
 import { fetchSearchResults } from "@/api/fetchSearchResults";
 import { TrackCard, AlbumCard, ArtistCard } from "../features/Cards";
 import { ImSpinner2 } from "react-icons/im";
-import shared from "@/styles/shared.module.css";
 import type { SearchResult } from "@/types/music/MusicTypes";
 
 
@@ -62,7 +61,7 @@ export default function SearchBar() {
         />
 
         {loading && (
-          <div className={shared.loading}>
+          <div className={styles.loading}>
             <ImSpinner2 />
           </div>
         )}

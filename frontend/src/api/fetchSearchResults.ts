@@ -1,7 +1,10 @@
+import { fetchWithService } from "@/utils/api";
+
 export async function fetchSearchResults(query: string) {
   try {
-    const response = await fetch(
-      `http://localhost:8000/spotify/search?query=${encodeURIComponent(query)}`,
+    const response = await fetchWithService(
+      `/spotify/search?query=${encodeURIComponent(query)}`,
+      'MUSIC_SERVICE',
       { headers: { "Content-Type": "application/json" } }
     );
 
@@ -22,8 +25,9 @@ export async function fetchSearchResults(query: string) {
 
 export async function fetchAlbumSearchResults(query: string) {
   try {
-    const response = await fetch(
-      `http://localhost:8000/spotify/search?query=${encodeURIComponent(query)}&type=album`,
+    const response = await fetchWithService(
+      `/spotify/search?query=${encodeURIComponent(query)}&type=album`,
+      'MUSIC_SERVICE',
       { headers: { "Content-Type": "application/json" } }
     );
 

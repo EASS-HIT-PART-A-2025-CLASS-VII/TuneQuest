@@ -10,7 +10,7 @@ import { useUser } from "@/contexts/UserContext";
 import type { Artist } from "@/types/music/MusicTypes";
 import type { BaseAlbum } from "@/types/music/MusicTypes";
 import type { BaseTrack } from "@/types/music/MusicTypes";
-
+import { fetchWithService } from "@/utils/api";
 
 export default function ArtistDetails() {
   const { id } = useParams<{ id: string }>();
@@ -25,7 +25,7 @@ export default function ArtistDetails() {
 
   useEffect(() => {
     setLoading(true);
-    fetch(`http://localhost:8000/spotify/artist/${id}`)
+    fetchWithService(`/spotify/artist/${id}`,'MUSIC_SERVICE')
       .then((res) => {
         if (!res.ok) throw new Error("Failed to fetch artist");
         return res.json();
@@ -35,7 +35,7 @@ export default function ArtistDetails() {
       .finally(() => setLoading(false));
 
     if (user) {
-      fetch(`http://localhost:8000/favorites/${id}?type=artist`, {
+      fetchWithService(`/favorites/${id}?type=artist`,'MUSIC_SERVICE', {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -47,9 +47,7 @@ export default function ArtistDetails() {
         .catch((err) => setError(err.message));
     }
 
-    fetch(
-      `http://localhost:8000/spotify/artist/${id}/albums?include_groups=album,single,appears_on,compilation`
-    )
+    fetchWithService(`/spotify/artist/${id}/albums?include_groups=album,single,appears_on,compilation`,'MUSIC_SERVICE')
       .then((res) => {
         if (!res.ok) throw new Error("Failed to fetch albums");
         return res.json();
@@ -58,7 +56,7 @@ export default function ArtistDetails() {
       .catch((err) => setError(err.message))
       .finally(() => setLoading(false));
 
-    fetch(`http://localhost:8000/spotify/artist/${id}/top-tracks`)
+    fetchWithService(`/spotify/artist/${id}/top-tracks`,'MUSIC_SERVICE')
       .then((res) => {
         if (!res.ok) throw new Error("Failed to fetch top tracks");
         return res.json();
@@ -77,22 +75,18 @@ export default function ArtistDetails() {
     try {
       let response;
       if (favorite) {
-        response = await fetch(
-          `http://localhost:8000/favorites/${id}?type=artist`,
-          {
-            method: "DELETE",
-            headers: {
-              Authorization: `Bearer ${token}`,
+        response = await fetchWithService(`/favorites/${id}?type=artist`,'MUSIC_SERVICE', {
+          method: "DELETE",
+          headers: {
+            Authorization: `Bearer ${token}`,
             },
           }
         );
       } else {
-        response = await fetch(
-          `http://localhost:8000/favorites?spotify_id=${id}&type=artist`,
-          {
-            method: "POST",
-            headers: {
-              Authorization: `Bearer ${token}`,
+        response = await fetchWithService(`/favorites?spotify_id=${id}&type=artist`,'MUSIC_SERVICE', {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${token}`,
             },
           }
         );

@@ -16,13 +16,10 @@ def search_spotify_entities(names: List[str], type_: str):
         try:
             query = f"{name}"
             search = sp.search(q=query, type=type_, limit=1)
-
             items = search.get(f"{type_}s", {}).get("items", [])
             if not items:
                 continue
-
             item = items[0]
-
             result = {
                 "name": item.get("name"),
                 "id": item.get("id"),
@@ -32,7 +29,6 @@ def search_spotify_entities(names: List[str], type_: str):
                 else item["album"]["images"][0]["url"],
                 "url": item.get("external_urls", {}).get("spotify"),
             }
-
             results.append(result)
 
         except Exception:

@@ -2,6 +2,7 @@ import styles from "./Login.module.css";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useUser } from "@/contexts/UserContext";
+import { fetchWithService } from "@/utils/api";
 
 export default function Login() {
   const [formData, setFormData] = useState({
@@ -19,7 +20,7 @@ export default function Login() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const response = await fetch("http://localhost:8000/users/login/", {
+      const response = await fetchWithService('/users/login/', 'BACKEND', {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),
@@ -31,7 +32,7 @@ export default function Login() {
       }
 
       localStorage.setItem("access_token", data.access_token);
-      const profileResponse = await fetch("http://localhost:8000/users/me/", {
+      const profileResponse = await fetchWithService("/users/me/", 'BACKEND', {
         headers: {
           Authorization: `Bearer ${data.access_token}`,
         },

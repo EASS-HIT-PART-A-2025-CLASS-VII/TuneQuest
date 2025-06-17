@@ -3,14 +3,10 @@ from app.models.base import Base
 from app.core.db import init_db
 from app.routers import (
     user,
-    user_favorites,
-    spotify,
-    deezer,
     ai,
 )
 from contextlib import asynccontextmanager
 from fastapi.middleware.cors import CORSMiddleware
-from app.services import deezer_genres
 
 
 @asynccontextmanager
@@ -23,7 +19,6 @@ async def lifespan(app: FastAPI):
     # Startup: create tables
     async with db_engine.begin() as conn:
         await conn.run_sync(Base.metadata.create_all)
-    deezer_genres.load_deezer_genres()
 
     yield
 
@@ -31,9 +26,6 @@ async def lifespan(app: FastAPI):
 app = FastAPI(lifespan=lifespan)
 
 app.include_router(user.router)
-app.include_router(user_favorites.router)
-app.include_router(spotify.router)
-app.include_router(deezer.router)
 app.include_router(ai.router)
 
 

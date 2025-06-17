@@ -25,19 +25,49 @@ services:
       - ./backend:/app
     ports:
       - "8000:8000"
+    env_file:
+      - .env
     depends_on:
       db:
         condition: service_healthy
     environment:
       DATABASE_URL: ${DB_URL}
+      TEST_DB_URL: ${TEST_DB_URL}
+      ENV: ${ENV}
       BACKEND_PORT: ${BACKEND_PORT}
-    env_file:
-      - .env
+
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      test: ["CMD", "curl", "-f", "http://backend:8000/health"]
       interval: 5s
       timeout: 5s
       retries: 5
+    restart: always
+
+  music-service:
+    build:
+      context: ./music-service
+      dockerfile: Dockerfile
+    ports:
+      - "8001:8001"
+    volumes:
+      - ./music-service:/app
+    depends_on:
+      - db
+      - backend
+    env_file:
+      - .env
+    environment:
+      DATABASE_URL: ${DB_URL}
+      TEST_DB_URL: ${TEST_DB_URL}
+      ENV: ${ENV}
+      MUSIC_SERVICE_PORT: ${MUSIC_SERVICE_PORT}
+
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://music-service:8001/health"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    restart: always
 
   frontend:
     build:
@@ -52,9 +82,17 @@ services:
       - "5173:5173"
     depends_on:
       - backend
+      - music-service
     environment:
-      - VITE_API_URL=http://backend:8000
-      - NODE_ENV=development
+      VITE_API_URL: http://localhost:8000
+      REACT_APP_MUSIC_API_URL: http://localhost:8001
+      NODE_ENV: development
+    restart: always
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5173/health"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
 
 volumes:
   postgres_data:

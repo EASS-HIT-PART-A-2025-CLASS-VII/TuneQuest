@@ -1,7 +1,7 @@
 import styles from "./SignUp.module.css";
 import { useState } from "react";
 import type { FormData, FormErrors } from "@/types/user/UserTypes";
-
+import { fetchWithService } from "@/utils/api";
 
 export default function SignUp() {
   const [formData, setFormData] = useState<FormData>({
@@ -72,7 +72,7 @@ export default function SignUp() {
 
     const { confirmPassword, ...newForm } = formData;
     try {
-      const response = await fetch("http://localhost:8000/users/register", {
+      const response = await fetchWithService("/users/register", "BACKEND", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

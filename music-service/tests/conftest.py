@@ -5,11 +5,8 @@ import pytest_asyncio
 from dotenv import load_dotenv
 from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession, async_sessionmaker
 from sqlalchemy.pool import NullPool
-from app.models.user import User
-from app.core.security import hash_password
 from httpx import AsyncClient, ASGITransport
 from app.main import app
-from app.core.db import init_db
 from pathlib import Path
 from sqlalchemy import MetaData
 
@@ -18,7 +15,6 @@ from sqlalchemy import MetaData
 ROOT_DIR = Path(__file__).parent.parent.parent
 load_dotenv(ROOT_DIR / ".env.test")
 os.environ["ENV"] = "testing"
-init_db()
 
 # Database setup
 TEST_DB_URL = os.getenv("TEST_DB_URL")
@@ -38,6 +34,21 @@ TestingSessionLocal = async_sessionmaker(
     autoflush=False,
 )
 
+@pytest_asyncio.fixture(scope="session", autouse=True)
+async def setup_database():
+    """Setup database once for all tests"""
+    from app.models.base import Base
+    from app.models.favorite import Favorite
+    
+    # Create a metadata object for music service tables only
+    music_metadata = MetaData()
+    Favorite.__table__.metadata = music_metadata
+    
+    async with test_engine.begin() as conn:
+        # Drop and create only music service tables
+        await conn.run_sync(music_metadata.drop_all)
+        await conn.run_sync(music_metadata.create_all)
+
 
 # Test fixtures
 @pytest.fixture(scope="session")
@@ -48,24 +59,6 @@ def event_loop():
     yield loop
     loop.close()
 
-
-@pytest_asyncio.fixture(scope="session", autouse=True)
-async def setup_database():
-    """Setup database once for all tests"""
-    from app.models.base import Base
-    from app.models.user import User
-    from app.models.history import AiHistory
-    
-    # Create a metadata object for backend tables only
-    backend_metadata = MetaData()
-    User.__table__.metadata = backend_metadata
-    AiHistory.__table__.metadata = backend_metadata
-    
-    async with test_engine.begin() as conn:
-        # Drop and create only backend tables
-        await conn.run_sync(backend_metadata.drop_all)
-        await conn.run_sync(backend_metadata.create_all)
-    
 
 @pytest_asyncio.fixture(scope="function")
 async def db_session():
@@ -104,24 +97,29 @@ async def async_client():
     ) as client:
         yield client
 
+@pytest_asyncio.fixture
+async def backend_client():
+    """Create async HTTP client for backend service."""
+    from backend.app.main import app as backend_app
+    async with AsyncClient(
+        transport=ASGITransport(app=backend_app), base_url="http://testserver"
+    ) as client:
+        yield client
+
 
 @pytest_asyncio.fixture
-async def create_test_user(db_session):
-    """Create test user."""
-
+async def create_test_user(backend_client):
+    """Create test user through backend API."""
+    
     async def _create(username: str, password: str):
-        user = User(
-            username=username,
-            email=f"{username}@example.com",
-            hashed_password=hash_password(password),
+        response = await backend_client.post(
+            "/users/register",
+            json={"username": username, "email": f"{username}@example.com", "password": password}
         )
-        db_session.add(user)
-        await db_session.commit()
-        await db_session.refresh(user)
-        return user
-
+        assert response.status_code == 201
+        return response.json()
+    
     return _create
-
 
 @pytest_asyncio.fixture
 async def get_auth_headers(async_client):

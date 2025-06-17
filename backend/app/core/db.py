@@ -13,7 +13,7 @@ def init_db():
         DB_URL = os.getenv("TEST_DB_URL")
         poolclass = NullPool  # Disable pooling for tests
     else:
-        DB_URL = os.getenv("DB_URL") or os.getenv("DATABASE_URL")
+        DB_URL = os.getenv("DB_URL")
         poolclass = None
 
     if not DB_URL:

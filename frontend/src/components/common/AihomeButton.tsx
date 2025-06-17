@@ -3,6 +3,7 @@ import { useState } from "react";
 import { TrackCard, ArtistCard, AlbumCard } from "../features/Cards";
 import { ImSpinner2 } from "react-icons/im";
 import shared from "@/styles/shared.module.css";
+import { fetchWithService } from "@/utils/api";
 
 /**
  * Component that fetches AI recommendations for tracks, albums, and artists.
@@ -35,12 +36,10 @@ Example:
   "albums": ["Album 1", "Album 2"]
 }
 `;
-      const aiResponse = await fetch(
-        "http://localhost:8000/ai/recommend-home",
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ prompt }),
+      const aiResponse = await fetchWithService("/ai/recommend-home",'BACKEND', {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ prompt }),
         }
       );
 
@@ -48,20 +47,23 @@ Example:
 
       const aiData = await aiResponse.json();
       const [trackRes, artistRes, albumRes] = await Promise.all([
-        fetch(
-          `http://localhost:8000/spotify/tracks?ids=${aiData.results.tracks
+        fetchWithService(
+          `/spotify/tracks?ids=${aiData.results.tracks
             .map((t: any) => t.id)
-            .join(",")}`
+            .join(",")}`,
+          'MUSIC_SERVICE'
         ),
-        fetch(
-          `http://localhost:8000/spotify/artists?ids=${aiData.results.artists
+        fetchWithService(
+          `/spotify/artists?ids=${aiData.results.artists
             .map((a: any) => a.id)
-            .join(",")}`
+            .join(",")}`,
+          'MUSIC_SERVICE'
         ),
-        fetch(
-          `http://localhost:8000/spotify/albums?ids=${aiData.results.albums
+        fetchWithService(
+          `/spotify/albums?ids=${aiData.results.albums
             .map((a: any) => a.id)
-            .join(",")}`
+            .join(",")}`,
+          'MUSIC_SERVICE'
         ),
       ]);
 

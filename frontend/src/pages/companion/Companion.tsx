@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { v4 as uuidv4 } from "uuid";
 import styles from "./Companion.module.css";
 import { TrackCard, AlbumCard, ArtistCard } from "@/components/features/Cards";
@@ -6,7 +6,7 @@ import { FiSend, FiRefreshCw } from "react-icons/fi";
 import { ImSpinner2 } from "react-icons/im";
 import shared from "@/styles/shared.module.css";
 import type { Message } from "@/types/ai/AITypes";
-
+import { fetchWithService } from "@/utils/api";
 
 export default function Companion() {
   const [messages, setMessages] = useState<Message[]>([]);
@@ -16,10 +16,17 @@ export default function Companion() {
   const [error, setError] = useState<string | null>(null);
   const token = localStorage.getItem("access_token");
 
+  const messagesEndRef = useRef<HTMLDivElement | null>(null);
+  useEffect(() => {
+    if (messagesEndRef.current) {
+      messagesEndRef.current.scrollIntoView({ behavior: "auto" });
+    }
+  }, [messages]);
+
   useEffect(() => {
     async function fetchHistory() {
       try {
-        const response = await fetch("http://localhost:8000/ai/companion", {
+        const response = await fetchWithService("/ai/companion",'BACKEND', {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
@@ -51,9 +58,9 @@ export default function Companion() {
             .join(",");
 
           const [trackRes, artistRes, albumRes] = await Promise.all([
-            fetch(`http://localhost:8000/spotify/tracks?ids=${tracksIds}`),
-            fetch(`http://localhost:8000/spotify/artists?ids=${artistsIds}`),
-            fetch(`http://localhost:8000/spotify/albums?ids=${albumsIds}`),
+            fetchWithService(`/spotify/tracks?ids=${tracksIds}`,'MUSIC_SERVICE'),
+            fetchWithService(`/spotify/artists?ids=${artistsIds}`,'MUSIC_SERVICE'),
+            fetchWithService(`/spotify/albums?ids=${albumsIds}`,'MUSIC_SERVICE'),
           ]);
 
           if (trackRes.ok && artistRes.ok && albumRes.ok) {
@@ -106,7 +113,7 @@ export default function Companion() {
     setInput("");
 
     try {
-      const response = await fetch("http://localhost:8000/ai/companion", {
+      const response = await fetchWithService("/ai/companion",'BACKEND', {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -126,9 +133,9 @@ export default function Companion() {
         .join(",");
 
       const [trackRes, artistRes, albumRes] = await Promise.all([
-        fetch(`http://localhost:8000/spotify/tracks?ids=${tracksIds}`),
-        fetch(`http://localhost:8000/spotify/artists?ids=${artistsIds}`),
-        fetch(`http://localhost:8000/spotify/albums?ids=${albumsIds}`),
+        fetchWithService(`/spotify/tracks?ids=${tracksIds}`,'MUSIC_SERVICE'),
+        fetchWithService(`/spotify/artists?ids=${artistsIds}`,'MUSIC_SERVICE'),
+        fetchWithService(`/spotify/albums?ids=${albumsIds}`,'MUSIC_SERVICE'),
       ]);
 
       if (!trackRes.ok || !artistRes.ok || !albumRes.ok) {
@@ -235,6 +242,7 @@ export default function Companion() {
               )}
             </div>
           ))}
+          <div ref={messagesEndRef} />
         </div>
         {loading && (
           <div className={shared.loading}>
@@ -242,7 +250,6 @@ export default function Companion() {
           </div>
         )}
       </div>
-
       <div className={styles.userInput}>
         <input
           type="text"

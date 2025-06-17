@@ -10,8 +10,6 @@ class FavoriteType(PyEnum):
     artist = "artist"
 
 # User favorites model
-default_utcnow = lambda: datetime.now(timezone.utc)
-
 class Favorite(Base):
     __tablename__ = "favorites"
 
@@ -19,4 +17,6 @@ class Favorite(Base):
     user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
     spotify_id = Column(String(50), nullable=False)
     type = Column(Enum(FavoriteType), nullable=False)
-    created_at = Column(DateTime(timezone=True), default=default_utcnow)
+    created_at = Column(
+        DateTime(timezone=True), default=lambda: datetime.now(timezone.utc)
+    )

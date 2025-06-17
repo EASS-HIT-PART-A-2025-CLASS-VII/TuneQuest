@@ -11,7 +11,7 @@ from app.crud.favorite import (
 )
 from app.core.db import get_db
 from app.core.auth import get_current_user
-from app.models.user import User
+from app.schemas.user import User
 
 # User favorites endpoints
 router = APIRouter(prefix="/favorites", tags=["favorites"])

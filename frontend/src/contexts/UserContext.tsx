@@ -2,7 +2,7 @@ import { createContext, useContext, useState, useEffect, useMemo } from "react";
 import shared from "@/styles/shared.module.css";
 import { ImSpinner2 } from "react-icons/im";
 import type { User, UserContextType } from "@/types/user/UserTypes";
-
+import { fetchWithService } from "@/utils/api";
 
 const UserContext = createContext<UserContextType | undefined>(undefined);
 
@@ -23,7 +23,7 @@ export function UserProvider({
       }
 
       try {
-        const response = await fetch("http://localhost:8000/users/me/", {
+        const response = await fetchWithService("/users/me/",'BACKEND', {
           headers: { Authorization: `Bearer ${token}` },
         });
 

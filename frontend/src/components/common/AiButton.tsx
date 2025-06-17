@@ -4,7 +4,7 @@ import { TrackCard, ArtistCard, AlbumCard } from "../features/Cards";
 import { ImSpinner2 } from "react-icons/im";
 import shared from "@/styles/shared.module.css";
 import type { RecommendationItem, AiButtonProps } from "@/types/ai/AITypes";
-
+import { fetchWithService } from "@/utils/api";
 
 export function AiButton({ type, name }: AiButtonProps) {
   const [results, setResults] = useState<RecommendationItem[]>([]);
@@ -19,7 +19,7 @@ export function AiButton({ type, name }: AiButtonProps) {
     try {
       const prompt = `recommend ${type}s similar to ${name}. Return the names only, dont add words. 5 results. Be creative. I want a combination of popular and niche ${type}s. No introductions, no explanations, no other text.`;
 
-      const aiResponse = await fetch("http://localhost:8000/ai/recommend", {
+      const aiResponse = await fetchWithService("/ai/recommend",'BACKEND', {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ prompt, type }),
@@ -34,22 +34,25 @@ export function AiButton({ type, name }: AiButtonProps) {
 
       switch (type) {
         case "album":
-          url = `http://localhost:8000/spotify/albums?ids=${ids}`;
+          url = `/spotify/albums?ids=${ids}`;
           dataKey = "albums";
           break;
         case "track":
-          url = `http://localhost:8000/spotify/tracks?ids=${ids}`;
+          url = `/spotify/tracks?ids=${ids}`;
           dataKey = "tracks";
           break;
         case "artist":
-          url = `http://localhost:8000/spotify/artists?ids=${ids}`;
+          url = `/spotify/artists?ids=${ids}`;
           dataKey = "artists";
           break;
         default:
           throw new Error("Unsupported type");
       }
 
-      const response = await fetch(url);
+      const response = await fetchWithService(url,'MUSIC_SERVICE', {
+        method: "GET",
+        headers: { "Content-Type": "application/json" },
+      });
       if (!response.ok) throw new Error("Failed to fetch details");
 
       const data = await response.json();

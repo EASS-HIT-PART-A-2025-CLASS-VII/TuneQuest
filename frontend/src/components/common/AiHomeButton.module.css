@@ -26,22 +26,23 @@
 
 .columns {
   display: flex;
-  flex-wrap: wrap;
-  gap: 1rem;
-  justify-content: center;
+  flex-direction: column;
+  gap: 2rem;
+  width: 100%;
   margin-top: 1.5rem;
-  align-items: stretch;
 }
 
 .columns > div {
   display: flex;
   flex-direction: column;
-  justify-content: flex-start;
-  flex: 1;
+  width: 100%;
+  border-color: #f8f4f2;
   border-radius: 10px;
-  box-shadow: 0 0 10px rgba(0, 255, 255, 0.1);
-  background-color: #f8f4f2;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  border: 1px solid #e0e0e0;
   gap: 1rem;
+  padding: 1.5rem 1rem;
+  box-sizing: border-box;
 }
 
 .title {
@@ -53,4 +54,16 @@
 .error {
   color: red;
   font-weight: bold;
+}
+
+@media (max-width: 900px) {
+  .button {
+    width: 250px;
+  }
+}
+
+@media (max-width: 600px) {
+  .button {
+    width: 200px;
+  }
 }

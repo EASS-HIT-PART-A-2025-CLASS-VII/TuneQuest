@@ -8,6 +8,7 @@ import shared from "@/styles/shared.module.css";
 import { MdFavorite, MdFavoriteBorder } from "react-icons/md";
 import { useUser } from "@/contexts/UserContext";
 import type { FullTrack } from "@/types/music/MusicTypes";
+import { fetchWithService } from "@/utils/api";
 
 export default function TrackDetails() {
   const { id } = useParams<{ id: string }>();
@@ -22,7 +23,7 @@ export default function TrackDetails() {
 
   useEffect(() => {
     setLoading(true);
-    fetch(`http://localhost:8000/spotify/track/${id}`)
+    fetchWithService(`/spotify/track/${id}`,'MUSIC_SERVICE')
       .then((res) => {
         if (!res.ok) throw new Error("Failed to fetch track");
         return res.json();
@@ -32,7 +33,7 @@ export default function TrackDetails() {
       .finally(() => setLoading(false));
 
     if (user) {
-      fetch(`http://localhost:8000/favorites/${id}?type=track`, {
+      fetchWithService(`/favorites/${id}?type=track`,'MUSIC_SERVICE', {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -68,22 +69,18 @@ export default function TrackDetails() {
     try {
       let response;
       if (favorite) {
-        response = await fetch(
-          `http://localhost:8000/favorites/${id}?type=track`,
-          {
-            method: "DELETE",
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
+        response = await fetchWithService(`/favorites/${id}?type=track`,'MUSIC_SERVICE', {
+          method: "DELETE",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
           }
         );
       } else {
-        response = await fetch(
-          `http://localhost:8000/favorites?spotify_id=${id}&type=track`,
-          {
-            method: "POST",
-            headers: {
-              Authorization: `Bearer ${token}`,
+        response = await fetchWithService(`/favorites?spotify_id=${id}&type=track`,'MUSIC_SERVICE', {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${token}`,
             },
           }
         );

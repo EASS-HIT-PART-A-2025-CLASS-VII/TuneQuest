@@ -9,7 +9,7 @@ import shared from "@/styles/shared.module.css";
 import { MdFavorite, MdFavoriteBorder } from "react-icons/md";
 import { useUser } from "@/contexts/UserContext";
 import type { FullAlbum } from "@/types/music/MusicTypes";
-
+import { fetchWithService } from "@/utils/api";
 
 export default function AlbumDetails() {
   const { id } = useParams<{ id: string }>();
@@ -23,7 +23,7 @@ export default function AlbumDetails() {
 
   useEffect(() => {
     setLoading(true);
-    fetch(`http://localhost:8000/spotify/album/${id}`)
+    fetchWithService(`/spotify/album/${id}`,'MUSIC_SERVICE')
       .then((res) => {
         if (!res.ok) throw new Error("Failed to fetch album");
         return res.json();
@@ -33,7 +33,7 @@ export default function AlbumDetails() {
       .finally(() => setLoading(false));
 
     if (user) {
-      fetch(`http://localhost:8000/favorites/${id}?type=album`, {
+      fetchWithService(`/favorites/${id}?type=album`,'MUSIC_SERVICE', {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -65,22 +65,18 @@ export default function AlbumDetails() {
     try {
       let response;
       if (favorite) {
-        response = await fetch(
-          `http://localhost:8000/favorites/${id}?type=album`,
-          {
-            method: "DELETE",
-            headers: {
-              Authorization: `Bearer ${token}`,
+        response = await fetchWithService(`/favorites/${id}?type=album`,'MUSIC_SERVICE', {
+          method: "DELETE",
+          headers: {
+            Authorization: `Bearer ${token}`,
             },
           }
         );
       } else {
-        response = await fetch(
-          `http://localhost:8000/favorites?spotify_id=${id}&type=album`,
-          {
-            method: "POST",
-            headers: {
-              Authorization: `Bearer ${token}`,
+        response = await fetchWithService(`/favorites?spotify_id=${id}&type=album`,'MUSIC_SERVICE', {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${token}`,
             },
           }
         );

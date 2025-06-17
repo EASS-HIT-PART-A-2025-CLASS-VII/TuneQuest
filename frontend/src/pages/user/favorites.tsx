@@ -5,6 +5,8 @@ import { ImSpinner2 } from "react-icons/im";
 import shared from "@/styles/shared.module.css";
 import { useUser } from "@/contexts/UserContext";
 import type { SpotifyFavorites } from "@/types/user/UserTypes";
+import { fetchWithService } from "@/utils/api";
+
 
 export default function Favorites() {
 
@@ -25,7 +27,7 @@ export default function Favorites() {
       if (!user) return;
       try {
         setLoading(true);
-        const resFavs = await fetch(`http://localhost:8000/favorites/spotify`, {
+        const resFavs = await fetchWithService(`/favorites/spotify`,'MUSIC_SERVICE', {
           headers: {
             Authorization: `Bearer ${token}`,
           },

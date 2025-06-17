@@ -1,7 +1,7 @@
 from fastapi import APIRouter, HTTPException
 import json
 from app.schemas.ai import AIRequest, AISpecificRequest
-from app.crud.ai_history import (
+from app.crud.ai import (
     get_recommendations_home,
     get_companion,
     get_recommendations_button,
@@ -18,10 +18,10 @@ ai_response_is_not_valid = "AI response is not valid JSON"
 
 
 @router.post("/recommend-home")
-def ai_recommend_home(request: AIRequest):
+async def ai_recommend_home(request: AIRequest):
     """Get AI home recommendations."""
     try:
-        result = get_recommendations_home(request.prompt)
+        result = await get_recommendations_home(request.prompt)
         return result
     except json.JSONDecodeError:
         raise HTTPException(status_code=400, detail="Invalid AI response")
@@ -30,10 +30,10 @@ def ai_recommend_home(request: AIRequest):
 
 
 @router.post("/recommend")
-def ai_recommend(request: AISpecificRequest):
+async def ai_recommend(request: AISpecificRequest):
     """Get specific AI recommendations."""
     try:
-        result = get_recommendations_button(request)
+        result = await get_recommendations_button(request)
         return result
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
