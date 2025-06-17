@@ -33,7 +33,7 @@ router = APIRouter(prefix="/users", tags=["users"])
 VALID_SORT_FIELDS = ["id", "username", "email"]
 
 
-@router.post("/register", response_model=UserRead)
+@router.post("/register", response_model=dict)
 async def create_user_endpoint(user: UserCreate, db: AsyncSession = Depends(get_db)):
     """Register a new user."""
     existing_user = await get_user_by_username(db, user.username)
@@ -47,11 +47,13 @@ async def create_user_endpoint(user: UserCreate, db: AsyncSession = Depends(get_
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST, detail="Email already registered"
         )
+    
+    user = await create_user(db, user)
+    access_token = create_access_token(data={"sub": user.username})
+    return {"access_token": access_token, "token_type": "bearer"}
 
-    return await create_user(db, user)
 
-
-@router.post("/login")
+@router.post("/login", response_model=dict)
 async def login(user_login: UserLogin, db: AsyncSession = Depends(get_db)):
     """Authenticate user and return JWT token."""
     user = await get_user_by_username(db, user_login.username)

@@ -68,6 +68,7 @@ async def get_all_user_favorites(
     user_id: int,
     db: AsyncSession,
 ):
+    print(user_id)
     """Get all favorites for a user."""
     query = select(Favorite).where(Favorite.user_id == user_id)
     query = apply_sorting(query, Favorite)
@@ -89,25 +90,17 @@ async def _fetch_spotify_data_in_batches_threaded(
 
 async def get_spotify_metadata_for_user_favorites(user_id: int, db: AsyncSession):
     """Get Spotify metadata for all user favorites."""
-    print(f"\n=== STARTING METADATA FETCH FOR USER {user_id} ===")
 
     # Get all favorites
     favorites = await get_all_user_favorites(user_id, db)
-    print(f"Found {len(favorites)} favorites:")
-    for fav in favorites:
-        print(f"  - {fav.spotify_id} ({fav.type})")
 
     # Group favorites by type
     grouped = {"tracks": [], "artists": [], "albums": []}
     for fav in favorites:
         plural_type_key = fav.type.name.lower() + "s"
-        print(f"Grouping {fav.spotify_id} as {plural_type_key}")
         if fav.type and plural_type_key in grouped:
             grouped[plural_type_key].append(fav.spotify_id)
 
-    print("\nGrouped favorites:")
-    for key, ids in grouped.items():
-        print(f"{key}: {ids}")
 
     # Fetch data in parallel
     tracks_task = _fetch_spotify_data_in_batches_threaded(
@@ -124,10 +117,6 @@ async def get_spotify_metadata_for_user_favorites(user_id: int, db: AsyncSession
     tracks, artists, albums = await asyncio.gather(
         tracks_task, artists_task, albums_task
     )
-    print("\nFetched data:")
-    print(f"Tracks: {tracks}")
-    print(f"Artists: {artists}")
-    print(f"Albums: {albums}")
 
     # Create final metadata structure
     metadata = {
@@ -135,8 +124,6 @@ async def get_spotify_metadata_for_user_favorites(user_id: int, db: AsyncSession
         "artists": artists,
         "albums": albums,
     }
-    print("\nFinal metadata:")
-    print(metadata)
 
     return metadata
 

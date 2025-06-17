@@ -67,7 +67,7 @@ export default function SearchBar() {
         )}
       </div>
 
-      {!loading && results[type as keyof SearchResult]?.length > 0 && (
+      {!loading && search.trim() !== "" && results[type as keyof SearchResult]?.length > 0 && (
         <div className={styles.dropdown}>
           <div className={styles.tabs}>
             {types.map((t) => (

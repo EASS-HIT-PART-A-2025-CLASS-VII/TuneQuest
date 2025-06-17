@@ -14,7 +14,7 @@ export function TrackCard({ track }: { readonly track: any }) {
       />
       <div className={styles.info}>
         <h4 className={styles.title}>{track.name}</h4>
-        <p className={styles.subtitle}>
+        <p className={styles.artist}>
           {track.artists.map((a: any) => a.name).join(", ")}
         </p>
       </div>
@@ -31,7 +31,7 @@ export function NonImageTrackCard({ track }: { readonly track: any }) {
       <p>{track.track_number}</p>
       <div className={styles.info}>
         <h4 className={styles.title}>{track.name}</h4>
-        <p className={styles.subtitle}>
+        <p className={styles.artist}>
           {track.artists.map((a: any) => a.name).join(", ")}
         </p>
       </div>
@@ -52,7 +52,7 @@ export function AlbumCard({ album }: { readonly album: any }) {
       />
       <div className={styles.info}>
         <h4 className={styles.title}>{album.name}</h4>
-        <p className={styles.subtitle}>
+        <p className={styles.artist}>
           {album.artists.map((a: any) => a.name).join(", ")}
         </p>
         <p>

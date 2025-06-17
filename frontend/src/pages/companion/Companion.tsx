@@ -168,6 +168,12 @@ export default function Companion() {
     }
   };
 
+  const handleEnter = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter") {
+      handleSubmit(input);
+    }
+  };
+
   const handleRegenerate = () => {
     if (!regenerate.trim()) return;
 
@@ -256,6 +262,7 @@ export default function Companion() {
           className={styles.inputBox}
           value={input}
           onChange={(e) => setInput(e.target.value)}
+          onKeyDown={handleEnter}
         />
         <button
           className={styles.sendButton}

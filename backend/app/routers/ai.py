@@ -11,6 +11,7 @@ from fastapi import Depends
 from app.core.auth import get_current_user
 from sqlalchemy.ext.asyncio import AsyncSession
 from app.core.db import get_db
+from app.models.user import User
 
 # AI endpoints
 router = APIRouter(prefix="/ai", tags=["ai"])
@@ -42,7 +43,7 @@ async def ai_recommend(request: AISpecificRequest):
 @router.post("/companion")
 async def ai_companion(
     request: AIRequest,
-    current_user=Depends(get_current_user),
+    current_user: User = Depends(get_current_user),
     db: AsyncSession = Depends(get_db),
 ):
     """Get AI companion response."""
@@ -57,7 +58,8 @@ async def ai_companion(
 
 @router.get("/companion")
 async def ai_companion_get_history(
-    current_user=Depends(get_current_user), db: AsyncSession = Depends(get_db)
+    current_user: User = Depends(get_current_user), 
+    db: AsyncSession = Depends(get_db)
 ):
     try:
         result = await get_companion_history(db, user_id=current_user.id)

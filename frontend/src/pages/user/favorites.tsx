@@ -28,6 +28,7 @@ export default function Favorites() {
       try {
         setLoading(true);
         const resFavs = await fetchWithService(`/favorites/spotify`,'MUSIC_SERVICE', {
+          method: "GET",
           headers: {
             Authorization: `Bearer ${token}`,
           },

@@ -2,6 +2,8 @@ import styles from "./SignUp.module.css";
 import { useState } from "react";
 import type { FormData, FormErrors } from "@/types/user/UserTypes";
 import { fetchWithService } from "@/utils/api";
+import { useNavigate } from "react-router-dom";
+import { useUser } from "@/contexts/UserContext";
 
 export default function SignUp() {
   const [formData, setFormData] = useState<FormData>({
@@ -17,6 +19,9 @@ export default function SignUp() {
     password: "",
     confirmPassword: "",
   });
+
+  const navigate = useNavigate();
+  const { setUser } = useUser();
 
   function validate(name: keyof FormData, value: string) {
     let error = "";
@@ -82,12 +87,29 @@ export default function SignUp() {
 
       const data = await response.json();
       if (!response.ok) {
-        alert(data.detail ?? "Invalid login");
+        alert(data.detail ?? "Invalid registration");
       } else {
-        console.log("Login successful:", data);
+        console.log("Registration successful:", data);
+        if (data.access_token) {
+          localStorage.setItem("access_token", data.access_token);
+          const profileResponse = await fetchWithService("/users/me/", "BACKEND", {
+            headers: {
+              Authorization: `Bearer ${data.access_token}`,
+            },
+          });
+          if (!profileResponse.ok) {
+            alert("Registration succeeded but failed to fetch user info.");
+            return;
+          }
+          const userData = await profileResponse.json();
+          setUser(userData);
+          navigate("/");
+        } else {
+          navigate("/login");
+        }
       }
     } catch (error) {
-      console.error("Login error:", error);
+      console.error("Registration error:", error);
       alert("Something went wrong. Try again later.");
     }
   }

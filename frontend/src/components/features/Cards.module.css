@@ -25,6 +25,11 @@
   border-bottom: none;
 }
 
+.info {
+  flex: 1;
+  min-width: 0;
+}
+
 .image {
   width: 3rem;
   height: 3rem;
@@ -37,24 +42,33 @@
   font-weight: 600;
   margin: 0;
   white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: block;
+  width: 100%;
 }
 
 .artist {
   font-size: 0.875rem;
   color: #666;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: block;
+  width: 100%;
+}
+@media (max-width: 900px) {
+
 }
 
 @media (max-width: 600px) {
-  .image {
-    width: 2rem;
-    height: 2rem;
-  }
+
 
   .title {
-    font-size: 0.8rem;
+    font-size: 0.9rem;
   }
 
   .artist {
-    font-size: 0.7rem;
+    font-size: 0.8rem;
   }
 }
