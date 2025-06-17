@@ -74,7 +74,7 @@ python-jose==3.4.0
 pywin32==308
 pyzmq==26.2.1
 redis==6.2.0
-requests==2.32.3
+requests==2.32.4
 rsa==4.9.1
 ruff==0.11.7
 six==1.17.0
