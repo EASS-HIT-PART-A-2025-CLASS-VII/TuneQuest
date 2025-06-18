@@ -5,11 +5,10 @@ from fastapi import HTTPException
 
 
 @pytest.mark.asyncio
-async def test_create_favorite_success():
+async def test_create_favorite_success(mock_db):
     """
     Tests successful creation of a new favorite when it does not exist.
     """
-    mock_db = AsyncMock()
     mock_result = Mock()  # Use a standard Mock for the result object
 
     # Simulate that the item does NOT exist in the database
@@ -28,11 +27,10 @@ async def test_create_favorite_success():
 
 
 @pytest.mark.asyncio
-async def test_create_favorite_duplicate():
+async def test_create_favorite_duplicate(mock_db):
     """
     Tests that the function returns False if the favorite already exists.
     """
-    mock_db = AsyncMock()
     mock_result = Mock()  # Use a standard Mock
 
     # Simulate that the item DOES exist in the database
@@ -51,11 +49,10 @@ async def test_create_favorite_duplicate():
 
 
 @pytest.mark.asyncio
-async def test_create_favorite_missing_type():
+async def test_create_favorite_missing_type(mock_db):
     """
     Tests that an HTTPException is raised if the 'type' parameter is missing.
     """
-    mock_db = AsyncMock()
     mock_result = Mock()  # Use a standard Mock
 
     # Simulate that the item does NOT exist, so the function proceeds to the type check
@@ -75,11 +72,10 @@ async def test_create_favorite_missing_type():
 
 
 @pytest.mark.asyncio
-async def test_create_favorite_invalid_type():
+async def test_create_favorite_invalid_type(mock_db):
     """
     Tests that an HTTPException is raised for an invalid 'type' string.
     """
-    mock_db = AsyncMock()
     mock_result = Mock()  # Use a standard Mock
 
     # Simulate that the item does NOT exist
@@ -123,11 +119,10 @@ async def test_get_all_user_favorites():
 
 
 @pytest.mark.asyncio
-async def test_erase_favorite_success():
+async def test_erase_favorite_success(mock_db):
     """
     Tests successfully erasing a favorite that exists.
     """
-    mock_db = AsyncMock()
     mock_result = Mock()
     mock_favorite = Mock()
     mock_favorite.user_id = 1
@@ -144,11 +139,10 @@ async def test_erase_favorite_success():
 
 
 @pytest.mark.asyncio
-async def test_erase_favorite_not_found():
+async def test_erase_favorite_not_found(mock_db):
     """
     Tests attempting to erase a favorite that doesn't exist.
     """
-    mock_db = AsyncMock()
     mock_result = Mock()
     mock_result.scalar_one_or_none.return_value = None
     mock_db.execute.return_value = mock_result
@@ -161,11 +155,10 @@ async def test_erase_favorite_not_found():
 
 
 @pytest.mark.asyncio
-async def test_erase_favorite_invalid_type():
+async def test_erase_favorite_invalid_type(mock_db):
     """
     Tests attempting to erase a favorite with an invalid type.
     """
-    mock_db = AsyncMock()
     mock_result = Mock()
     mock_result.scalar_one_or_none.return_value = None
     mock_db.execute.return_value = mock_result

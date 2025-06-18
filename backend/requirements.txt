@@ -20,3 +20,7 @@ psycopg2-binary==2.9.9
 
 # AI/ML
 google-generativeai==0.4.0
+
+# Testing
+pytest==8.4.0
+pytest-asyncio==1.0.0

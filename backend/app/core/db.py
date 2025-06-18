@@ -11,9 +11,11 @@ def init_db():
 
     if os.getenv("ENV") == "testing":
         DB_URL = os.getenv("TEST_DB_URL")
+        print(DB_URL)
         poolclass = NullPool  # Disable pooling for tests
     else:
         DB_URL = os.getenv("DB_URL")
+        print(DB_URL)
         poolclass = None
 
     if not DB_URL:

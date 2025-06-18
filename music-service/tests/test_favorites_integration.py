@@ -14,8 +14,8 @@ from unittest.mock import AsyncMock, patch
 @pytest.mark.asyncio
 async def test_favorite_lifecycle(db_session: AsyncSession, create_test_user):
     """Test complete favorite lifecycle."""
-    test_user = await create_test_user("testuser", "password")
-    spotify_id = "test_track_123"
+    test_user = await create_test_user("test_user_lifecycle", "password")
+    spotify_id = "test_track_lifecycle"
 
     # Create favorite
     create_result = await create_favorite(
@@ -60,8 +60,8 @@ async def test_favorite_with_metadata(
     create_test_user,
 ):
     """Test favorite operations with Spotify metadata."""
-    test_user = await create_test_user("testuser_metadata", "password")
-    spotify_id = "test_track_123"
+    test_user = await create_test_user("test_user_metadata", "password")
+    spotify_id = "test_track_metadata"
 
     # Mock Spotify API responses
     mock_get_tracks.return_value = AsyncMock(
@@ -108,7 +108,7 @@ async def test_favorite_with_metadata(
 @pytest.mark.asyncio
 async def test_concurrent_operations(db_sessions: list[AsyncSession], create_test_user):
     """Test concurrent favorite operations."""
-    test_user = await create_test_user("testuser_concurrent", "password")
+    test_user = await create_test_user("test_user_concurrent", "password")
 
     # Create favorites concurrently
     create_tasks = []
@@ -116,7 +116,7 @@ async def test_concurrent_operations(db_sessions: list[AsyncSession], create_tes
         task = asyncio.create_task(
             create_favorite(
                 user_id=test_user.id,
-                spotify_id=f"track_{i}",
+                spotify_id=f"track_concurrent_{i}",
                 db=db_sessions[i],
                 type="track",
             )
@@ -136,7 +136,7 @@ async def test_concurrent_operations(db_sessions: list[AsyncSession], create_tes
         task = asyncio.create_task(
             erase_favorite(
                 user_id=test_user.id,
-                spotify_id=f"track_{i}",
+                spotify_id=f"track_concurrent_{i}",
                 db=db_sessions[i],
                 type="track",
             )

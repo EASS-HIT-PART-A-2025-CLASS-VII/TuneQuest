@@ -11,14 +11,15 @@ from httpx import AsyncClient, ASGITransport
 from app.main import app
 from app.core.db import init_db
 from pathlib import Path
-from sqlalchemy import MetaData
+from sqlalchemy import MetaData, text
+from unittest.mock import AsyncMock
+from app.crud import user as crud_user
 
 
 # Setup test environment
-ROOT_DIR = Path(__file__).parent.parent.parent
-load_dotenv(ROOT_DIR / ".env.test")
+BACKEND_DIR = Path(__file__).parent.parent
+load_dotenv(BACKEND_DIR / ".env.test")
 os.environ["ENV"] = "testing"
-init_db()
 
 # Database setup
 TEST_DB_URL = os.getenv("TEST_DB_URL")
@@ -56,22 +57,29 @@ async def setup_database():
     from app.models.user import User
     from app.models.history import AiHistory
     
-    # Create a metadata object for backend tables only
-    backend_metadata = MetaData()
-    User.__table__.metadata = backend_metadata
-    AiHistory.__table__.metadata = backend_metadata
-    
-    async with test_engine.begin() as conn:
-        # Drop and create only backend tables
-        await conn.run_sync(backend_metadata.drop_all)
-        await conn.run_sync(backend_metadata.create_all)
-    
+    # Clean tables before tests start
+    async with TestingSessionLocal() as session:
+        await session.begin()
+        await session.execute(text("TRUNCATE TABLE users RESTART IDENTITY CASCADE"))
+        await session.execute(text("TRUNCATE TABLE ai_history RESTART IDENTITY CASCADE"))
+        await session.commit()
+
+    yield
+
+    # Clean tables after all tests
+    async with TestingSessionLocal() as session:
+        await session.begin()
+        await session.execute(text("TRUNCATE TABLE users RESTART IDENTITY CASCADE"))
+        await session.execute(text("TRUNCATE TABLE ai_history RESTART IDENTITY CASCADE"))
+        await session.commit()
+
 
 @pytest_asyncio.fixture(scope="function")
 async def db_session():
     """Create database session for test function."""
     session = TestingSessionLocal()
     try:
+        # Clean tables before each test
         await session.begin()
         yield session
     finally:
@@ -103,6 +111,16 @@ async def async_client():
         transport=ASGITransport(app=app), base_url="http://testserver"
     ) as client:
         yield client
+
+
+@pytest_asyncio.fixture
+async def mock_db():
+    """Create a mock database session for unit tests."""
+    db = AsyncMock()
+    db.commit = AsyncMock()
+    db.refresh = AsyncMock()
+    db.execute = AsyncMock()
+    return db
 
 
 @pytest_asyncio.fixture

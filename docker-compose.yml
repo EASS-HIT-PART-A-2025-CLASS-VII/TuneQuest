@@ -27,14 +27,15 @@ services:
       - "8000:8000"
     env_file:
       - .env
+      - backend/.env.test
     depends_on:
       db:
         condition: service_healthy
     environment:
       DATABASE_URL: ${DB_URL}
-      TEST_DB_URL: ${TEST_DB_URL}
       ENV: ${ENV}
       BACKEND_PORT: ${BACKEND_PORT}
+      PYTHONPATH: /app
 
     healthcheck:
       test: ["CMD", "curl", "-f", "http://backend:8000/health"]
@@ -56,12 +57,12 @@ services:
       - backend
     env_file:
       - .env
+      - music-service/.env.test
     environment:
       DATABASE_URL: ${DB_URL}
-      TEST_DB_URL: ${TEST_DB_URL}
       ENV: ${ENV}
       MUSIC_SERVICE_PORT: ${MUSIC_SERVICE_PORT}
-
+      PYTHONPATH: /app
     healthcheck:
       test: ["CMD", "curl", "-f", "http://music-service:8001/health"]
       interval: 5s

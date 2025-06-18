@@ -4,7 +4,7 @@ from datetime import datetime, timedelta
 from unittest.mock import patch
 from sqlalchemy import select
 
-from app.crud.ai_history import (
+from app.crud.ai import (
     get_recommendations_home,
     get_recommendations_button,
     get_companion,
@@ -34,14 +34,15 @@ def cleaned_json_data():
     }
 
 
-@patch("app.crud.ai_history.ask_gemini")
-@patch("app.crud.ai_history.search_spotify_entities")
-def test_get_recommendations_home(
+@pytest.mark.asyncio
+@patch("app.crud.ai.ask_gemini")
+@patch("app.crud.ai.search_spotify_entities")
+async def test_get_recommendations_home(
     mock_search_spotify, mock_ask_gemini, sample_ai_response, cleaned_json_data
 ):
     mock_ask_gemini.return_value = sample_ai_response
 
-    def enrich_mock(names, type_):
+    async def enrich_mock(names, type_):
         return [{"name": f"enriched-{name}"} for name in names]
 
     mock_search_spotify.side_effect = enrich_mock
@@ -60,7 +61,7 @@ Example:
 }
 """
 
-    result = get_recommendations_home(prompt)
+    result = await get_recommendations_home(prompt)
 
     assert "results" in result
     assert [t["name"] for t in result["results"]["tracks"]] == [
@@ -77,9 +78,10 @@ Example:
     ]
 
 
-@patch("app.crud.ai_history.ask_gemini")
-@patch("app.crud.ai_history.search_spotify_entities")
-def test_get_recommendations_button(mock_search_spotify, mock_ask_gemini):
+@pytest.mark.asyncio
+@patch("app.crud.ai.ask_gemini")
+@patch("app.crud.ai.search_spotify_entities")
+async def test_get_recommendations_button(mock_search_spotify, mock_ask_gemini):
     ai_response = "- Song 1\n- Song 2\n- Song 3"
     mock_ask_gemini.return_value = ai_response
     enriched_data = [
@@ -91,7 +93,7 @@ def test_get_recommendations_button(mock_search_spotify, mock_ask_gemini):
     prompt = """recommend ${type}s similar to ${name}. Return the names only, dont add words. 5 results. Be creative. I want a combination of popular and niche ${type}s. No introductions, no explanations, no other text."""
 
     request = AISpecificRequest(prompt=prompt, type="track")
-    result = get_recommendations_button(request)
+    result = await get_recommendations_button(request)
 
     assert "results" in result
     assert result["results"] == enriched_data
@@ -99,8 +101,8 @@ def test_get_recommendations_button(mock_search_spotify, mock_ask_gemini):
 
 
 @pytest.mark.asyncio
-@patch("app.crud.ai_history.ask_gemini")
-@patch("app.crud.ai_history.search_spotify_entities")
+@patch("app.crud.ai.ask_gemini")
+@patch("app.crud.ai.search_spotify_entities")
 async def test_get_companion_success(
     mock_search_spotify, mock_ask_gemini, db_session, create_test_user
 ):

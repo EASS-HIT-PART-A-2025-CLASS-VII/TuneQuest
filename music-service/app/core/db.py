@@ -4,7 +4,7 @@ import os
 
 
 DATABASE_URL = os.getenv("TEST_DB_URL") if os.getenv("ENV") == "testing" else os.getenv("DB_URL")
-
+print(DATABASE_URL)
 engine = create_async_engine(
     DATABASE_URL, 
     echo=True,
