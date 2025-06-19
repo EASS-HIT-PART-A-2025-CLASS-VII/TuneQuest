@@ -100,6 +100,10 @@ async def test_update_user(mock_db):
     )
     user_update = UserUpdate(username="new", email="new@example.com")
 
+    mock_result = MagicMock()
+    mock_result.scalar_one_or_none.return_value = existing_user
+    mock_db.execute.return_value = mock_result
+
     result = await crud_user.update_user(mock_db, existing_user.id, user_update)
 
     assert result.username == "new"
@@ -115,13 +119,16 @@ async def test_replace_user(mock_db):
     )
     user_replace = UserReplace(username="new", email="new@example.com")
 
+    mock_result = MagicMock()
+    mock_result.scalar_one_or_none.return_value = existing_user
+    mock_db.execute.return_value = mock_result
+
     result = await crud_user.replace_user(mock_db, existing_user.id, user_replace)
 
     assert result.username == "new"
     assert result.email == "new@example.com"
     mock_db.commit.assert_called_once()
     mock_db.refresh.assert_called_once()
-
 
 @pytest.mark.asyncio
 async def test_delete_user(mock_db):

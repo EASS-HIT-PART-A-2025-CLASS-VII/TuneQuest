@@ -15,7 +15,7 @@ docker compose exec db psql -U postgres -f /create_test_dbs.sql
 
 # Run schema in test databases
 Write-Host "Setting up test databases..."
-docker compose exec db psql -U postgres -d tunequest_test -f /schema.sql
+docker compose exec db psql -U postgres -d tunequest_backend_test -f /schema.sql
 docker compose exec db psql -U postgres -d music_service_test -f /schema.sql
 
 # Clean up copied files
