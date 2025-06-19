@@ -3,6 +3,9 @@ from logging.config import fileConfig
 from sqlalchemy import engine_from_config, pool
 from alembic import context
 from app.models.base import Base
+from app.models.user import User
+from app.models.favorite import Favorite
+from app.models.history import AiHistory
 from dotenv import load_dotenv
 
 # Load environment variables
