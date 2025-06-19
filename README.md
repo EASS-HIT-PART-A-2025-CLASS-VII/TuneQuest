@@ -76,6 +76,7 @@ TuneQuest/
     │   │   ├── schemas/    # Pydantic schemas
     │   │   └── services/   # Service-specific business logic
     │   └── tests/          # Service tests
+```
     
 ## 🛠️ Development Setup
 
@@ -87,6 +88,18 @@ TuneQuest/
 - **Git** (for cloning the repository)
 - **Docker & Docker Compose**
 
+### External API Keys Required
+
+1. **Google Gemini API Key**
+   - Required for AI music recommendations
+   - Get one from: https://makersuite.google.com/app/apikey
+
+2. **Spotify API Credentials**
+   - Client ID and Client Secret
+   - Register your application at: https://developer.spotify.com/dashboard/applications
+
+Note: No API key is needed for Deezer as we use their public API endpoints.
+
 ### Installation
 
 1. Clone the repository:
@@ -96,6 +109,7 @@ cd tunequest
 ```
 
 2. Create a .env file in the root directory with the following content:
+```bash
 DB_USER=postgres
 DB_PASSWORD=your-db-password
 DB_HOST=db
@@ -111,22 +125,25 @@ SPOTIFY_CLIENT_ID=your-spotify-client-id
 SPOTIFY_CLIENT_SECRET=your-spotify-client-secret
 GOOGLE_API_KEY=your-google-api-key
 ENV=development
+```
 
 3. create .env.test in the backend and music-service directories with the following content:
-
-backend:
+```bash
+#backend:
 TEST_DB_URL=postgresql+asyncpg://postgres:your-db-password@db:5432/TuneQuest_backend_test
 ENV=testing
 GEMINI_API_KEY=your-gemini-api-key
 SPOTIFY_CLIENT_ID=your-spotify-client-id
 SPOTIFY_CLIENT_SECRET=your-spotify-client-secret
-
-music-service:
+```
+```bash
+#music-service:
 TEST_DB_URL=postgresql+asyncpg://postgres:your-db-password@db:5432/TuneQuest_music_service_test
 ENV=testing
 GEMINI_API_KEY=your-gemini-api-key
 SPOTIFY_CLIENT_ID=your-spotify-client-id
 SPOTIFY_CLIENT_SECRET=your-spotify-client-secret
+```
 
 ### Running the Application
 
@@ -137,8 +154,9 @@ docker compose build --no-cache
 
 # Then start the services
 docker compose up
-
+```
 2. Set up the database:
+```bash
 # First, stop any existing containers
 docker compose down
 
@@ -147,8 +165,9 @@ docker compose up -d db
 
 # Set up the database
 .\setup-database.ps1
-
+```
 3. Start all services:
+```bash
 docker compose up
 ```
 
@@ -165,8 +184,8 @@ docker compose up
 ### Backend Tests
 
 - **Unit Tests**: Located in `backend/tests/`
-- **Integration Tests**: Cover API routes (ai, auth, etc.)
-- **Test Coverage**: Includes both backend and music service
+- **Integration Tests**: Cover API routes (AI, auth, user management)
+- **Test Coverage**: Focuses on user authentication, AI interactions, and user profile management
 
 Run tests:
 ```bash
@@ -175,12 +194,12 @@ docker compose exec backend pytest
 
 # Run specific test file
 docker compose exec backend pytest tests/test_auth.py
-
+```
 ### Music Service Tests
 
 - **Unit Tests**: Located in `music-service/tests/`
-- **Integration Tests**: Cover API routes (favorites, auth, etc.)
-- **Test Coverage**: Includes both backend and music service
+- **Integration Tests**: Focuses on favorites management
+- **Test Coverage**: Tests adding, retrieving, and deleting favorites
 
 Run tests:
 ```bash
@@ -188,11 +207,18 @@ Run tests:
 docker compose exec music-service pytest
 
 # Run specific test file
-docker compose exec music-service pytest tests/test_auth.py
+docker compose exec music-service pytest tests/test_favorites.py
 ```
 
 ## 📄 License
 
 This project is licensed under the MIT License - see the LICENSE file for details.
 
-> Made with ❤️ by Dvir Manos | [GitHub](https://github.com/zoroflamingo/tunequest)
+## 📬 Contact
+
+For questions or suggestions, feel free to:
+- Open an issue on the [GitHub repository](https://github.com/EASS-HIT-PART-A-2025-CLASS-VII/TuneQues/issues)
+- Create a pull request with improvements
+- Or send a message through [GitHub](https://github.com/zoroflamingo)
+  
+> Made with ❤️ by Dvir Manos | [GitHub](https://github.com/EASS-HIT-PART-A-2025-CLASS-VII/TuneQuest)
