@@ -23,7 +23,7 @@ export default function AlbumDetails() {
 
   useEffect(() => {
     setLoading(true);
-    fetchWithService(`/spotify/album/${id}`,'MUSIC_SERVICE')
+    fetchWithService(`/spotify/album/${id}`, "MUSIC_SERVICE")
       .then((res) => {
         if (!res.ok) throw new Error("Failed to fetch album");
         return res.json();
@@ -33,7 +33,7 @@ export default function AlbumDetails() {
       .finally(() => setLoading(false));
 
     if (user) {
-      fetchWithService(`/favorites/${id}?type=album`,'MUSIC_SERVICE', {
+      fetchWithService(`/favorites/${id}?type=album`, "MUSIC_SERVICE", {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -65,18 +65,24 @@ export default function AlbumDetails() {
     try {
       let response;
       if (favorite) {
-        response = await fetchWithService(`/favorites/${id}?type=album`,'MUSIC_SERVICE', {
-          method: "DELETE",
-          headers: {
-            Authorization: `Bearer ${token}`,
+        response = await fetchWithService(
+          `/favorites/${id}?type=album`,
+          "MUSIC_SERVICE",
+          {
+            method: "DELETE",
+            headers: {
+              Authorization: `Bearer ${token}`,
             },
           }
         );
       } else {
-        response = await fetchWithService(`/favorites?spotify_id=${id}&type=album`,'MUSIC_SERVICE', {
-          method: "POST",
-          headers: {
-            Authorization: `Bearer ${token}`,
+        response = await fetchWithService(
+          `/favorites?spotify_id=${id}&type=album`,
+          "MUSIC_SERVICE",
+          {
+            method: "POST",
+            headers: {
+              Authorization: `Bearer ${token}`,
             },
           }
         );
@@ -130,7 +136,8 @@ export default function AlbumDetails() {
                     >
                       {artist.name}
                     </NavLink>
-                    {album.artists.indexOf(artist) < album.artists.length - 1 && ", "}
+                    {album.artists.indexOf(artist) < album.artists.length - 1 &&
+                      ", "}
                   </span>
                 ))}
               </p>

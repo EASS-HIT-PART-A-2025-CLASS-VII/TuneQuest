@@ -9,6 +9,7 @@ SPOTIFY_TRACKS_URL = "https://api.spotify.com/v1/tracks"
 SPOTIFY_ARTISTS_URL = "https://api.spotify.com/v1/artists"
 SPOTIFY_ALBUMS_URL = "https://api.spotify.com/v1/albums"
 
+
 def get_spotify_access_token():
     """Get Spotify API access token."""
     client_id = os.getenv("SPOTIFY_CLIENT_ID")
@@ -30,6 +31,7 @@ def get_spotify_access_token():
 
     return response.json()["access_token"]
 
+
 def get_tracks_by_ids(ids: List[str]):
     """Get Spotify tracks by IDs."""
     token = get_spotify_access_token()
@@ -50,6 +52,7 @@ def get_tracks_by_ids(ids: List[str]):
     data = response.json()
     return data.get("tracks", [])
 
+
 def get_artists_by_ids(ids: List[str]):
     """Get Spotify artists by IDs."""
     token = get_spotify_access_token()
@@ -69,6 +72,7 @@ def get_artists_by_ids(ids: List[str]):
 
     data = response.json()
     return data.get("artists", [])
+
 
 def get_albums_by_ids(ids: List[str]):
     """Get Spotify albums by IDs."""

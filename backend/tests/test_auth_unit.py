@@ -27,7 +27,10 @@ async def test_create_user(mock_db):
 @pytest.mark.asyncio
 async def test_get_user_by_id(mock_db):
     fake_user = User(
-        id=1, username="test_user_id", email="test_user_id@example.com", hashed_password="hashed"
+        id=1,
+        username="test_user_id",
+        email="test_user_id@example.com",
+        hashed_password="hashed",
     )
 
     mock_result = MagicMock()
@@ -43,7 +46,10 @@ async def test_get_user_by_id(mock_db):
 @pytest.mark.asyncio
 async def test_get_user_by_username(mock_db):
     fake_user = User(
-        id=1, username="test_user_username", email="test_user_username@example.com", hashed_password="hashed"
+        id=1,
+        username="test_user_username",
+        email="test_user_username@example.com",
+        hashed_password="hashed",
     )
 
     mock_result = MagicMock()
@@ -59,7 +65,10 @@ async def test_get_user_by_username(mock_db):
 @pytest.mark.asyncio
 async def test_get_user_by_email(mock_db):
     fake_user = User(
-        id=1, username="test_user_email", email="test_user_email@example.com", hashed_password="hashed"
+        id=1,
+        username="test_user_email",
+        email="test_user_email@example.com",
+        hashed_password="hashed",
     )
 
     mock_result = MagicMock()
@@ -76,10 +85,16 @@ async def test_get_user_by_email(mock_db):
 async def test_get_all_users(mock_db):
     fake_users = [
         User(
-            id=1, username="test_user_1", email="test_user_1@example.com", hashed_password="hashed"
+            id=1,
+            username="test_user_1",
+            email="test_user_1@example.com",
+            hashed_password="hashed",
         ),
         User(
-            id=2, username="test_user_2", email="test_user_2@example.com", hashed_password="hashed"
+            id=2,
+            username="test_user_2",
+            email="test_user_2@example.com",
+            hashed_password="hashed",
         ),
     ]
 
@@ -96,7 +111,10 @@ async def test_get_all_users(mock_db):
 @pytest.mark.asyncio
 async def test_update_user(mock_db):
     existing_user = User(
-        id=1, username="test_user_old", email="test_user_old@example.com", hashed_password="hashed"
+        id=1,
+        username="test_user_old",
+        email="test_user_old@example.com",
+        hashed_password="hashed",
     )
     user_update = UserUpdate(username="new", email="new@example.com")
 
@@ -115,7 +133,10 @@ async def test_update_user(mock_db):
 @pytest.mark.asyncio
 async def test_replace_user(mock_db):
     existing_user = User(
-        id=1, username="test_user_old", email="test_user_old@example.com", hashed_password="hashed"
+        id=1,
+        username="test_user_old",
+        email="test_user_old@example.com",
+        hashed_password="hashed",
     )
     user_replace = UserReplace(username="new", email="new@example.com")
 
@@ -130,10 +151,14 @@ async def test_replace_user(mock_db):
     mock_db.commit.assert_called_once()
     mock_db.refresh.assert_called_once()
 
+
 @pytest.mark.asyncio
 async def test_delete_user(mock_db):
     user = User(
-        id=1, username="test_user_delete", email="test_user_delete@example.com", hashed_password="hashed"
+        id=1,
+        username="test_user_delete",
+        email="test_user_delete@example.com",
+        hashed_password="hashed",
     )
 
     mock_result = MagicMock()

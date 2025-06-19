@@ -1,4 +1,3 @@
-from datetime import datetime, timedelta, timezone
 from authlib.jose import jwt
 from authlib.jose.errors import JoseError
 import os
@@ -16,9 +15,10 @@ SECRET_KEY = os.getenv("JWT_SECRET_KEY")
 ALGORITHM = "HS256"
 security = HTTPBearer(auto_error=False)
 
+
 async def get_current_user(
     credentials: HTTPAuthorizationCredentials = Depends(security),
-    db: AsyncSession = Depends(get_db)
+    db: AsyncSession = Depends(get_db),
 ) -> User:
     if not credentials:
         raise HTTPException(status_code=401, detail="Not authenticated")

@@ -7,9 +7,7 @@ import { ImSpinner2 } from "react-icons/im";
 import shared from "@/styles/shared.module.css";
 import { MdFavorite, MdFavoriteBorder } from "react-icons/md";
 import { useUser } from "@/contexts/UserContext";
-import type { Artist } from "@/types/music/MusicTypes";
-import type { BaseAlbum } from "@/types/music/MusicTypes";
-import type { BaseTrack } from "@/types/music/MusicTypes";
+import type { Artist, BaseAlbum, BaseTrack } from "@/types/music/MusicTypes";
 import { fetchWithService } from "@/utils/api";
 
 export default function ArtistDetails() {
@@ -25,7 +23,7 @@ export default function ArtistDetails() {
 
   useEffect(() => {
     setLoading(true);
-    fetchWithService(`/spotify/artist/${id}`,'MUSIC_SERVICE')
+    fetchWithService(`/spotify/artist/${id}`, "MUSIC_SERVICE")
       .then((res) => {
         if (!res.ok) throw new Error("Failed to fetch artist");
         return res.json();
@@ -35,7 +33,7 @@ export default function ArtistDetails() {
       .finally(() => setLoading(false));
 
     if (user) {
-      fetchWithService(`/favorites/${id}?type=artist`,'MUSIC_SERVICE', {
+      fetchWithService(`/favorites/${id}?type=artist`, "MUSIC_SERVICE", {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -47,7 +45,10 @@ export default function ArtistDetails() {
         .catch((err) => setError(err.message));
     }
 
-    fetchWithService(`/spotify/artist/${id}/albums?include_groups=album,single,appears_on,compilation`,'MUSIC_SERVICE')
+    fetchWithService(
+      `/spotify/artist/${id}/albums?include_groups=album,single,appears_on,compilation`,
+      "MUSIC_SERVICE"
+    )
       .then((res) => {
         if (!res.ok) throw new Error("Failed to fetch albums");
         return res.json();
@@ -56,7 +57,7 @@ export default function ArtistDetails() {
       .catch((err) => setError(err.message))
       .finally(() => setLoading(false));
 
-    fetchWithService(`/spotify/artist/${id}/top-tracks`,'MUSIC_SERVICE')
+    fetchWithService(`/spotify/artist/${id}/top-tracks`, "MUSIC_SERVICE")
       .then((res) => {
         if (!res.ok) throw new Error("Failed to fetch top tracks");
         return res.json();
@@ -75,18 +76,24 @@ export default function ArtistDetails() {
     try {
       let response;
       if (favorite) {
-        response = await fetchWithService(`/favorites/${id}?type=artist`,'MUSIC_SERVICE', {
-          method: "DELETE",
-          headers: {
-            Authorization: `Bearer ${token}`,
+        response = await fetchWithService(
+          `/favorites/${id}?type=artist`,
+          "MUSIC_SERVICE",
+          {
+            method: "DELETE",
+            headers: {
+              Authorization: `Bearer ${token}`,
             },
           }
         );
       } else {
-        response = await fetchWithService(`/favorites?spotify_id=${id}&type=artist`,'MUSIC_SERVICE', {
-          method: "POST",
-          headers: {
-            Authorization: `Bearer ${token}`,
+        response = await fetchWithService(
+          `/favorites?spotify_id=${id}&type=artist`,
+          "MUSIC_SERVICE",
+          {
+            method: "POST",
+            headers: {
+              Authorization: `Bearer ${token}`,
             },
           }
         );

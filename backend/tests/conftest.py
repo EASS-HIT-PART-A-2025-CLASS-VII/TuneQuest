@@ -9,11 +9,9 @@ from app.models.user import User
 from app.core.security import hash_password
 from httpx import AsyncClient, ASGITransport
 from app.main import app
-from app.core.db import init_db
 from pathlib import Path
-from sqlalchemy import MetaData, text
+from sqlalchemy import text
 from unittest.mock import AsyncMock
-from app.crud import user as crud_user
 
 
 # Setup test environment
@@ -53,15 +51,14 @@ def event_loop():
 @pytest_asyncio.fixture(scope="session", autouse=True)
 async def setup_database():
     """Setup database once for all tests"""
-    from app.models.base import Base
-    from app.models.user import User
-    from app.models.history import AiHistory
-    
+
     # Clean tables before tests start
     async with TestingSessionLocal() as session:
         await session.begin()
         await session.execute(text("TRUNCATE TABLE users RESTART IDENTITY CASCADE"))
-        await session.execute(text("TRUNCATE TABLE ai_history RESTART IDENTITY CASCADE"))
+        await session.execute(
+            text("TRUNCATE TABLE ai_history RESTART IDENTITY CASCADE")
+        )
         await session.commit()
 
     yield
@@ -70,7 +67,9 @@ async def setup_database():
     async with TestingSessionLocal() as session:
         await session.begin()
         await session.execute(text("TRUNCATE TABLE users RESTART IDENTITY CASCADE"))
-        await session.execute(text("TRUNCATE TABLE ai_history RESTART IDENTITY CASCADE"))
+        await session.execute(
+            text("TRUNCATE TABLE ai_history RESTART IDENTITY CASCADE")
+        )
         await session.commit()
 
 

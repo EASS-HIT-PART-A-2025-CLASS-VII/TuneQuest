@@ -6,21 +6,22 @@ from app.routers import (
     deezer,
 )
 from app.services import deezer_genres
-from app.core.db import engine
 from contextlib import asynccontextmanager
 
 
 app = FastAPI(
     title="TuneQuest Music Service",
     description="Microservice handling all music-related operations",
-    version="1.0.0"
+    version="1.0.0",
 )
+
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     deezer_genres.load_deezer_genres()
     yield
-    
+
+
 # CORS middleware
 app.add_middleware(
     CORSMiddleware,

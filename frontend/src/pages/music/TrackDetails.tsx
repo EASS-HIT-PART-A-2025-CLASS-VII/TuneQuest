@@ -23,7 +23,7 @@ export default function TrackDetails() {
 
   useEffect(() => {
     setLoading(true);
-    fetchWithService(`/spotify/track/${id}`,'MUSIC_SERVICE')
+    fetchWithService(`/spotify/track/${id}`, "MUSIC_SERVICE")
       .then((res) => {
         if (!res.ok) throw new Error("Failed to fetch track");
         return res.json();
@@ -33,7 +33,7 @@ export default function TrackDetails() {
       .finally(() => setLoading(false));
 
     if (user) {
-      fetchWithService(`/favorites/${id}?type=track`,'MUSIC_SERVICE', {
+      fetchWithService(`/favorites/${id}?type=track`, "MUSIC_SERVICE", {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -69,18 +69,24 @@ export default function TrackDetails() {
     try {
       let response;
       if (favorite) {
-        response = await fetchWithService(`/favorites/${id}?type=track`,'MUSIC_SERVICE', {
-          method: "DELETE",
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
+        response = await fetchWithService(
+          `/favorites/${id}?type=track`,
+          "MUSIC_SERVICE",
+          {
+            method: "DELETE",
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
           }
         );
       } else {
-        response = await fetchWithService(`/favorites?spotify_id=${id}&type=track`,'MUSIC_SERVICE', {
-          method: "POST",
-          headers: {
-            Authorization: `Bearer ${token}`,
+        response = await fetchWithService(
+          `/favorites?spotify_id=${id}&type=track`,
+          "MUSIC_SERVICE",
+          {
+            method: "POST",
+            headers: {
+              Authorization: `Bearer ${token}`,
             },
           }
         );

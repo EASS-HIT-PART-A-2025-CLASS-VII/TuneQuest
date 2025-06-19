@@ -3,14 +3,18 @@ from datetime import datetime, timezone
 from enum import Enum as PyEnum
 from .base import Base
 
+
 # Favorite types enum
 class FavoriteType(PyEnum):
     track = "track"
     album = "album"
     artist = "artist"
 
+
 # User favorites model
-default_utcnow = lambda: datetime.now(timezone.utc)
+def default_utcnow():
+    return datetime.now(timezone.utc)
+
 
 class Favorite(Base):
     __tablename__ = "favorites"

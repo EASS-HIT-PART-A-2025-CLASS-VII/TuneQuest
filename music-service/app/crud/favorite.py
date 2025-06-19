@@ -101,7 +101,6 @@ async def get_spotify_metadata_for_user_favorites(user_id: int, db: AsyncSession
         if fav.type and plural_type_key in grouped:
             grouped[plural_type_key].append(fav.spotify_id)
 
-
     # Fetch data in parallel
     tracks_task = _fetch_spotify_data_in_batches_threaded(
         grouped["tracks"], get_tracks_by_ids, 20

@@ -1,6 +1,7 @@
 from sqlalchemy import Column, Integer, Text, ForeignKey, DateTime, func
 from .base import Base
 
+
 # AI chat history model
 class AiHistory(Base):
     __tablename__ = "ai_history"

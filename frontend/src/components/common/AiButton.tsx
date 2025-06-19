@@ -19,7 +19,7 @@ export function AiButton({ type, name }: AiButtonProps) {
     try {
       const prompt = `recommend ${type}s similar to ${name}. Return the names only, dont add words. 5 results. Be creative. I want a combination of popular and niche ${type}s. No introductions, no explanations, no other text.`;
 
-      const aiResponse = await fetchWithService("/ai/recommend",'BACKEND', {
+      const aiResponse = await fetchWithService("/ai/recommend", "BACKEND", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ prompt, type }),
@@ -49,7 +49,7 @@ export function AiButton({ type, name }: AiButtonProps) {
           throw new Error("Unsupported type");
       }
 
-      const response = await fetchWithService(url,'MUSIC_SERVICE', {
+      const response = await fetchWithService(url, "MUSIC_SERVICE", {
         method: "GET",
         headers: { "Content-Type": "application/json" },
       });

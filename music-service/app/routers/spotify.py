@@ -119,15 +119,16 @@ def search(query: str = Query(..., min_length=1)):
             timeout=5,
         )
         response.raise_for_status()
-    except requests.RequestException as e:
+    except requests.RequestException:
         raise HTTPException(status_code=502, detail="Spotify search failed")
 
     return response.json()
 
+
 @router.get("/entities")
 def get_spotify_entities(
     names: List[str] = Query(..., description="List of names to search"),
-    type_: str = Query(..., description="Entity type: track, artist, or album")
+    type_: str = Query(..., description="Entity type: track, artist, or album"),
 ):
     print("8")
     return search_spotify_entities(names, type_)

@@ -7,7 +7,6 @@ import { ImSpinner2 } from "react-icons/im";
 import shared from "@/styles/shared.module.css";
 import type { SearchResults } from "@/types/music/MusicTypes";
 
-
 export default function Search() {
   const [results, setResults] = useState<SearchResults>({
     tracks: [],

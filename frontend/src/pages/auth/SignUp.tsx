@@ -92,11 +92,15 @@ export default function SignUp() {
         console.log("Registration successful:", data);
         if (data.access_token) {
           localStorage.setItem("access_token", data.access_token);
-          const profileResponse = await fetchWithService("/users/me/", "BACKEND", {
-            headers: {
-              Authorization: `Bearer ${data.access_token}`,
-            },
-          });
+          const profileResponse = await fetchWithService(
+            "/users/me/",
+            "BACKEND",
+            {
+              headers: {
+                Authorization: `Bearer ${data.access_token}`,
+              },
+            }
+          );
           if (!profileResponse.ok) {
             alert("Registration succeeded but failed to fetch user info.");
             return;

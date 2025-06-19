@@ -1,5 +1,6 @@
 import requests
 
+
 # Deezer API endpoints
 def fetch_deezer_genres(album: str, artist: str):
     """Get Deezer genre for album and artist."""
@@ -20,6 +21,7 @@ def fetch_deezer_genres(album: str, artist: str):
     genre_data = genre_response.json()
 
     return genre_data.get("name")
+
 
 def fetch_deezer_preview_url(track_name, artist_name):
     """Get Deezer preview URL for track."""

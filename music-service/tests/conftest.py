@@ -10,10 +10,8 @@ from app.core.security import hash_password
 from httpx import AsyncClient, ASGITransport
 from app.main import app
 from pathlib import Path
-from sqlalchemy import MetaData
 from sqlalchemy import text
-from unittest.mock import AsyncMock, MagicMock, patch
-from sqlalchemy.ext.asyncio import AsyncSession
+from unittest.mock import AsyncMock
 
 
 # Setup test environment
@@ -39,18 +37,18 @@ TestingSessionLocal = async_sessionmaker(
     autoflush=False,
 )
 
+
 @pytest_asyncio.fixture(scope="session", autouse=True)
 async def setup_database():
     """Setup database once for all tests"""
-    from app.models.base import Base
-    from app.models.favorite import Favorite
-    from app.models.user import User
-    
+
     # Clean tables before tests start
     async with TestingSessionLocal() as session:
         await session.begin()
         await session.execute(text("TRUNCATE TABLE users RESTART IDENTITY CASCADE"))
-        await session.execute(text("TRUNCATE TABLE ai_history RESTART IDENTITY CASCADE"))
+        await session.execute(
+            text("TRUNCATE TABLE ai_history RESTART IDENTITY CASCADE")
+        )
         await session.commit()
 
     yield
@@ -61,7 +59,8 @@ async def setup_database():
         await session.execute(text("TRUNCATE TABLE favorites RESTART IDENTITY CASCADE"))
         await session.execute(text("TRUNCATE TABLE users RESTART IDENTITY CASCADE"))
         await session.commit()
-    
+
+
 # Test fixtures
 @pytest.fixture(scope="session")
 def event_loop():
@@ -119,6 +118,7 @@ async def async_client():
     ) as client:
         yield client
 
+
 @pytest_asyncio.fixture
 async def create_test_user(db_session):
     """Create test user."""
@@ -136,10 +136,11 @@ async def create_test_user(db_session):
 
     return _create
 
+
 @pytest_asyncio.fixture
 async def get_auth_headers(db_session, create_test_user):
     """Create auth headers using in-memory user."""
-    
+
     async def _headers(username: str, password: str):
         user = await create_test_user(username, password)
         return {"Authorization": f"Bearer test-token-{user.id}"}

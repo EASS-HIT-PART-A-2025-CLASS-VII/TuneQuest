@@ -1,18 +1,20 @@
 import pytest
 from httpx import AsyncClient
 
+
 @pytest.mark.asyncio
 async def test_register_user(create_test_user):
     """Test user registration."""
     response = await create_test_user("test_user", "securepassword")
     assert response.username == "test_user"
 
+
 @pytest.mark.asyncio
 async def test_register_duplicate_user(async_client: AsyncClient, create_test_user):
     """Test duplicate user registration."""
     # First create a user
     await create_test_user("test_user_duplicate", "securepassword")
-    
+
     # Try to create the same user again
     response = await async_client.post(
         "/users/register",
@@ -24,6 +26,7 @@ async def test_register_duplicate_user(async_client: AsyncClient, create_test_us
     )
     assert response.status_code == 400
     assert response.json()["detail"] == "Username already exists"
+
 
 @pytest.mark.asyncio
 async def test_login_user(async_client: AsyncClient):
@@ -42,6 +45,7 @@ async def test_login_user(async_client: AsyncClient):
     assert response.status_code == 200
     assert "access_token" in response.json()
 
+
 @pytest.mark.asyncio
 async def test_login_invalid_credentials(async_client: AsyncClient):
     """Test login with invalid credentials."""
@@ -54,9 +58,11 @@ async def test_login_invalid_credentials(async_client: AsyncClient):
         },
     )
     response = await async_client.post(
-        "/users/login", json={"username": "invalid_login_user", "password": "wrongpassword"}
+        "/users/login",
+        json={"username": "invalid_login_user", "password": "wrongpassword"},
     )
     assert response.status_code == 401
+
 
 @pytest.mark.asyncio
 async def test_get_current_user(async_client: AsyncClient):
@@ -77,6 +83,7 @@ async def test_get_current_user(async_client: AsyncClient):
     response = await async_client.get("/users/me", headers=headers)
     assert response.status_code == 200
     assert response.json()["username"] == "current_user"
+
 
 @pytest.mark.asyncio
 async def test_register_invalid_username(async_client: AsyncClient):
@@ -129,7 +136,9 @@ async def test_change_password_success(
     async_client: AsyncClient, create_test_user, get_auth_headers
 ):
     await create_test_user(username="change_pass_user", password="oldpassword123")
-    headers = await get_auth_headers(username="change_pass_user", password="oldpassword123")
+    headers = await get_auth_headers(
+        username="change_pass_user", password="oldpassword123"
+    )
 
     response = await async_client.post(
         "/users/change-password",
@@ -148,8 +157,12 @@ async def test_change_password_success(
 async def test_login_after_password_change(
     async_client: AsyncClient, create_test_user, get_auth_headers
 ):
-    await create_test_user(username="login_after_pass_change_user", password="oldpass123")
-    headers = await get_auth_headers(username="login_after_pass_change_user", password="oldpass123")
+    await create_test_user(
+        username="login_after_pass_change_user", password="oldpass123"
+    )
+    headers = await get_auth_headers(
+        username="login_after_pass_change_user", password="oldpass123"
+    )
 
     response = await async_client.post(
         "/users/change-password",
@@ -159,7 +172,8 @@ async def test_login_after_password_change(
     assert response.status_code == 200
 
     login_response = await async_client.post(
-        "/users/login", json={"username": "login_after_pass_change_user", "password": "newpass456"}
+        "/users/login",
+        json={"username": "login_after_pass_change_user", "password": "newpass456"},
     )
     assert login_response.status_code == 200
     assert "access_token" in login_response.json()
@@ -170,7 +184,9 @@ async def test_change_password_incorrect_current(
     async_client: AsyncClient, create_test_user, get_auth_headers
 ):
     await create_test_user(username="wrong_pass_user", password="correct_pass")
-    headers = await get_auth_headers(username="wrong_pass_user", password="correct_pass")
+    headers = await get_auth_headers(
+        username="wrong_pass_user", password="correct_pass"
+    )
 
     response = await async_client.post(
         "/users/change-password",

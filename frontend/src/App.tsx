@@ -2,7 +2,7 @@ import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import Header from "./components/common/Header";
 import Home from "./pages/home/Home";
 import SignUp from "./pages/auth/SignUp";
-import Login from "./pages/auth/Login";
+import Login from "./pages/auth/LogIn";
 import Search from "./pages/music/Search";
 import TrackDetails from "./pages/music/TrackDetails";
 import ArtistDetails from "./pages/music/ArtistDetails";

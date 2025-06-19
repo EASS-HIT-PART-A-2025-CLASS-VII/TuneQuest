@@ -26,7 +26,7 @@ export default function Companion() {
   useEffect(() => {
     async function fetchHistory() {
       try {
-        const response = await fetchWithService("/ai/companion",'BACKEND', {
+        const response = await fetchWithService("/ai/companion", "BACKEND", {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
@@ -58,9 +58,18 @@ export default function Companion() {
             .join(",");
 
           const [trackRes, artistRes, albumRes] = await Promise.all([
-            fetchWithService(`/spotify/tracks?ids=${tracksIds}`,'MUSIC_SERVICE'),
-            fetchWithService(`/spotify/artists?ids=${artistsIds}`,'MUSIC_SERVICE'),
-            fetchWithService(`/spotify/albums?ids=${albumsIds}`,'MUSIC_SERVICE'),
+            fetchWithService(
+              `/spotify/tracks?ids=${tracksIds}`,
+              "MUSIC_SERVICE"
+            ),
+            fetchWithService(
+              `/spotify/artists?ids=${artistsIds}`,
+              "MUSIC_SERVICE"
+            ),
+            fetchWithService(
+              `/spotify/albums?ids=${albumsIds}`,
+              "MUSIC_SERVICE"
+            ),
           ]);
 
           if (trackRes.ok && artistRes.ok && albumRes.ok) {
@@ -113,7 +122,7 @@ export default function Companion() {
     setInput("");
 
     try {
-      const response = await fetchWithService("/ai/companion",'BACKEND', {
+      const response = await fetchWithService("/ai/companion", "BACKEND", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -133,9 +142,9 @@ export default function Companion() {
         .join(",");
 
       const [trackRes, artistRes, albumRes] = await Promise.all([
-        fetchWithService(`/spotify/tracks?ids=${tracksIds}`,'MUSIC_SERVICE'),
-        fetchWithService(`/spotify/artists?ids=${artistsIds}`,'MUSIC_SERVICE'),
-        fetchWithService(`/spotify/albums?ids=${albumsIds}`,'MUSIC_SERVICE'),
+        fetchWithService(`/spotify/tracks?ids=${tracksIds}`, "MUSIC_SERVICE"),
+        fetchWithService(`/spotify/artists?ids=${artistsIds}`, "MUSIC_SERVICE"),
+        fetchWithService(`/spotify/albums?ids=${albumsIds}`, "MUSIC_SERVICE"),
       ]);
 
       if (!trackRes.ok || !artistRes.ok || !albumRes.ok) {

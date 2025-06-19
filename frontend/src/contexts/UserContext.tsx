@@ -23,7 +23,7 @@ export function UserProvider({
       }
 
       try {
-        const response = await fetchWithService("/users/me/",'BACKEND', {
+        const response = await fetchWithService("/users/me/", "BACKEND", {
           headers: { Authorization: `Bearer ${token}` },
         });
 

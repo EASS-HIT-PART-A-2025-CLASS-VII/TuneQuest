@@ -3,6 +3,7 @@ import requests
 # Global genre map
 DEEZER_GENRE_MAP = {}
 
+
 def load_deezer_genres():
     """Load Deezer genres into global map."""
     global DEEZER_GENRE_MAP
@@ -12,6 +13,7 @@ def load_deezer_genres():
         DEEZER_GENRE_MAP = {genre["id"]: genre["name"] for genre in data["data"]}
     else:
         DEEZER_GENRE_MAP = {}
+
 
 def get_genre_name_by_id(genre_id: int) -> str:
     """Get genre name by ID."""

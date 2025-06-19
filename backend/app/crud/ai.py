@@ -25,7 +25,9 @@ async def get_recommendations_home(request: str):
     print("albums:", albums, type(albums))
 
     enriched_tracks = await search_spotify_entities(tracks, "track") if tracks else []
-    enriched_artists = await search_spotify_entities(artists, "artist") if artists else []
+    enriched_artists = (
+        await search_spotify_entities(artists, "artist") if artists else []
+    )
     enriched_albums = await search_spotify_entities(albums, "album") if albums else []
 
     return {
@@ -74,7 +76,9 @@ async def get_companion(db: AsyncSession, prompt: str, user_id: int = None):
     albums = data.get("albums", [])
 
     enriched_tracks = await search_spotify_entities(tracks, "track") if tracks else []
-    enriched_artists = await search_spotify_entities(artists, "artist") if artists else []
+    enriched_artists = (
+        await search_spotify_entities(artists, "artist") if artists else []
+    )
     enriched_albums = await search_spotify_entities(albums, "album") if albums else []
     result = {
         "results": {
@@ -126,7 +130,7 @@ async def search_spotify_entities(names, entity_type):
     async with httpx.AsyncClient() as client:
         response = await client.get(
             "http://music-service:8001/spotify/entities",
-            params=[("names", n) for n in names] + [("type_", entity_type)]
+            params=[("names", n) for n in names] + [("type_", entity_type)],
         )
         response.raise_for_status()
         return response.json()

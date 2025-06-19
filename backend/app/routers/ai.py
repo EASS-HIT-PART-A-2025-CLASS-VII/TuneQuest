@@ -58,8 +58,7 @@ async def ai_companion(
 
 @router.get("/companion")
 async def ai_companion_get_history(
-    current_user: User = Depends(get_current_user), 
-    db: AsyncSession = Depends(get_db)
+    current_user: User = Depends(get_current_user), db: AsyncSession = Depends(get_db)
 ):
     try:
         result = await get_companion_history(db, user_id=current_user.id)

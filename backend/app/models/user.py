@@ -1,6 +1,7 @@
 from sqlalchemy import Column, Integer, String
 from .base import Base
 
+
 # User model for authentication
 class User(Base):
     __tablename__ = "users"

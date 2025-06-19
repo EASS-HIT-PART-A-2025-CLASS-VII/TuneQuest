@@ -7,9 +7,7 @@ import { useUser } from "@/contexts/UserContext";
 import type { SpotifyFavorites } from "@/types/user/UserTypes";
 import { fetchWithService } from "@/utils/api";
 
-
 export default function Favorites() {
-
   const [favorites, setFavorites] = useState<SpotifyFavorites>({
     tracks: [],
     artists: [],
@@ -27,12 +25,16 @@ export default function Favorites() {
       if (!user) return;
       try {
         setLoading(true);
-        const resFavs = await fetchWithService(`/favorites/spotify`,'MUSIC_SERVICE', {
-          method: "GET",
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
+        const resFavs = await fetchWithService(
+          `/favorites/spotify`,
+          "MUSIC_SERVICE",
+          {
+            method: "GET",
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
         const favs = await resFavs.json();
         setFavorites(favs);
       } catch {

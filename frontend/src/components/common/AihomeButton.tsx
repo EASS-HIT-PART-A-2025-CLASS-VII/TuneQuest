@@ -36,10 +36,13 @@ Example:
   "albums": ["Album 1", "Album 2"]
 }
 `;
-      const aiResponse = await fetchWithService("/ai/recommend-home",'BACKEND', {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ prompt }),
+      const aiResponse = await fetchWithService(
+        "/ai/recommend-home",
+        "BACKEND",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ prompt }),
         }
       );
 
@@ -51,19 +54,19 @@ Example:
           `/spotify/tracks?ids=${aiData.results.tracks
             .map((t: any) => t.id)
             .join(",")}`,
-          'MUSIC_SERVICE'
+          "MUSIC_SERVICE"
         ),
         fetchWithService(
           `/spotify/artists?ids=${aiData.results.artists
             .map((a: any) => a.id)
             .join(",")}`,
-          'MUSIC_SERVICE'
+          "MUSIC_SERVICE"
         ),
         fetchWithService(
           `/spotify/albums?ids=${aiData.results.albums
             .map((a: any) => a.id)
             .join(",")}`,
-          'MUSIC_SERVICE'
+          "MUSIC_SERVICE"
         ),
       ]);
 
