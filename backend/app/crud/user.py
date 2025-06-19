@@ -86,7 +86,7 @@ async def delete_user(db: AsyncSession, user_id: int) -> bool:
 async def update_user(db: AsyncSession, user_id: int, user_update: UserUpdate):
     """Update user partially."""
     result = await db.execute(select(User).filter(User.id == user_id))
-    user = await result.scalar_one_or_none()
+    user = result.scalar_one_or_none()
 
     if not user:
         return None
@@ -103,7 +103,7 @@ async def update_user(db: AsyncSession, user_id: int, user_update: UserUpdate):
 async def replace_user(db: AsyncSession, user_id: int, user_replace: UserReplace):
     """Replace user completely."""
     result = await db.execute(select(User).filter(User.id == user_id))
-    user = await result.scalar_one_or_none()
+    user = result.scalar_one_or_none()
 
     if not user:
         return None

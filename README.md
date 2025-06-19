@@ -92,7 +92,7 @@ TuneQuest/
 1. Clone the repository:
 ```bash
 git clone [https://github.com/EASS-HIT-PART-A-2025-CLASS-VII/TuneQuest.git](https://github.com/EASS-HIT-PART-A-2025-CLASS-VII/TuneQuest.git)
-cd tunequest
+cd TuneQuest
 ```
 
 2. Create a .env file in the root directory with the following content:
