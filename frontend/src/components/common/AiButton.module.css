@@ -22,3 +22,15 @@
   background-color: darkorange;
   transform: translate(1px, 1px);
 }
+
+@media (max-width: 900px) {
+  .button {
+    width: 220px;
+  }
+}
+
+@media (max-width: 700px) {
+  .button {
+    width: 150px;
+  }
+}

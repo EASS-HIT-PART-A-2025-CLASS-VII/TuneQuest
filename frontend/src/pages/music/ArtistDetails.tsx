@@ -121,57 +121,59 @@ export default function ArtistDetails() {
 
       {!loading && artist && (
         <>
-          <div className={styles.mainInfo}>
-            <div className={styles.leftSide}>
-              {artist.images?.[0]?.url && (
-                <img
-                  src={artist.images[0].url}
-                  alt={artist.name}
-                  className={styles.artistImage}
-                  width={300}
-                  height="auto"
-                />
-              )}
-              <AiButton type="artist" name={artist.name} />
-            </div>
+          <section
+            className={styles.upperSection}
+            aria-label="Artist information"
+          >
+            <div className={styles.mainInfo}>
+              <div className={styles.infoSection}>
+                {artist.images?.[0]?.url && (
+                  <img
+                    src={artist.images[0].url}
+                    alt={artist.name}
+                    className={styles.artistImage}
+                    width={300}
+                    height="auto"
+                  />
+                )}
+                <h2>{artist.name}</h2>
+                <p>Genres: {artist.genres?.join(", ") ?? "N/A"}</p>
+                <p>Followers: {artist.followers?.total.toLocaleString()}</p>
+                <p>Popularity: {artist.popularity}</p>
+                <button
+                  className={`${shared.favoriteButton} ${
+                    favorite ? shared.favorited : ""
+                  }`}
+                  onClick={() => {
+                    if (user) handleFavorite();
+                    else alert("You need to be logged in to use that feature");
+                  }}
+                  aria-label={
+                    favorite ? "Remove from favorites" : "Add to favorites"
+                  }
+                >
+                  {favorite ? <MdFavorite /> : <MdFavoriteBorder />}
+                </button>
+              </div>
 
-            <div className={styles.rightSide}>
-              <h2>{artist.name}</h2>
-              <p>Genres: {artist.genres?.join(", ") ?? "N/A"}</p>
-              <p>Followers: {artist.followers?.total.toLocaleString()}</p>
-              <p>Popularity: {artist.popularity}</p>
-              <button
-                className={`${shared.favoriteButton} ${
-                  favorite ? shared.favorited : ""
-                }`}
-                onClick={() => {
-                  if (user) handleFavorite();
-                  else alert("You need to be logged in to use that feature");
-                }}
-                aria-label={
-                  favorite ? "Remove from favorites" : "Add to favorites"
-                }
-              >
-                {favorite ? <MdFavorite /> : <MdFavoriteBorder />}
-              </button>
+              <div className={styles.topTracksSection}>
+                {Array.isArray(topTracks) &&
+                  topTracks.length > 0 &&
+                  topTracks
+                    .slice(0, 5)
+                    .map((track) => <TrackCard key={track.id} track={track} />)}
+              </div>
             </div>
-            <div className={styles.topTracksSection}>
-              {Array.isArray(topTracks) &&
-                topTracks.length > 0 &&
-                topTracks
-                  .slice(0, 5)
-                  .map((track) => <TrackCard key={track.id} track={track} />)}
-            </div>
-          </div>
-
-          <div className={styles.albumsSection}>
+            <AiButton type="artist" name={artist.name} />
+          </section>
+          <section className={styles.albumsSection}>
             <h2>Albums</h2>
             {Array.isArray(albums) &&
               albums.length > 0 &&
               albums.map((album) => (
                 <CompactAlbumCard key={album.id} album={album} />
               ))}
-          </div>
+          </section>
         </>
       )}
     </div>

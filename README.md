@@ -23,6 +23,10 @@
 - **TypeScript**
 - **React Router**
 
+## 📚 Architecture Diagram
+
+![Diagram](https://github.com/EASS-HIT-PART-A-2025-CLASS-VII/TuneQuest/blob/master/frontend/src/assets/TuneQuest-diagram.svg)
+
 ## API Documentation
 
 API documentation is automatically generated and available at:

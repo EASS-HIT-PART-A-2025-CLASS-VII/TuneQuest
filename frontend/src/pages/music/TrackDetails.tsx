@@ -119,81 +119,87 @@ export default function TrackDetails() {
         </div>
       )}
       {!loading && track && (
-        <div className={styles.mainInfo}>
-          <div>
-            {track.album.images?.length > 0 && (
-              <img
-                src={track.album.images[0].url}
-                alt={track.album.name}
-                className={styles.albumImage}
-                width={300}
-                height="auto"
-              />
-            )}
-            <AiButton type="track" name={track.name} />
-          </div>
-          <div>
-            <h2>{track.name}</h2>
-            <p>
-              {track.artists.map((a) => (
-                <span key={a.id}>
-                  <NavLink className={styles.navigate} to={`/artist/${a.id}`}>
-                    {a.name}
-                  </NavLink>
-                  {track.artists.indexOf(a) < track.artists.length - 1
-                    ? ", "
-                    : ""}
-                </span>
-              ))}
-            </p>
-            <NavLink
-              className={styles.navigate}
-              to={`/album/${track.album.id}`}
-            >
-              <p>Album: {track.album.name}</p>
-            </NavLink>
-            {genres.length > 0 ? (
-              <p>Genres: {genres?.join(", ") ?? "N/A"}</p>
-            ) : (
-              <p>Genres: Unknown</p>
-            )}
-            <p>Duration: {formatDuration(track.duration_ms)}</p>
-            <p>Popularity: {track.popularity}</p>
-            <div className={styles.buttonAndAudio}>
-              <button
-                className={`${shared.favoriteButton} ${
-                  favorite ? shared.favorited : ""
-                }`}
-                onClick={() => {
-                  if (user) {
-                    handleFavorite();
-                  } else {
-                    alert("You need to be logged in to use that feature");
-                  }
-                }}
-                aria-label={
-                  favorite ? "Remove from favorites" : "Add to favorites"
-                }
-              >
-                {favorite ? <MdFavorite /> : <MdFavoriteBorder />}
-              </button>
-              {deezerPreviewUrl ? (
-                <audio className={styles.audio} controls src={deezerPreviewUrl}>
-                  <track
-                    kind="captions"
-                    srcLang="en"
-                    src="path/to/your-captions.vtt"
-                    label="English"
-                    default
-                  />
-                  Your browser does not support the audio element.
-                </audio>
-              ) : (
-                <p>No preview available</p>
+        <section className={styles.upperSection} aria-label="Track information">
+          <div className={styles.mainInfo}>
+            <div>
+              {track.album.images?.length > 0 && (
+                <img
+                  src={track.album.images[0].url}
+                  alt={track.album.name}
+                  className={styles.albumImage}
+                  width={300}
+                  height="auto"
+                />
               )}
             </div>
+            <div>
+              <h2>{track.name}</h2>
+              <p>
+                {track.artists.map((a) => (
+                  <span key={a.id}>
+                    <NavLink className={styles.navigate} to={`/artist/${a.id}`}>
+                      {a.name}
+                    </NavLink>
+                    {track.artists.indexOf(a) < track.artists.length - 1
+                      ? ", "
+                      : ""}
+                  </span>
+                ))}
+              </p>
+              <NavLink
+                className={styles.navigate}
+                to={`/album/${track.album.id}`}
+              >
+                <p>Album: {track.album.name}</p>
+              </NavLink>
+              {genres.length > 0 ? (
+                <p>Genres: {genres?.join(", ") ?? "N/A"}</p>
+              ) : (
+                <p>Genres: Unknown</p>
+              )}
+              <p>Duration: {formatDuration(track.duration_ms)}</p>
+              <p>Popularity: {track.popularity}</p>
+              <div className={styles.buttonAndAudio}>
+                <button
+                  className={`${shared.favoriteButton} ${
+                    favorite ? shared.favorited : ""
+                  }`}
+                  onClick={() => {
+                    if (user) {
+                      handleFavorite();
+                    } else {
+                      alert("You need to be logged in to use that feature");
+                    }
+                  }}
+                  aria-label={
+                    favorite ? "Remove from favorites" : "Add to favorites"
+                  }
+                >
+                  {favorite ? <MdFavorite /> : <MdFavoriteBorder />}
+                </button>
+                {deezerPreviewUrl ? (
+                  <audio
+                    className={styles.audio}
+                    controls
+                    src={deezerPreviewUrl}
+                  >
+                    <track
+                      kind="captions"
+                      srcLang="en"
+                      src="path/to/your-captions.vtt"
+                      label="English"
+                      default
+                    />
+                    Your browser does not support the audio element.
+                  </audio>
+                ) : (
+                  <p>No preview available</p>
+                )}
+              </div>
+            </div>
           </div>
-        </div>
+          <AiButton type="track" name={track.name} />
+        </section>
       )}
     </div>
   );

@@ -110,70 +110,71 @@ export default function AlbumDetails() {
 
       {!loading && album && (
         <>
-          <section className={styles.mainInfo} aria-label="Album information">
-            <div>
-              {album.images?.[0]?.url && (
-                <img
-                  src={album.images[0].url}
-                  alt={`Album cover for ${album.name}`}
-                  className={styles.albumImage}
-                  width={300}
-                  height="auto"
-                />
-              )}
-              <AiButton type="album" name={album.name} />
-            </div>
+          <section
+            className={styles.upperSection}
+            aria-label="Album information"
+          >
+            <div className={styles.mainInfo}>
+              <div>
+                {album.images?.[0]?.url && (
+                  <img
+                    src={album.images[0].url}
+                    alt={`Album cover for ${album.name}`}
+                    className={styles.albumImage}
+                    width={300}
+                    height="auto"
+                  />
+                )}
+              </div>
 
-            <div>
-              <h2>{album.name}</h2>
-
-              <p>
-                {album.artists.map((artist) => (
-                  <span key={artist.id}>
-                    <NavLink
-                      className={styles.navigate}
-                      to={`/artist/${artist.id}`}
-                    >
-                      {artist.name}
-                    </NavLink>
-                    {album.artists.indexOf(artist) < album.artists.length - 1 &&
-                      ", "}
-                  </span>
-                ))}
-              </p>
-
-              <p>Type: {album.album_type}</p>
-
-              <p>
-                Release Year:{" "}
-                {album.release_date_precision === "year"
-                  ? album.release_date
-                  : new Date(album.release_date).getFullYear()}
-              </p>
-
-              <p>Popularity: {album.popularity ?? "N/A"}</p>
-
-              <p>Genres: {genres.length > 0 ? genres.join(", ") : "Unknown"}</p>
-
-              <button
-                className={`${shared.favoriteButton} ${
-                  favorite ? shared.favorited : ""
-                }`}
-                onClick={() => {
-                  if (user) {
-                    handleFavorite();
-                  } else {
-                    alert("You need to be logged in to use that feature");
+              <div>
+                <h2>{album.name}</h2>
+                <p>
+                  {album.artists.map((artist) => (
+                    <span key={artist.id}>
+                      <NavLink
+                        className={styles.navigate}
+                        to={`/artist/${artist.id}`}
+                      >
+                        {artist.name}
+                      </NavLink>
+                      {album.artists.indexOf(artist) <
+                        album.artists.length - 1 && ", "}
+                    </span>
+                  ))}
+                </p>
+                <p>Type: {album.album_type}</p>
+                <p>
+                  Release Year:{" "}
+                  {album.release_date_precision === "year"
+                    ? album.release_date
+                    : new Date(album.release_date).getFullYear()}
+                </p>
+                <p>Popularity: {album.popularity ?? "N/A"}</p>
+                <p>
+                  Genres: {genres.length > 0 ? genres.join(", ") : "Unknown"}
+                </p>
+                <button
+                  className={`${shared.favoriteButton} ${
+                    favorite ? shared.favorited : ""
+                  }`}
+                  onClick={() => {
+                    if (user) {
+                      handleFavorite();
+                    } else {
+                      alert("You need to be logged in to use that feature");
+                    }
+                  }}
+                  aria-pressed={favorite}
+                  aria-label={
+                    favorite ? "Remove from favorites" : "Add to favorites"
                   }
-                }}
-                aria-pressed={favorite}
-                aria-label={
-                  favorite ? "Remove from favorites" : "Add to favorites"
-                }
-              >
-                {favorite ? <MdFavorite /> : <MdFavoriteBorder />}
-              </button>
+                >
+                  {favorite ? <MdFavorite /> : <MdFavoriteBorder />}
+                </button>
+              </div>
             </div>
+            <AiButton type="album" name={album.name} />
           </section>
 
           {album.tracks?.items?.length > 0 && (
