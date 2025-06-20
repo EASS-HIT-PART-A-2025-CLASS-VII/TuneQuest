@@ -32,7 +32,17 @@
 API documentation is automatically generated and available at:
 - Swagger UI: http://localhost:8000/docs
 
-![Homepage Screenshot](https://github.com/EASS-HIT-PART-A-2025-CLASS-VII/TuneQuest/blob/master/frontend/src/assets/home-page.png)
+### 🎥 Demo Video
+
+<a href="https://youtu.be/8Fv_tWG-gIY" target="_blank">
+  <img 
+    src="https://github.com/EASS-HIT-PART-A-2025-CLASS-VII/TuneQuest/blob/master/frontend/src/assets/home-page-play.png" 
+    alt="TuneQuest Project Demo" 
+    width="100%"
+  />
+</a>
+
+## 📸 Images
 ![Companion Page Screenshot](https://github.com/EASS-HIT-PART-A-2025-CLASS-VII/TuneQuest/blob/master/frontend/src/assets/companion-page.png)
 ![Album Screenshot](https://github.com/EASS-HIT-PART-A-2025-CLASS-VII/TuneQuest/blob/master/frontend/src/assets/silk-sonic.png)
 
