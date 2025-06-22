@@ -197,8 +197,7 @@ docker compose up
 
 ### Backend Tests
 
-- **Unit Tests**: Located in `backend/tests/`
-- **Integration Tests**: Cover API routes (AI, auth, user management)
+- **Unit and Integration Tests**: Located in `backend/tests/`
 - **Test Coverage**: Focuses on user authentication, AI interactions, and user profile management
 
 Run tests:
@@ -211,8 +210,7 @@ docker compose exec backend pytest tests/test_auth.py
 ```
 ### Music Service Tests
 
-- **Unit Tests**: Located in `music-service/tests/`
-- **Integration Tests**: Focuses on favorites management
+- **Unit and Integration Tests**: Located in `music-service/tests/`
 - **Test Coverage**: Tests adding, retrieving, and deleting favorites
 
 Run tests:
@@ -222,6 +220,19 @@ docker compose exec music-service pytest
 
 # Run specific test file
 docker compose exec music-service pytest tests/test_favorites.py
+```
+### Frontend Tests
+
+- **Unit Tests**: Located in `frontend/src/tests/`
+- **Test Coverage**: Covers React components and API utilities
+
+Run tests:
+```bash
+# Run all frontend tests
+docker compose exec frontend npm test
+
+# Run specific test file
+docker compose exec frontend npm test tests/components/AiButton.test.tsx
 ```
 
 ## 📄 License
