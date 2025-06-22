@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import styles from "./AlbumDetails.module.css";
 import { NonImageTrackCard } from "@/components/features/Cards";
 import { fetchDeezerGenres } from "@/api/deezer";
-import { AiButton } from "@/components/common/AiButton";
+import AiButton from "@/components/common/AiButton";
 import { ImSpinner2 } from "react-icons/im";
 import shared from "@/styles/shared.module.css";
 import { MdFavorite, MdFavoriteBorder } from "react-icons/md";

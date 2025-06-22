@@ -2,7 +2,7 @@ import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import styles from "./ArtistDetails.module.css";
 import { CompactAlbumCard, TrackCard } from "@/components/features/Cards";
-import { AiButton } from "@/components/common/AiButton";
+import AiButton from "@/components/common/AiButton";
 import { ImSpinner2 } from "react-icons/im";
 import shared from "@/styles/shared.module.css";
 import { MdFavorite, MdFavoriteBorder } from "react-icons/md";
@@ -114,7 +114,7 @@ export default function ArtistDetails() {
   return (
     <div className={styles.container}>
       {loading && (
-        <div className={shared.loading}>
+        <div className={shared.loading} data-testid="loading-spinner">
           <ImSpinner2 />
         </div>
       )}

@@ -47,7 +47,7 @@ export function UserProvider({
   return (
     <UserContext.Provider value={value}>
       {loading ? (
-        <div className={shared.loading}>
+        <div className={shared.loading} data-testid="loading-spinner">
           <ImSpinner2 />
         </div>
       ) : (

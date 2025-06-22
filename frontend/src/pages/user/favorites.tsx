@@ -50,7 +50,7 @@ export default function Favorites() {
     <div className={styles.container}>
       {error && <p className={shared.error}>{error}</p>}
       {loading && (
-        <div className={shared.loading}>
+        <div className={shared.loading} data-testid="loading-spinner">
           <ImSpinner2 />
         </div>
       )}

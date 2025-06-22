@@ -8,7 +8,7 @@ import { fetchWithService } from "@/utils/api";
 /**
  * Component that fetches AI recommendations for tracks, albums, and artists.
  */
-export function AiHomeButton() {
+export default function AiHomeButton() {
   const [results, setResults] = useState<{
     tracks: any[];
     albums: any[];
@@ -102,7 +102,7 @@ Example:
         Ask AI
       </button>
       {loading && (
-        <div className={shared.loading}>
+        <div className={shared.loading} data-testid="loading-spinner">
           <ImSpinner2 />
         </div>
       )}

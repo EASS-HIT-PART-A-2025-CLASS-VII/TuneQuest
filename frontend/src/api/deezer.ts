@@ -5,7 +5,7 @@ export async function fetchDeezerGenres(album: string, artist: string): Promise<
     const res = await fetchWithService(`/deezer/genres?album=${encodeURIComponent(album)}&artist=${encodeURIComponent(artist)}`,'MUSIC_SERVICE');
     if (!res.ok) throw new Error("Failed to fetch genres");
     const data = await res.json();
-    return data.genre ? [String(data.genre)] : [];
+    return typeof data.genre === 'string' ? [data.genre] : [];
   } catch (err) {
     console.error("Deezer fetch error:", err);
     return [];

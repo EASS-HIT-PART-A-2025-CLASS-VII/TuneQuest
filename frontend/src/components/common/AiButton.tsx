@@ -6,7 +6,7 @@ import shared from "@/styles/shared.module.css";
 import type { RecommendationItem, AiButtonProps } from "@/types/ai/AITypes";
 import { fetchWithService } from "@/utils/api";
 
-export function AiButton({ type, name }: AiButtonProps) {
+export default function AiButton({ type, name }: AiButtonProps) {
   const [results, setResults] = useState<RecommendationItem[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
@@ -74,7 +74,7 @@ export function AiButton({ type, name }: AiButtonProps) {
         Ask AI
       </button>
       {loading && (
-        <div className={shared.loading}>
+        <div className={shared.loading} data-testid="loading-spinner">
           <ImSpinner2 />
         </div>
       )}
