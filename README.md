@@ -34,7 +34,7 @@ API documentation is automatically generated and available at:
 
 ### 🎥 Demo Video
 
-<a href="https://youtu.be/8Fv_tWG-gIY" target="_blank">
+<a href="https://youtu.be/SbZUSdSBhTo" target="_blank">
   <img 
     src="https://github.com/EASS-HIT-PART-A-2025-CLASS-VII/TuneQuest/blob/master/frontend/src/assets/home-page-play.png" 
     alt="TuneQuest Project Demo" 
