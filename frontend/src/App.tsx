@@ -23,7 +23,14 @@ function App() {
         <Route path="/track/:id" element={<TrackDetails />} />
         <Route path="/artist/:id" element={<ArtistDetails />} />
         <Route path="/album/:id" element={<AlbumDetails />} />
-        <Route path="/companion" element={<Companion />} />
+        <Route
+          path="/companion"
+          element={
+            <ProtectedRoute>
+              <Companion />
+            </ProtectedRoute>
+          }
+        />{" "}
         <Route
           path="/favorites"
           element={
