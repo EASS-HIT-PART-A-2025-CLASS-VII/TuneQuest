@@ -100,7 +100,7 @@
   margin: 1rem 0;
   font-size: 2rem;
   animation: loading 1s linear infinite;
-  right: 1rem;
+  right: 0.5rem;
   top: 0.75rem;
 }
 
@@ -110,13 +110,22 @@
   }
 }
 
-
-@media (max-width: 600px) {
+@media (max-width: 900px) {
   .searchBar {
-    margin-top: 1rem;
+    margin-top: 0.8rem;
   }
   .loading {
     right: 0.5rem;
-    top: 0.25rem;
+    top: 0rem;
+  }
+}
+
+@media (max-width: 600px) {
+  .searchBar {
+    margin-top: 0.3rem;
+  }
+  .loading {
+    right: 0.5rem;
+    top: -0.4rem;
   }
 }

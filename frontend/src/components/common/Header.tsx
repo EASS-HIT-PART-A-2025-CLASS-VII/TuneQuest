@@ -81,22 +81,15 @@ export default function Header() {
               </NavLink>
             </li>
             {user ? (
-              <>
-                <li>
-                  <NavLink to="/profile" onClick={() => setMenuOpen(false)}>
-                    Profile
-                  </NavLink>
-                </li>
-                <button
-                  onClick={() => {
-                    handleLogout();
-                    setMenuOpen(false);
-                  }}
-                  className={styles.dropdownButton}
-                >
-                  Log Out
-                </button>
-              </>
+              <button
+                onClick={() => {
+                  handleLogout();
+                  setMenuOpen(false);
+                }}
+                className={styles.dropdownButton}
+              >
+                Log Out
+              </button>
             ) : (
               <>
                 <li>

@@ -33,9 +33,9 @@
 .btnHeader {
   cursor: pointer;
   background: linear-gradient(135deg, #ffa450 50%, #d64c68 100%);
-  margin-top: 0.5rem;
-  width: 8rem;
-  height: 4rem;
+  margin-top: 1.2rem;
+  width: 7rem;
+  height: 3rem;
   text-align: center;
   border-radius: 3rem;
   transition-duration: 0.2s;
@@ -104,7 +104,7 @@
 
 .desktopMenu {
   display: flex;
-  gap: 0.5rem;
+  gap: 1rem;
 }
 
 @media (max-width: 900px) {
@@ -112,12 +112,6 @@
     width: 4rem;
   }
 
-  .btnHeader {
-    width: 7rem;
-    height: 3.5rem;
-    font-size: 0.8rem;
-    margin-top: 0.2rem;
-  }
   .desktopMenu {
     display: none;
   }
@@ -136,13 +130,7 @@
     width: 3rem;
   }
 
-  .btnHeader {
-    width: 5rem;
-    height: 3rem;
-    font-size: 0.8rem;
-    margin-top: 0rem;
-  }
   .hamburger {
-    margin-top: 0;
+    margin-top: 0rem;
   }
 }
