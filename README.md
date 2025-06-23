@@ -206,7 +206,7 @@ Run tests:
 docker compose exec backend pytest
 
 # Run specific test file
-docker compose exec backend pytest tests/test_auth.py
+docker compose exec backend pytest tests/test_auth_unit.py
 ```
 ### Music Service Tests
 
@@ -219,7 +219,7 @@ Run tests:
 docker compose exec music-service pytest
 
 # Run specific test file
-docker compose exec music-service pytest tests/test_favorites.py
+docker compose exec music-service pytest tests/test_favorites_unit.py
 ```
 ### Frontend Tests
 
