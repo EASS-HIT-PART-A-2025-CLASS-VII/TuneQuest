@@ -18,6 +18,11 @@
 - **Alembic**
 - **Google Generative AI API**
 
+### Music-Service
+- **Spotify API**
+- **Deezer API**
+
+  
 ### Frontend
 - **React** (Vite)
 - **TypeScript**
